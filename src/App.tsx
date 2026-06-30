@@ -731,16 +731,14 @@ export default function App() {
     fetchInsight("Building materials sustainability in 2026");
     fetchNews();
 
-    // Real-time market data updates every 60 seconds
+    // Real-time market data updates every 15 seconds
     const marketInterval = setInterval(() => {
       if (document.visibilityState === 'visible') {
-        setLoadingMarket(true);
         getLiveMarketData().then((data) => {
           setMarketData(data);
-          setLoadingMarket(false);
         });
       }
-    }, 60000);
+    }, 15000);
 
     return () => {
       clearInterval(timer);
@@ -840,7 +838,7 @@ Summary: ${art.summary}`
       ).join("\n\n");
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Strategist. 
 Analyze the following hand-selected intelligence bulletins curated by the asset manager:
 
@@ -1080,7 +1078,7 @@ Structure your response using clean, bulleted, professional sections with bold t
     setSelectedResearchInsight("");
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: `You are a world-class commodity strategist and research director.
 Analyze this research report title: "${report.title}" from source: "${report.source}" (${report.date}).
 
@@ -1115,7 +1113,7 @@ Keep the tone extremely elite, precise, and professional. Do not use generic fil
       const categoryLabel = activeResearchTab.toUpperCase();
       
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Director.
 We have multiple high-impact intelligence reports for the sector: ${categoryLabel}.
 Analyze this collective matrix of publications:
@@ -1148,7 +1146,7 @@ Keep the formatting clean, bulleted, and in a high-caliber professional report s
     try {
       const categoryLabel = activeResearchTab.toUpperCase();
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Stress-Testing Specialist.
 Evaluate the exact macro-economic and industrial impact of this stress scenario: "${stressScenario}" on the sector: "${categoryLabel}".
 
@@ -1288,7 +1286,7 @@ Ensure the output is valid JSON only.`,
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: `You are the AI assistant inside Survvi Opulence Insights. Users are high-level executives. Answer concisely. User says: ${chatInput}`
       });
       setChatMessages([...newMsgs, { role: 'ai', content: response.text || "I am analyzing this now." }]);
