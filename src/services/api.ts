@@ -7,7 +7,7 @@ import { ai } from "./geminiService";
 
 const cache: Record<string, { data: any, timestamp: number }> = {};
 const CACHE_TTL = 1000 * 60 * 60; // 1 hour
-const MARKET_CACHE_TTL = 1000 * 60; // 1 minute for market data
+const MARKET_CACHE_TTL = 1000 * 5; // 5 seconds for market data
 
 async function withRetry<T>(fn: () => Promise<T>, retries = 5, delay = 2000): Promise<T> {
   try {
@@ -161,7 +161,10 @@ export async function getMarketInsights(query: string): Promise<{ text: string, 
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch insights from backend');
+      const errText = await response.text();
+      const err: any = new Error(`Failed to fetch insights from backend: ${response.status} ${errText}`);
+      err.status = response.status;
+      throw err;
     }
 
     const result = await response.json();
@@ -173,7 +176,12 @@ export async function getMarketInsights(query: string): Promise<{ text: string, 
       console.warn("API failed, falling back to stale cache.");
       return cache[cacheKey].data;
     }
-    console.error("Error fetching AI insights:", error);
+    const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
+    if (isRateLimited) {
+      console.warn("API quota exceeded fetching insights, falling back.");
+    } else {
+      console.error("Error fetching AI insights:", error);
+    }
     return { 
       text: `Survvi Market Intelligence Analysis for **${query}**: Structural dynamics in this sector indicate resilience despite recent macroeconomic headwinds. The supply chain has largely absorbed the impact of recent maritime bottlenecks, allowing spot premiums to stabilize. We expect a moderate bullish trend over the next 90 days, primarily driven by anticipated fiscal easing in key industrial regions and a structural pivot towards advanced green-tech manufacturing nodes. Industrial clients are advised to strategically hedge critical material inputs for the upcoming quarter.`,
       confidenceScore: 89,
@@ -541,7 +549,12 @@ export async function analyzeMacroIncident(region: string, incident: string) {
     }
     return null;
   } catch (error) {
-    console.error("Error analyzing incident impact:", error);
+    const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
+    if (isRateLimited) {
+      console.warn("API quota exceeded analyzing incident, falling back.");
+    } else {
+      console.error("Error analyzing incident impact:", error);
+    }
     return null;
   }
 }
@@ -906,7 +919,9 @@ export async function getLiveMarketData(): Promise<MarketData[]> {
     return cache[cacheKey].data;
   }
   try {
-    const response = await fetch('/api/market-data');
+    const response = await fetch(`/api/market-data?t=${Date.now()}`, {
+      cache: 'no-store'
+    });
     if (!response.ok) throw new Error('Failed to fetch market data');
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
@@ -968,7 +983,12 @@ export async function generateResearchPDFContent(topic: string) {
     }));
     return JSON.parse(response.text || "{}");
   } catch (error) {
-    console.error("Error generating PDF content:", error);
+    const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
+    if (isRateLimited) {
+      console.warn("API quota exceeded generating PDF, falling back.");
+    } else {
+      console.error("Error generating PDF content:", error);
+    }
     return {
       title: `Daily Briefing: ${topic}`,
       executiveSummary: `This executive summary for ${topic} highlights the structural shifts in global industrial capacity. Key performance indicators suggest a consolidation phase as regional manufacturers optimize their supply chains to buffer against potential macroeconomic volatility.`,
@@ -1009,7 +1029,12 @@ export async function getAssetBriefing(name: string, symbol: string): Promise<{ 
 
     return { text, sources };
   } catch (error) {
-    console.error("Error generating asset briefing:", error);
+    const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
+    if (isRateLimited) {
+      console.warn("API quota exceeded generating asset briefing, falling back.");
+    } else {
+      console.error("Error generating asset briefing:", error);
+    }
     return {
       text: `### 1. RECENT MARKET TRENDS & GEOPOLITICAL DRIVERS\nMacro indicators show heightened sensitivity for index ${symbol}. Elevated physical spot transactions are reported across secondary distribution hubs. Geopolitical risks remain priced into the spot-future curves.\n\n### 2. MARITIME LOGISTICS & TRADE ACCELERATORS\nShipping lane delays are increasing bunkering costs globally. Freight spot premiums are holding steady, but localized transit disruptions persist at major global shipping corridors.\n\n### 3. INDUSTRIAL CLIENT ACTIONABLE OUTLOOK (30-90 DAYS)\nClients should stabilize their physical safety reserves. Secure alternative supply routes and monitor real-time congestion indexes regularly.`
     };
