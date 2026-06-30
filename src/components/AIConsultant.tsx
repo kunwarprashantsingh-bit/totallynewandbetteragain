@@ -21,7 +21,7 @@ const AIConsultant = () => {
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: userMsg,
         config: {
           systemInstruction: "You are a world-class industrial management consultant and AI strategist at Survvi Opulence Insights. Provide concise, high-level strategic advice on building materials, energy, and global supply chains. Use a professional, authoritative, and forward-thinking tone.",

@@ -345,7 +345,7 @@ Deliver 3 highly tactical, actionable procurement or hedging recommendations for
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.0-flash",
         contents: `Analyze these recent news bulletins:\n\n${articlesText}`,
         config: {
           systemInstruction: systemPrompt,
