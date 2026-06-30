@@ -1,5 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import yahooFinance from "yahoo-finance2";
+import YahooFinanceImport from "yahoo-finance2";
+
+const YahooFinanceClass: any = (YahooFinanceImport as any).default || YahooFinanceImport;
+const yahooFinance = new YahooFinanceClass({ suppressNotices: ['yahooSurvey'] });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
@@ -77,8 +80,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return true;
     });
 
-    // Cache for 60 seconds on Vercel Edge Cache
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
+    // Disable caching on Vercel to ensure real-time data
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.status(200).json(finalData);
   } catch (error) {
     console.error("Error fetching market data:", error);

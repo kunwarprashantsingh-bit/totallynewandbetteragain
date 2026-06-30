@@ -50,7 +50,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json(jsonResponse);
   } catch (error: any) {
-    console.error("Error generating proxy content:", error);
-    return res.status(500).json({ error: 'Failed to generate content', details: error.message });
+    const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
+    if (isRateLimited) {
+      console.warn("Rate limited generating proxy content. Using fallback.");
+    } else {
+      console.error("Error generating proxy content:", error);
+    }
+    return res.status(isRateLimited ? 429 : 500).json({ error: 'Failed to generate content', details: error.message });
   }
 }
