@@ -1,9 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import YahooFinanceImport from "yahoo-finance2";
-
-// Robust ESM/CJS interop for yahoo-finance2
-const YahooFinanceClass: any = (YahooFinanceImport as any).default || YahooFinanceImport;
-const yahooFinance = new YahooFinanceClass();
+import yahooFinance from "yahoo-finance2";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
