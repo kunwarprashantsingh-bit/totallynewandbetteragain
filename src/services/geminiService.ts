@@ -1,31 +1,23 @@
-import { GoogleGenAI } from "@google/genai";
-
-let cachedAi: GoogleGenAI | null = null;
-
-function getAi(): GoogleGenAI {
-  if (!cachedAi) {
-    const apiKey = (typeof process !== 'undefined' && process.env && process.env.GEMINI_API_KEY) || "AI_STUDIO_PLACEHOLDER_KEY";
-    cachedAi = new GoogleGenAI({ 
-      apiKey,
-      httpOptions: {
+// We replace the direct GoogleGenAI instantiation with a proxy to our backend.
+// This ensures that the frontend code does not try to use process.env or the raw API key.
+export const ai = {
+  models: {
+    generateContent: async (params: { model: string, contents: any, config?: any }) => {
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
         headers: {
-          'User-Agent': 'aistudio-build',
-        }
-      }
-    });
-  }
-  return cachedAi;
-}
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
 
-// Proxied delegate object for 'ai' so that calls like `ai.models.generateContent` work seamlessly
-export const ai = new Proxy({} as GoogleGenAI, {
-  get(target, prop) {
-    const instance = getAi() as any;
-    const value = instance[prop];
-    if (typeof value === 'function') {
-      return value.bind(instance);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to generate content: ${response.status} ${response.statusText}. Details: ${text}`);
+      }
+
+      return await response.json();
     }
-    return value;
   }
-});
+} as any;
 
