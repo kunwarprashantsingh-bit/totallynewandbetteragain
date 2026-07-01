@@ -120,5 +120,95 @@ export const METHODOLOGIES = {
       "Detection of hidden labor or logistical unrest signs",
       "Sentiment-weighted hedge positioning recommendations"
     ]
+  },
+  "Predictive Commodity Arbitrage": {
+    title: "Predictive Commodity Arbitrage",
+    content: "Real-time algorithmic forecasting for raw material procurement optimization. By synthesizing global macro indicators and local supply constraints, we identify transient pricing inefficiencies.",
+    outcomes: [
+      "Optimized raw material procurement cycles",
+      "Reduction in overall input costs by 8-15%",
+      "Automated hedging strategies against price volatility"
+    ]
+  },
+  "Smart Material Digital Twins": {
+    title: "Smart Material Digital Twins",
+    content: "Virtualizing building material performance in diverse global climates. We simulate physical stress, environmental degradation, and lifecycle costs before physical deployment.",
+    outcomes: [
+      "Accelerated R&D cycles for new material formulations",
+      "Risk mitigation in extreme climate deployments",
+      "Precision-engineered durability profiles"
+    ]
+  },
+  "Energy Transition Modeling": {
+    title: "Energy Transition Modeling",
+    content: "Strategic roadmaps for legacy energy firms pivoting to renewables. We provide granular transitional architectures that balance short-term profitability with long-term sustainability mandates.",
+    outcomes: [
+      "De-risked capital reallocation strategies",
+      "Maximized capture of green energy subsidies",
+      "Seamless integration of renewable assets into legacy grids"
+    ]
+  },
+  "Geo-Political Risk Engine": {
+    title: "Geo-Political Risk Engine",
+    content: "Mapping supply chain vulnerabilities against real-time global events. We quantify the potential impact of trade disputes, regime changes, and localized conflicts on your specific operational footprint.",
+    outcomes: [
+      "Proactive mitigation of supply chain disruptions",
+      "Dynamic adjustment of regional risk premiums",
+      "Contingency planning for high-volatility theaters"
+    ]
+  },
+  "Circular Economy Integration": {
+    title: "Circular Economy Integration",
+    content: "Transforming industrial waste into high-value building material inputs. We design closed-loop industrial ecosystems that turn cost centers into revenue streams.",
+    outcomes: [
+      "Significant reduction in landfill and disposal costs",
+      "Creation of secondary revenue streams from byproducts",
+      "Enhanced ESG scoring and stakeholder relations"
+    ]
+  },
+  "Quantum Market Simulations": {
+    title: "Quantum Market Simulations",
+    content: "Simulating 10,000+ market scenarios to stress-test corporate strategies. We utilize advanced stochastic modeling to explore the edges of market probability and prepare for 'black swan' events.",
+    outcomes: [
+      "Robust strategic planning under extreme uncertainty",
+      "Identification of hidden systemic risks",
+      "Capital allocation optimized for resilience"
+    ]
+  },
+  "ESG Compliance Automation": {
+    title: "ESG Compliance Automation",
+    content: "Real-time tracking of carbon footprints across global operations. We automate data collection and reporting to ensure seamless compliance with evolving multi-jurisdictional frameworks.",
+    outcomes: [
+      "Elimination of manual ESG reporting overhead",
+      "Real-time visibility into carbon intensity metrics",
+      "Audit-ready compliance across all major frameworks"
+    ]
+  },
+  "Industrial IoT Consulting": {
+    title: "Industrial IoT Consulting",
+    content: "Optimizing factory floor efficiency through neural network integration. We architect sensory webs that feed real-time performance data into predictive maintenance algorithms.",
+    outcomes: [
+      "Drastic reduction in unplanned downtime",
+      "Optimization of machinery lifecycle and OEE",
+      "Data-driven operational bottleneck resolution"
+    ]
+  },
+  "Blockchain Supply Chain": {
+    title: "Blockchain Supply Chain",
+    content: "Immutable provenance tracking for ethical material sourcing. We implement distributed ledgers to guarantee the origin and ethical handling of critical raw materials.",
+    outcomes: [
+      "Verifiable compliance with ethical sourcing mandates",
+      "Enhanced brand trust and transparency",
+      "Streamlined customs and cross-border verifications"
+    ]
+  },
+  "Global Talent Synthesis": {
+    title: "Global Talent Synthesis",
+    content: "Connecting top-tier industrial experts with niche market challenges. We leverage our network to rapidly deploy specialized human capital to critical bottlenecks.",
+    outcomes: [
+      "Accelerated resolution of complex engineering challenges",
+      "Infusion of cross-industry best practices",
+      "Agile scaling of specialized project teams"
+    ]
   }
 };
