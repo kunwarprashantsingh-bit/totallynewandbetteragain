@@ -44,7 +44,8 @@ import {
   ChevronRight,
   Navigation,
   Sliders,
-  Download
+  Download,
+  Linkedin
 } from 'lucide-react';
 import { ai } from './services/geminiService';
 import { 
@@ -4263,23 +4264,70 @@ Ensure the output is valid JSON only.`,
             </div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { name: 'Dr. Elena Vance', role: 'Quantum Material Scientist', bio: 'Former lead at CERN, specializing in molecular concrete structures.' },
-              { name: 'Marcus Thorne', role: 'Energy Arbitrage Strategist', bio: 'Ex-Goldman Sachs, mapping global energy volatility for 15 years.' },
-              { name: 'Satoshi Nakamoto (Industrial)', role: 'Supply Chain Architect', bio: 'Pioneer of blockchain-based provenance for rare earth metals.' }
+              { 
+                name: 'Kunwar Prashant Singh', 
+                role: 'Co-Director', 
+                bio: 'Co-Director of Survvi Oppulence Insights, steering strategic vision and operations.',
+                linkedin: 'https://www.linkedin.com/in/kunwarprashantsingh/'
+              },
+              { 
+                name: 'Carolina Pereira', 
+                role: 'Co-Director', 
+                bio: 'Co-Director of Survvi Oppulence Insights, driving global insights and partnerships.',
+                linkedin: 'https://www.linkedin.com/in/carolinavpereira91/'
+              },
+              { 
+                name: 'Michael Kleinman', 
+                role: 'Mentor', 
+                bio: 'Mentor at Survvi Oppulence Insights, providing expert guidance and industry leadership.',
+                linkedin: 'https://www.linkedin.com/in/michaelbearkleinman/'
+              },
+              {
+                name: 'Beatrice Ene',
+                role: 'Key Corporate Partner',
+                bio: 'Key Corporate Partner for conferences and industry meetings.',
+                linkedin: 'https://www.linkedin.com/in/beatriceene/',
+                companyName: 'Industry Link',
+                companyLink: 'https://industrylink.eu/'
+              }
             ].map((expert, i) => (
               <motion.div 
                 key={i}
                 whileHover={{ y: -10 }}
-                className="p-8 bg-brand border border-white/5 rounded-[32px] hover:border-accent/30 transition-all"
+                className="p-8 bg-brand border border-white/5 rounded-[32px] hover:border-accent/30 transition-all flex flex-col h-full"
               >
-                <div className="w-20 h-20 rounded-2xl bg-accent/10 mb-6 overflow-hidden border border-white/10">
-                  <img src={`https://picsum.photos/seed/expert-${i}/200/200`} alt={expert.name} className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
+                <div className="w-20 h-20 rounded-2xl bg-accent/10 mb-6 overflow-hidden border border-white/10 shrink-0">
+                  <img src={`https://picsum.photos/seed/${expert.name.replace(/\s+/g, '')}/200/200`} alt={expert.name} className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
                 </div>
-                <h4 className="text-xl font-bold mb-1">{expert.name}</h4>
-                <p className="text-accent text-xs font-bold uppercase tracking-widest mb-4">{expert.role}</p>
-                <p className="text-white/40 text-sm leading-relaxed">{expert.bio}</p>
+                <div className="flex-1">
+                  <h4 className="text-xl font-bold mb-1">{expert.name}</h4>
+                  <p className="text-accent text-xs font-bold uppercase tracking-widest mb-4">{expert.role}</p>
+                  <p className="text-white/40 text-sm leading-relaxed mb-6">{expert.bio}</p>
+                </div>
+                <div className="flex flex-col gap-3 mt-auto">
+                  <a 
+                    href={expert.linkedin} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-accent hover:text-white transition-colors text-sm font-medium"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    View Profile
+                  </a>
+                  {expert.companyLink && expert.companyName && (
+                    <a 
+                      href={expert.companyLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-accent hover:text-white transition-colors text-sm font-medium"
+                    >
+                      <Navigation className="w-4 h-4" />
+                      {expert.companyName}
+                    </a>
+                  )}
+                </div>
               </motion.div>
             ))}
           </div>
