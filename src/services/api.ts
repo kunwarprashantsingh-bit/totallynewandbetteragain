@@ -156,6 +156,7 @@ export async function getMarketInsights(query: string): Promise<{ text: string, 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({ query, marketContext })
     });
@@ -254,7 +255,11 @@ export async function getRealTimeNews() {
     return cache[cacheKey].data;
   }
   try {
-    const response = await fetch('/api/news?q=global+industrial+supply+chain');
+    const response = await fetch('/api/news?q=global+industrial+supply+chain', {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
     if (!response.ok) throw new Error('Failed to fetch news');
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
@@ -920,7 +925,10 @@ export async function getLiveMarketData(): Promise<MarketData[]> {
   }
   try {
     const response = await fetch(`/api/market-data?t=${Date.now()}`, {
-      cache: 'no-store'
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
     });
     if (!response.ok) throw new Error('Failed to fetch market data');
     const contentType = response.headers.get('content-type');
