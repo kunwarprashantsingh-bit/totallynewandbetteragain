@@ -13,13 +13,23 @@ export const PrimeAlerts = () => {
   const [alerts, setAlerts] = useState<any[]>([]);
 
   useEffect(() => {
+    const addAlert = (newAlert: any) => {
+      setAlerts(prev => {
+        if (prev.some(a => a.id === newAlert.id)) return prev;
+        return [...prev, newAlert];
+      });
+      setTimeout(() => {
+        setAlerts(current => current.filter(alert => alert.id !== newAlert.id));
+      }, 30000);
+    };
+
     // Simulate real-time prime alerts appearing
     const timer = setTimeout(() => {
-      setAlerts([PRIME_ALERTS_MOCK[0]]);
+      addAlert(PRIME_ALERTS_MOCK[0]);
     }, 3000);
     
     const timer2 = setTimeout(() => {
-      setAlerts(prev => [...prev, PRIME_ALERTS_MOCK[1]]);
+      addAlert(PRIME_ALERTS_MOCK[1]);
     }, 15000);
 
     return () => {
