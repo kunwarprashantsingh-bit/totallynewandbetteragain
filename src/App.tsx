@@ -2309,23 +2309,69 @@ Ensure the output is valid JSON only.`,
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            className="flex flex-col h-full justify-center"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-6 w-max">
               <Target className="w-3 h-3" />
               The Genesis
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-8">A Vision Born from <span className="text-accent">Industrial Grit</span>.</h2>
-            <div className="space-y-6 text-text/60 leading-relaxed">
+            <div className="space-y-6 text-text/60 leading-relaxed mb-8">
               <p>
-                Survvi Opulence Insights was born from a powerful synergy between two industry veterans. For the past 7 years, Co-Managing Directors Prashant Singh and Carolina Pereira have worked side-by-side, navigating the complex intersections of global industrial management and predictive analytics.
-              </p>
-              <p>
-                "We saw brilliant engineers struggling with fragmented data, and visionary leaders blinded by supply chain opacity," says Carolina Pereira. "Our vision for Survvi was to bridge that gap. We aren't just consultants; we are architects of the new industrial era, bringing opulence and precision to market intelligence."
-              </p>
-              <p>
-                Their decision to found Survvi Opulence Insights was driven by a single mission: to provide the global industrial sector with the same level of technological sophistication that the financial and tech sectors have enjoyed for years. By blending Carolina's strategic foresight with deep proprietary AI, they have built a firm that doesn't just predict the future—it builds it.
+                Survvi Opulence Insights was born from a powerful synergy between two industry veterans. For the past 7 years, Founders Prashant Singh and Carolina Pereira have worked side-by-side, executing high-stakes projects for the <span className="text-white font-semibold">World Bank</span> and <span className="text-white font-semibold">IFC</span>, navigating the complex intersections of global industrial management and predictive analytics.
               </p>
             </div>
+            
+            <div className="space-y-6">
+              <div className="p-6 bg-brand-light/10 border border-white/10 rounded-2xl relative hover:border-accent/30 transition-colors group">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Globe className="w-16 h-16 text-accent" />
+                </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-xl bg-accent/10 overflow-hidden border border-white/20 shrink-0">
+                    <img src="/prashant.jpg" alt="Prashant Singh" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Prashant+Singh&background=0D1117&color=6EE7B7' }} />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white mb-1">Prashant Singh</h4>
+                    <p className="text-accent text-[10px] font-bold uppercase tracking-widest">Co-Founder & Managing Director</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {['Strategy', 'Research', 'Expert Network'].map((tag, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-white/70 uppercase tracking-wider">{tag}</span>
+                  ))}
+                </div>
+                <p className="text-white/60 text-sm mb-4 leading-relaxed">Prashant Singh is the Co-Founder & Managing Director of Survvi Opulence Insights, where he advises corporations, investors, financial institutions, and development organizations on high-impact strategic, commercial, and investment decisions. With nearly two decades of international consulting experience, he has led complex engagements across North America, Europe, the Middle East, Africa, and Asia, helping clients navigate uncertainty through rigorous research, independent analysis, and commercially grounded advice. His work has supported major capital investments, corporate strategy, and market intelligence initiatives for multinational enterprises and organizations including the World Bank Group and the International Finance Corporation (IFC). Guided by the belief that intellectual honesty precedes commercial success, Prashant is committed to delivering objective insights, transparent analysis, and practical recommendations that enable clients to make confident, evidence-based decisions.</p>
+                <blockquote className="border-l-2 border-accent/50 pl-4 py-1 text-white/80 italic text-sm">
+                  "True insight isn't just about data; it's about anticipating the ripple effects of global change before they hit the market."
+                </blockquote>
+              </div>
+
+              <div className="p-6 bg-brand-light/10 border border-white/10 rounded-2xl relative hover:border-accent/30 transition-colors group">
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Globe className="w-16 h-16 text-accent" />
+                </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-xl bg-accent/10 overflow-hidden border border-white/20 shrink-0">
+                    <img src="/carolina.jpg" alt="Carolina Pereira" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Carolina+Pereira&background=0D1117&color=6EE7B7' }} />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-bold text-white mb-1">Carolina Pereira</h4>
+                    <p className="text-accent text-[10px] font-bold uppercase tracking-widest">Co-Founder & Managing Director</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {['Statistics', 'Strategy', 'Client Management'].map((tag, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-white/70 uppercase tracking-wider">{tag}</span>
+                  ))}
+                </div>
+                <p className="text-white/60 text-sm mb-4 leading-relaxed">Carolina Pereira is the Co-Founder & Managing Director of Survvi Opulence Insights, where she helps clients transform complex strategic objectives into disciplined execution and measurable business outcomes. She brings extensive international consulting experience leading high-value advisory engagements across industrial, infrastructure, and investment sectors, with expertise spanning commercial due diligence, operational strategy, project execution, and investment feasibility. Having worked with multinational corporations, private investors, and international institutions including the World Bank Group and the International Finance Corporation (IFC), Carolina is recognized for her ability to align strategy, operations, and stakeholder interests in complex, cross-border environments. Guided by a commitment to analytical rigor, operational excellence, and client success, she delivers practical, evidence-based solutions that help organizations manage risk, improve performance, and make confident strategic decisions.</p>
+                <blockquote className="border-l-2 border-accent/50 pl-4 py-1 text-white/80 italic text-sm">
+                  "Data without context is noise. We transform complex statistical patterns into strategic foresight that empowers decisive action."
+                </blockquote>
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-8 mt-12 pt-12 border-t border-white/5">
               <div>
                 <p className="text-3xl font-bold text-accent mb-1">7+</p>
@@ -4256,28 +4302,19 @@ Ensure the output is valid JSON only.`,
       {/* 11. Feature: Expert Network Carousel */}
       <section className="py-24 bg-brand-light/10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-16">
-            <h2 className="text-4xl font-bold tracking-tight">Global Talent Synthesis</h2>
-            <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-6">
+            <div>
+              <h2 className="text-4xl font-bold tracking-tight mb-2">Global Talent Synthesis</h2>
+              <p className="text-white/60 max-w-xl">Our extended network of corporate partners, mentors, and strategic advisors driving industry transformation.</p>
+            </div>
+            <div className="flex gap-2 shrink-0">
               <button className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-accent hover:text-brand transition-all"><ChevronRight className="w-6 h-6 rotate-180" /></button>
               <button className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-accent hover:text-brand transition-all"><ChevronRight className="w-6 h-6" /></button>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {[
-              { 
-                name: 'Kunwar Prashant Singh', 
-                role: 'Co-Director', 
-                bio: 'Co-Director of Survvi Oppulence Insights, steering strategic vision and operations.',
-                linkedin: 'https://www.linkedin.com/in/kunwarprashantsingh/'
-              },
-              { 
-                name: 'Carolina Pereira', 
-                role: 'Co-Director', 
-                bio: 'Co-Director of Survvi Oppulence Insights, driving global insights and partnerships.',
-                linkedin: 'https://www.linkedin.com/in/carolinavpereira91/'
-              },
               { 
                 name: 'Michael Kleinman', 
                 role: 'Mentor', 
