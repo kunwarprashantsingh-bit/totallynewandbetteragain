@@ -2329,7 +2329,7 @@ Ensure the output is valid JSON only.`,
                 </div>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-xl bg-accent/10 overflow-hidden border border-white/20 shrink-0">
-                    <img src="/prashant.jpg" alt="Prashant Singh" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Prashant+Singh&background=0D1117&color=6EE7B7' }} />
+                    <img src="/Prashant.jpg" alt="Prashant Singh" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Prashant+Singh&background=0D1117&color=6EE7B7' }} />
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-white mb-1">Prashant Singh</h4>
@@ -2353,7 +2353,7 @@ Ensure the output is valid JSON only.`,
                 </div>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-xl bg-accent/10 overflow-hidden border border-white/20 shrink-0">
-                    <img src="/carolina.jpg" alt="Carolina Pereira" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Carolina+Pereira&background=0D1117&color=6EE7B7' }} />
+                    <img src="/Carolina.jpg" alt="Carolina Pereira" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Carolina+Pereira&background=0D1117&color=6EE7B7' }} />
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-white mb-1">Carolina Pereira</h4>
