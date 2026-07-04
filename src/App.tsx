@@ -5,6 +5,7 @@
 
 import { jsPDF } from 'jspdf';
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
+import { HeroSection } from './components/HeroSection';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   TrendingUp, 
@@ -141,6 +142,7 @@ const GlobalTicker = React.lazy(() => import('./components/GlobalTicker'));
 const BDIChart = React.lazy(() => import('./components/BDIChart'));
 import OpulenceIndexWidget from './components/OpulenceIndexWidget';
 import AIDispatchCompiler from './components/AIDispatchCompiler';
+import { SovereignIntelligenceTerminal } from './components/SovereignIntelligenceTerminal';
 const NewsletterSubscription = React.lazy(() => import('./components/NewsletterSubscription'));
 const ClientIntelligenceSuite = React.lazy(() => import('./components/ClientIntelligenceSuite'));
 const ClientPortal = React.lazy(() => import('./components/ClientPortal'));
@@ -157,7 +159,7 @@ const ToolSkeleton = () => (
   </div>
 );
 
-const Navbar = ({ onMacroClick, language, setLanguage, darkMode, setDarkMode, workspaceCount, onWorkspaceClick, isPremium, onUpgradeClick }: { 
+const Navbar = ({ onMacroClick, language, setLanguage, darkMode, setDarkMode, workspaceCount, onWorkspaceClick, isPremium, onUpgradeClick, setTerminalTab }: { 
   onMacroClick: () => void, 
   language: Language, 
   setLanguage: (l: Language) => void,
@@ -166,7 +168,8 @@ const Navbar = ({ onMacroClick, language, setLanguage, darkMode, setDarkMode, wo
   workspaceCount: number,
   onWorkspaceClick: () => void,
   isPremium: boolean,
-  onUpgradeClick: () => void
+  onUpgradeClick: () => void,
+  setTerminalTab: (tab: 'materials' | 'energy' | 'news' | 'research') => void
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const t = translations[language].nav;
@@ -289,35 +292,53 @@ const Navbar = ({ onMacroClick, language, setLanguage, darkMode, setDarkMode, wo
               <Layers className="w-3.5 h-3.5 text-accent" />
               <span>{t.methodology}</span>
             </a>
-            <a 
-              href="#news" 
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0"
+            <button 
+              onClick={() => {
+                setTerminalTab('news');
+                setTimeout(() => {
+                  const el = document.getElementById('intelligence-terminal');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0 cursor-pointer text-left"
             >
               <Newspaper className="w-3.5 h-3.5 text-accent" />
               <span>{t.news}</span>
-            </a>
+            </button>
             <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-accent/40 mx-1 shrink-0" />
-            <a 
-              href="#research" 
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0"
+            <button 
+              onClick={() => {
+                setTerminalTab('research');
+                setTimeout(() => {
+                  const el = document.getElementById('intelligence-terminal');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0 cursor-pointer text-left"
             >
               <FileText className="w-3.5 h-3.5 text-accent" />
               <span>{t.research}</span>
-            </a>
+            </button>
             <button 
               onClick={onMacroClick} 
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0 cursor-pointer text-left"
             >
               <TrendingUp className="w-3.5 h-3.5 text-accent" />
               <span>{t.macro}</span>
             </button>
-            <a 
-              href="#map" 
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0"
+            <button 
+              onClick={() => {
+                setTerminalTab('research');
+                setTimeout(() => {
+                  const el = document.getElementById('intelligence-terminal');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.12em] text-white hover:text-accent bg-white/5 hover:bg-white/10 border border-white/5 hover:border-accent/30 transition-all shadow-sm shrink-0 cursor-pointer text-left"
             >
               <Globe className="w-3.5 h-3.5 text-accent" />
               <span>{t.global}</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -537,6 +558,7 @@ export default function App() {
   // Feature: Strategic Workspaces
   const [workspace, setWorkspace] = useLocalStorage<any[]>('ai_studio_workspace', []);
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
+  const [terminalTab, setTerminalTab] = useLocalStorage<'materials' | 'energy' | 'news' | 'research'>('ai_studio_terminalTab', 'news');
 
   useEffect(() => {
     const handleAdd = (e: Event) => {
@@ -1246,12 +1268,88 @@ Ensure the output is valid JSON only.`,
   }, [researchReports, activeResearchTab, researchSourceFilter, researchDateFilter]);
 
   const researchChartData = useMemo(() => {
-    const counts: Record<string, number> = {};
-    filteredResearchReports.forEach(report => {
-      counts[report.type] = (counts[report.type] || 0) + 1;
-    });
-    return Object.entries(counts).map(([name, value]) => ({ name, value }));
-  }, [filteredResearchReports]);
+    const dataByTab: Record<string, { metric: string; value: number; projected: number }[]> = {
+      materials: [
+        { metric: "Cement Output (MT)", value: 245, projected: 260 },
+        { metric: "Steel Rebar (kT)", value: 180, projected: 195 },
+        { metric: "Softwood Lumber (Mbf)", value: 320, projected: 340 },
+        { metric: "Glass Capacity (Tons)", value: 150, projected: 155 },
+        { metric: "Gypsum Board (MSF)", value: 95, projected: 102 }
+      ],
+      energy: [
+        { metric: "Crude Production (mb/d)", value: 12.4, projected: 12.8 },
+        { metric: "LNG Export (Bcf/d)", value: 14.1, projected: 15.6 },
+        { metric: "Natural Gas ($/MMBtu)", value: 2.8, projected: 3.2 },
+        { metric: "Coal Output (MT)", value: 85, projected: 80 },
+        { metric: "Renewable Capacity (GW)", value: 220, projected: 250 }
+      ],
+      shipping: [
+        { metric: "BDI (Baltic Dry Index)", value: 1850, projected: 2100 },
+        { metric: "Capesize Rate ($k/day)", value: 24.5, projected: 28.0 },
+        { metric: "Panamax Rate ($k/day)", value: 16.2, projected: 18.5 },
+        { metric: "Bunker Fuel Cost ($/t)", value: 610, projected: 590 },
+        { metric: "Port Delay (Days)", value: 4.2, projected: 3.5 }
+      ],
+      steel: [
+        { metric: "Crude Steel Output (MT)", value: 88.5, projected: 91.2 },
+        { metric: "Hot-Rolled Coil ($/t)", value: 740, projected: 780 },
+        { metric: "Iron Ore Stocks (MT)", value: 120, projected: 115 },
+        { metric: "Met Coal Spot ($/t)", value: 290, projected: 275 },
+        { metric: "Scrap Recycling (MT)", value: 45, projected: 48 }
+      ],
+      chemicals: [
+        { metric: "Ethylene Output (kT)", value: 540, projected: 565 },
+        { metric: "Polyethylene Index (¢/lb)", value: 48.5, projected: 52.0 },
+        { metric: "Ammonia Production (MT)", value: 12.2, projected: 13.5 },
+        { metric: "Chlorine Capacity (kT)", value: 210, projected: 225 },
+        { metric: "Methanol Spot ($/ton)", value: 310, projected: 335 }
+      ],
+      mining: [
+        { metric: "Copper Output (kT)", value: 145, projected: 160 },
+        { metric: "Lithium Carbonate ($k/t)", value: 14.5, projected: 16.8 },
+        { metric: "Nickel Production (Tons)", value: 2800, projected: 3100 },
+        { metric: "Bauxite Shipments (MT)", value: 18.5, projected: 19.2 },
+        { metric: "Cobalt Refining (Tons)", value: 850, projected: 920 }
+      ],
+      agribusiness: [
+        { metric: "Wheat Shipments (MT)", value: 22.4, projected: 24.1 },
+        { metric: "Soybeans (M Bushels)", value: 410, projected: 435 },
+        { metric: "Potash Fertilizer ($/t)", value: 380, projected: 360 },
+        { metric: "Phosphate Deliveries (kT)", value: 155, projected: 165 },
+        { metric: "Corn Futures ($/bu)", value: 4.6, projected: 4.9 }
+      ],
+      logistics: [
+        { metric: "Intermodal Rail (k Cars)", value: 285, projected: 305 },
+        { metric: "Air Freight Index", value: 142, projected: 150 },
+        { metric: "Container Vol (M TEU)", value: 12.5, projected: 13.8 },
+        { metric: "Warehouse Vacancy (%)", value: 4.8, projected: 4.2 },
+        { metric: "LTL Truck Yield ($/mi)", value: 3.10, projected: 3.25 }
+      ],
+      ai: [
+        { metric: "GPU Cluster Power (MW)", value: 85, projected: 120 },
+        { metric: "Cobot Shipments (Units)", value: 1250, projected: 1500 },
+        { metric: "Digital Twin Sites", value: 340, projected: 480 },
+        { metric: "Edge AI Sensors (k)", value: 180, projected: 240 },
+        { metric: "Predictive Acc (%)", value: 92, projected: 96 }
+      ],
+      pharma: [
+        { metric: "API Production (MT)", value: 85.5, projected: 92.0 },
+        { metric: "Cold-Chain Vol (kL)", value: 420, projected: 480 },
+        { metric: "Biologics Volume (MT)", value: 18.2, projected: 21.5 },
+        { metric: "Clinical Trials", value: 145, projected: 160 },
+        { metric: "Generic Dist (M units)", value: 310, projected: 335 }
+      ],
+      other: [
+        { metric: "Global Ind Production (%)", value: 3.2, projected: 3.8 },
+        { metric: "Supply Chain Pressure", value: 1.45, projected: 1.15 },
+        { metric: "Multi-modal Freight Idx", value: 122, projected: 135 },
+        { metric: "Capital Expenditure ($B)", value: 48.5, projected: 54.0 },
+        { metric: "Energy Efficiency Ratio (%)", value: 74.2, projected: 78.5 }
+      ]
+    };
+
+    return dataByTab[activeResearchTab] || dataByTab.other;
+  }, [activeResearchTab]);
 
   const researchSources = useMemo(() => {
     const currentReports = researchReports[activeResearchTab] || [];
@@ -1325,6 +1423,7 @@ Ensure the output is valid JSON only.`,
         onWorkspaceClick={() => setIsWorkspaceOpen(true)}
         isPremium={isPremium}
         onUpgradeClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
+        setTerminalTab={setTerminalTab}
       />
       
       <AnimatePresence>
@@ -1518,6 +1617,122 @@ Ensure the output is valid JSON only.`,
                   )}
                 </div>
               )}
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Research / Oracle Intelligence Report Modal */}
+        {selectedResearchItem && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-brand/90 backdrop-blur flex items-center justify-center p-6"
+            onClick={() => setSelectedResearchItem(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
+              onClick={e => e.stopPropagation()}
+              className="bg-brand border border-white/10 rounded-3xl p-8 max-w-3xl w-full text-left"
+            >
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="px-2 py-0.5 bg-accent/20 text-accent rounded text-[8px] font-extrabold uppercase tracking-widest border border-accent/20">
+                      {selectedResearchItem.source}
+                    </span>
+                    <span className="text-[10px] font-mono text-white/40">
+                      {selectedResearchItem.date}
+                    </span>
+                    {selectedResearchItem.impact && (
+                      <span className={cn(
+                        "px-2 py-0.5 rounded text-[8px] font-bold font-mono uppercase tracking-wider",
+                        selectedResearchItem.impact === 'High' ? 'bg-red-500/10 text-red-400 border border-red-500/10' :
+                        selectedResearchItem.impact === 'Medium' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/10' :
+                        'bg-blue-500/10 text-blue-400 border border-blue-500/10'
+                      )}>
+                        IMPACT: {selectedResearchItem.impact}
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="text-2xl font-bold text-white tracking-tight leading-tight mb-2">
+                    {selectedResearchItem.title}
+                  </h2>
+                  <p className="text-white/40 text-xs">
+                    Type: <span className="text-white/60 font-medium">{selectedResearchItem.type}</span>
+                  </p>
+                </div>
+                <button onClick={() => setSelectedResearchItem(null)} className="p-2 hover:bg-white/10 rounded-full cursor-pointer transition-colors">
+                  <X className="w-6 h-6 text-white" />
+                </button>
+              </div>
+
+              <div className="border-t border-white/10 pt-6">
+                <h4 className="text-[10px] font-extrabold uppercase tracking-widest text-white/40 mb-3">Executive Synopsis</h4>
+                <p className="text-white/80 text-sm leading-relaxed mb-6">
+                  {selectedResearchItem.summary || "Sovereign analysis stream initialized. Decrypting regional market indicators and geopolitical friction thresholds."}
+                </p>
+
+                {/* Tactical briefing section generated via Gemini */}
+                <div className="bg-white/5 border border-white/5 rounded-2xl p-6 min-h-[250px] max-h-80 overflow-y-auto custom-scrollbar">
+                  {loadingResearchInsight ? (
+                    <div className="space-y-4 py-4 animate-pulse">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-3.5 h-3.5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+                        <span className="text-[9px] font-mono font-bold tracking-widest text-accent uppercase">Generating Deep Oracle Macro Insight...</span>
+                      </div>
+                      <div className="h-4 bg-white/10 rounded w-1/3" />
+                      <div className="h-3 bg-white/5 rounded w-full" />
+                      <div className="h-3 bg-white/5 rounded w-[95%]" />
+                      <div className="h-3 bg-white/5 rounded w-[90%]" />
+                    </div>
+                  ) : selectedResearchInsight ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 border-b border-white/5 pb-3 mb-3">
+                        <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+                        <h4 className="text-xs font-extrabold uppercase tracking-widest text-white">Sovereign Strategic Macro-Briefing</h4>
+                      </div>
+                      <div className="text-white/80 text-xs leading-relaxed whitespace-pre-line text-left font-sans">
+                        {selectedResearchInsight}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-10 text-center">
+                      <Bot className="w-8 h-8 text-white/20 mb-3" />
+                      <span className="text-xs text-white/40">No strategic briefing computed yet. Please refresh.</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-8 pt-4 border-t border-white/5">
+                {selectedResearchItem.url && (
+                  <a 
+                    href={selectedResearchItem.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[10px] font-bold text-accent hover:text-white uppercase tracking-widest transition-colors cursor-pointer"
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    Visit Original Reference Source
+                  </a>
+                )}
+                {selectedResearchInsight && (
+                  <button
+                    onClick={() => {
+                      const element = document.createElement("a");
+                      const file = new Blob([`RESEARCH REPORT BRIEFING\n\nTitle: ${selectedResearchItem.title}\nSource: ${selectedResearchItem.source} (${selectedResearchItem.date})\nImpact: ${selectedResearchItem.impact || "N/A"}\n\n${selectedResearchInsight}`], {type: 'text/plain'});
+                      element.href = URL.createObjectURL(file);
+                      element.download = `Sovereign_Briefing_${selectedResearchItem.title.replace(/\s+/g, '_')}.txt`;
+                      document.body.appendChild(element);
+                      element.click();
+                      document.body.removeChild(element);
+                    }}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-accent text-brand rounded-xl text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent-deep transition-all cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 shrink-0" />
+                    Download Briefing
+                  </button>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -1826,7 +2041,7 @@ Ensure the output is valid JSON only.`,
                             </div>
                             <ul className="text-xs text-white/60 space-y-2 mb-6">
                               <li className="flex items-center gap-2">✓ All Sovereign Analytics Benefits</li>
-                              <li className="flex items-center gap-2">✓ 1-on-1 Advising with Prashant</li>
+                              <li className="flex items-center gap-2">✓ Direct 1-on-1 access to analysts</li>
                               <li className="flex items-center gap-2">✓ Custom Digital Twin Scenarios</li>
                               <li className="flex items-center gap-2">✓ Private Geopolitical Defense briefings</li>
                             </ul>
@@ -2016,108 +2231,7 @@ Ensure the output is valid JSON only.`,
       <IndustryHeatmap data={marketData} loading={loadingMarket} />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-        {/* Background Gradients */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/15 blur-[150px] rounded-full animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent-deep/5 blur-[150px] rounded-full" />
-        
-        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-16 items-center z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/25 text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-8 shadow-[0_0_15px_rgba(197,160,89,0.05)]">
-              <Activity className="w-3.5 h-3.5 animate-pulse" />
-              {t.hero.badge}
-            </div>
-            <h1 className="text-5xl md:text-7xl font-display font-extrabold mb-8 leading-[1.1] tracking-tight bg-gradient-to-br from-white via-white to-accent bg-clip-text text-transparent">
-              {t.hero.title}
-            </h1>
-            <p className="text-lg md:text-xl text-text/50 font-light max-w-lg mb-10 leading-relaxed">
-              {t.hero.subtitle}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button className="bg-gradient-to-r from-accent to-accent-deep hover:from-accent-deep hover:to-accent text-brand px-8 py-4 rounded-full font-bold text-base hover:scale-105 hover:shadow-[0_4px_25px_rgba(197,160,89,0.35)] transition-all duration-300 transform active:scale-95">
-                {t.hero.cta1}
-              </button>
-              <button className="border border-white/10 hover:border-accent/40 px-8 py-4 rounded-full font-bold text-base hover:bg-white/5 transition-all duration-300 transform hover:-translate-y-0.5 text-text/90">
-                {t.hero.cta2}
-              </button>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative"
-          >
-            {/* 2. Feature: Dynamic Market Visualization Deck */}
-            <div className="bg-brand-light/60 backdrop-blur-2xl border border-white/5 rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-accent/10 transition-colors duration-500">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h3 className="text-lg font-bold font-display tracking-tight text-white">{t.hero.indexTitle}</h3>
-                  <p className="text-xs text-text/40">{t.hero.indexSubtitle}</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-accent font-mono font-bold text-lg">+4.2%</span>
-                  <p className="text-[9px] text-text/40 uppercase tracking-widest">{t.hero.changeLabel}</p>
-                </div>
-              </div>
-              
-              <div className="h-64 w-full relative">
-                {loadingMarket && (
-                  <div className="absolute inset-0 z-20 flex items-center justify-center bg-brand/50 backdrop-blur-sm rounded-xl">
-                    <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin" />
-                  </div>
-                )}
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}>
-                    <defs>
-                      <linearGradient id="colorHeroValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.25}/>
-                        <stop offset="95%" stopColor="var(--accent)" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <YAxis hide domain={['auto', 'auto']} />
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px' }}
-                      itemStyle={{ color: 'var(--accent)' }}
-                    />
-                    <Area type="monotone" dataKey="value" stroke="var(--accent)" fillOpacity={1} fill="url(#colorHeroValue)" strokeWidth={2.5} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-white/5">
-                <div className="text-center">
-                  <p className="text-[10px] text-white/40 uppercase mb-1 tracking-wider">{t.hero.volatility}</p>
-                  <p className="font-mono font-semibold text-sm text-accent">{t.hero.low}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-[10px] text-white/40 uppercase mb-1 tracking-wider">{t.hero.sentiment}</p>
-                  <p className="font-mono font-semibold text-sm text-accent">{t.hero.bullish}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-[10px] text-white/40 uppercase mb-1 tracking-wider">{t.hero.liquidity}</p>
-                  <p className="font-mono font-semibold text-sm text-accent">{t.hero.high}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Info Card */}
-            <div className="absolute -bottom-6 -left-6 bg-brand-light/95 backdrop-blur-xl border border-accent/30 text-text p-5 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.4)] max-w-[220px] hover:scale-[1.02] transition-transform duration-300">
-              <div className="flex items-center gap-2 mb-2">
-                <ShieldCheck className="w-4 h-4 text-accent" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-accent">{t.hero.verified}</span>
-              </div>
-              <p className="text-xs font-light text-text/80 leading-relaxed">{t.hero.sourceInfo}</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <HeroSection language={language} />
 
       {/* 3. Feature: Global Time & IP Localization Hub */}
       <section className="py-12 bg-brand-light/20 border-y border-white/5">
@@ -2681,1286 +2795,36 @@ Ensure the output is valid JSON only.`,
         </div>
       </section>
 
-      {/* 6. Feature: Interactive Material Library (3D Cards) */}
-      <section id="materials" className="py-14 md:py-16 bg-brand-light/10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
-            <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
-                <Building2 className="w-3 h-3" />
-                Sector Story
-              </div>
-              <h2 className="text-4xl font-bold mb-4 tracking-tight">The Future of Foundations</h2>
-              <p className="text-white/50">
-                Prashant's vision for building materials goes beyond supply chains. It's about the "Molecular Revolution"—transforming how we perceive the very atoms of our infrastructure. We don't just track cement; we track the evolution of human shelter.
-              </p>
-            </div>
-            <button className="flex items-center gap-2 text-accent font-bold hover:gap-4 transition-all">
-              Explore the Narrative <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { name: 'Self-Healing Concrete', source: 'ETH Zurich', img: 'https://picsum.photos/seed/concrete/800/600' },
-              { name: 'Aerogel Insulation', source: 'NASA Spinoff', img: 'https://picsum.photos/seed/aerogel/800/600' },
-              { name: 'Transparent Wood', source: 'KTH Royal Institute', img: 'https://picsum.photos/seed/wood/800/600' },
-              { name: 'Graphene Steel', source: 'Manchester Graphene', img: 'https://picsum.photos/seed/graphene/800/600' },
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ y: -10 }}
-                className="relative group overflow-hidden rounded-2xl aspect-[3/4] shadow-xl"
-              >
-                <img 
-                  src={item.img} 
-                  alt={item.name} 
-                  className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand via-brand/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-1">Source: {item.source}</p>
-                  <h4 className="text-lg font-bold leading-tight">{item.name}</h4>
-                </div>
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
-                    <Play className="w-4 h-4 text-white fill-white" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Feature: Energy Transition Tracker (Live Data) */}
-      <section id="energy" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-6">
-              <Zap className="w-3 h-3" />
-              Energy Narrative
-            </div>
-            <h2 className="text-4xl font-bold mb-6 tracking-tight">Powering the Transition</h2>
-            <p className="text-white/60 mb-8 leading-relaxed">
-              "Energy is the lifeblood of civilization, but its current form is unsustainable," Prashant notes. Our energy story is one of transition—moving from extraction to optimization. We help legacy giants navigate the turbulent waters of decarbonization while ensuring global stability.
-            </p>
-            <div className="space-y-8">
-              {[
-                { label: 'Renewable Integration', value: 34, color: 'bg-accent' },
-                { label: 'Fossil Fuel Decoupling', value: 18, color: 'bg-accent-deep' },
-                { label: 'Grid Modernization', value: 56, color: 'bg-yellow-500' },
-              ].map((item, i) => (
-                <div key={i}>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm font-medium text-white/70">{item.label}</span>
-                    <span className="text-sm font-bold">{item.value}%</span>
-                  </div>
-                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${item.value}%` }}
-                      transition={{ duration: 1, delay: i * 0.2 }}
-                      className={cn("h-full rounded-full", item.color)} 
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="mt-12 text-white/40 text-sm italic">
-              *Data aggregated from International Energy Agency (IEA) and BloombergNEF. 
-              Updated daily at 00:00 GMT.
-            </p>
-          </div>
-
-          {/* Right Column: Custom Interactive Energy Transition Visualization Card */}
-          <div className="bg-brand-light/40 backdrop-blur-md border border-white/5 rounded-3xl p-8 shadow-xl">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-lg font-bold font-display tracking-tight text-white">Sovereign Grid Transition Model</h3>
-                <p className="text-xs text-white/40">Clean vs. Legacy Generation Decoupling Curve</p>
-              </div>
-              <div className="text-right">
-                <span className="text-emerald-400 font-mono font-bold text-lg">+12.4%</span>
-                <p className="text-[9px] text-white/40 uppercase tracking-widest">YTD Renewables Growth</p>
-              </div>
-            </div>
-
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={[
-                  { year: '2020', clean: 20, fossil: 80 },
-                  { year: '2021', clean: 24, fossil: 76 },
-                  { year: '2022', clean: 28, fossil: 72 },
-                  { year: '2023', clean: 31, fossil: 69 },
-                  { year: '2024', clean: 34, fossil: 66 },
-                  { year: '2025', clean: 38, fossil: 62 },
-                  { year: '2026', clean: 42, fossil: 58 },
-                ]}>
-                  <defs>
-                    <linearGradient id="colorClean" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorFossil" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="year" stroke="rgba(255,255,255,0.2)" fontSize={10} tickLine={false} />
-                  <YAxis hide domain={['auto', 'auto']} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px' }}
-                    itemStyle={{ color: 'var(--accent)' }}
-                  />
-                  <Area type="monotone" dataKey="clean" name="Renewable Power" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorClean)" />
-                  <Area type="monotone" dataKey="fossil" name="Fossil Base" stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3 3" fillOpacity={1} fill="url(#colorFossil)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/5">
-              <div>
-                <p className="text-[9px] text-white/40 uppercase mb-1 tracking-wider">Carbon Offsetting</p>
-                <p className="font-mono font-semibold text-xs text-emerald-400">42,500 Mt CO2e / yr</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[9px] text-white/40 uppercase mb-1 tracking-wider">ESG Rating</p>
-                <p className="font-mono font-semibold text-xs text-accent">Sovereign Grade A+</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Feature: Astraeus News Hub */}
-      <section id="news" className="py-14 md:py-16 px-6 bg-brand-light/20 relative overflow-hidden rounded-3xl mb-12 border border-white/5 max-w-7xl mx-auto">
-            <div className="max-w-7xl mx-auto relative z-10">
-              <div className="flex flex-col items-center text-center mb-10 gap-6">
-                <div className="max-w-2xl">
-                  <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
-                    <Newspaper className="w-3 h-3" />
-                    Global Intelligence
-                  </div>
-                  <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4">{t.news.title}</h2>
-                  <p className="text-white/40 text-lg">
-                    {t.news.subtitle}
-                  </p>
-                </div>
-                
-                <div className="flex flex-wrap gap-4 items-center justify-center">
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {NEWS_TOPICS.map((topic) => (
-                      <button
-                        key={topic}
-                        onClick={() => {
-                          setActiveNewsTopic(topic);
-                          trackUsage(topic);
-                        }}
-                        onMouseEnter={() => {
-                          fetchNewsletter(topic, newsletterDate);
-                        }}
-                        className={cn(
-                          "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all border",
-                          activeNewsTopic === topic 
-                            ? "bg-accent text-brand border-accent shadow-lg shadow-accent/20" 
-                            : "bg-white/5 text-white/40 border-white/10 hover:border-white/30"
-                        )}
-                      >
-                        {topic}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-4 py-2">
-                    <Clock className="w-3 h-3 text-accent" />
-                    <input 
-                      type="date" 
-                      value={newsletterDate}
-                      onChange={(e) => setNewsletterDate(e.target.value)}
-                      min="2026-03-16"
-                      max="2026-12-31"
-                      className="bg-transparent text-[10px] font-bold uppercase tracking-widest text-white focus:outline-none cursor-pointer"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-8 max-w-5xl mx-auto">
-                {/* 🚨 Geopolitical Risk Flash Bulletins Widget */}
-                <div className="w-full bg-brand/50 border border-white/10 rounded-3xl p-5 lg:p-6 backdrop-blur-md">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4 mb-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex items-center gap-1.5 px-2 py-0.5 bg-red-500/10 border border-red-500/35 rounded text-[8px] font-extrabold text-red-400 tracking-wider">
-                        <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-ping" />
-                        LIVE INTEL FEED
-                      </div>
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/40">Sovereign Geopolitical Alerts</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 ml-auto sm:ml-0">
-                      <button 
-                        onClick={() => {
-                          setDiscloseBulletin(false);
-                          setActiveBulletinIdx(prev => (prev === 0 ? GEOPOLITICAL_BULLETINS.length - 1 : prev - 1));
-                        }}
-                        className="p-1 hover:bg-white/5 rounded border border-white/5 text-white/40 hover:text-white transition-all text-xs"
-                      >
-                        ◀
-                      </button>
-                      <span className="text-[9px] font-mono text-white/40">{activeBulletinIdx + 1} / {GEOPOLITICAL_BULLETINS.length}</span>
-                      <button 
-                        onClick={() => {
-                          setDiscloseBulletin(false);
-                          setActiveBulletinIdx(prev => (prev === GEOPOLITICAL_BULLETINS.length - 1 ? 0 : prev + 1));
-                        }}
-                        className="p-1 hover:bg-white/5 rounded border border-white/5 text-white/40 hover:text-white transition-all text-xs"
-                      >
-                        ▶
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start justify-between gap-6">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className={cn(
-                          "px-2 py-0.5 rounded text-[7px] font-extrabold uppercase tracking-widest font-mono",
-                          GEOPOLITICAL_BULLETINS[activeBulletinIdx].threat === 'critical' ? 'bg-red-500/15 text-red-400 border border-red-500/20 animate-pulse' :
-                          GEOPOLITICAL_BULLETINS[activeBulletinIdx].threat === 'moderate' ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20' :
-                          GEOPOLITICAL_BULLETINS[activeBulletinIdx].threat === 'optimal' ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20' :
-                          'bg-blue-500/15 text-blue-400 border border-blue-500/20'
-                        )}>
-                          THREAT LEVEL: {GEOPOLITICAL_BULLETINS[activeBulletinIdx].threat}
-                        </span>
-                        <span className="text-[9px] font-extrabold text-accent uppercase tracking-widest">{GEOPOLITICAL_BULLETINS[activeBulletinIdx].topic}</span>
-                      </div>
-                      <h4 className="text-sm font-bold text-white tracking-tight leading-relaxed">{GEOPOLITICAL_BULLETINS[activeBulletinIdx].title}</h4>
-                    </div>
-
-                    <button 
-                      onClick={() => setDiscloseBulletin(!discloseBulletin)}
-                      className="px-3.5 py-1.5 bg-white/5 hover:bg-accent hover:text-brand border border-white/10 hover:border-accent rounded-full text-[9px] font-extrabold uppercase tracking-widest transition-all shrink-0"
-                    >
-                      {discloseBulletin ? 'Close Assessment' : 'Disclose Assessment'}
-                    </button>
-                  </div>
-
-                  {/* Bulletin disclosure drawer */}
-                  <AnimatePresence>
-                    {discloseBulletin && (
-                      <motion.div 
-                        initial={{ opacity: 0, height: 0 }} 
-                        animate={{ opacity: 1, height: 'auto' }} 
-                        exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden mt-4 border-t border-white/5 pt-4"
-                      >
-                        <div className="grid sm:grid-cols-3 gap-4 text-[10px]">
-                          <div className="p-3 bg-brand-light/30 border border-white/5 rounded-xl">
-                            <span className="text-white/40 uppercase font-bold tracking-wider block mb-1">Target Commodities</span>
-                            <span className="text-white font-extrabold text-xs">{GEOPOLITICAL_BULLETINS[activeBulletinIdx].commodity}</span>
-                          </div>
-                          <div className="p-3 bg-brand-light/30 border border-white/5 rounded-xl">
-                            <span className="text-white/40 uppercase font-bold tracking-wider block mb-1">Estimated Industry Impact</span>
-                            <span className="text-white/80 leading-relaxed block">{GEOPOLITICAL_BULLETINS[activeBulletinIdx].impact}</span>
-                          </div>
-                          <div className="p-3 bg-brand-light/30 border border-white/5 rounded-xl">
-                            <span className="text-accent uppercase font-bold tracking-wider block mb-1">Tactical Action Counter-Measure</span>
-                            <span className="text-white/95 font-semibold leading-relaxed block">{GEOPOLITICAL_BULLETINS[activeBulletinIdx].action}</span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Interactive Search, Filters, and Briefcase Drawer */}
-                <div className="w-full flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between mt-4">
-                  <div className="flex flex-1 flex-wrap gap-3 items-center">
-                    {/* Search Input */}
-                    <div className="relative flex-1 min-w-[220px]">
-                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                      <input
-                        type="text"
-                        placeholder="Search bulletins..."
-                        value={newsSearchQuery}
-                        onChange={(e) => setNewsSearchQuery(e.target.value)}
-                        className="w-full pl-11 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-xs text-white placeholder-white/30 focus:outline-none focus:border-accent/40 transition-all"
-                      />
-                      {newsSearchQuery && (
-                        <button 
-                          onClick={() => setNewsSearchQuery("")}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-extrabold uppercase tracking-wider text-accent hover:text-white"
-                        >
-                          Clear
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Sentiment Dropdown */}
-                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 min-w-[140px]">
-                      <span className="text-white/40 text-[9px] font-extrabold uppercase tracking-widest shrink-0">Sentiment:</span>
-                      <select
-                        value={newsSentimentFilter}
-                        onChange={(e) => setNewsSentimentFilter(e.target.value)}
-                        className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer flex-1"
-                      >
-                        <option value="All" className="bg-brand text-white">All</option>
-                        <option value="Bullish" className="bg-brand text-emerald-400">📈 Bullish</option>
-                        <option value="Bearish" className="bg-brand text-rose-400">📉 Bearish</option>
-                        <option value="Neutral" className="bg-brand text-amber-400">⚖️ Neutral</option>
-                      </select>
-                    </div>
-
-                    {/* Impact Dropdown */}
-                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 min-w-[130px]">
-                      <span className="text-white/40 text-[9px] font-extrabold uppercase tracking-widest shrink-0">Impact:</span>
-                      <select
-                        value={newsImpactFilter}
-                        onChange={(e) => setNewsImpactFilter(e.target.value)}
-                        className="bg-transparent text-xs font-bold text-white focus:outline-none cursor-pointer flex-1"
-                      >
-                        <option value="All" className="bg-brand text-white">All</option>
-                        <option value="High" className="bg-brand text-red-400">High</option>
-                        <option value="Medium" className="bg-brand text-amber-400">Medium</option>
-                        <option value="Low" className="bg-brand text-blue-400">Low</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Briefcase Button */}
-                  <button
-                    onClick={() => setIsBriefcaseOpen(!isBriefcaseOpen)}
-                    className={cn(
-                      "flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-extrabold uppercase tracking-widest transition-all border shrink-0",
-                      isBriefcaseOpen || pinnedNews.length > 0
-                        ? "bg-accent/10 border-accent/30 text-accent hover:bg-accent/20"
-                        : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
-                    )}
-                  >
-                    <Bookmark className={cn("w-3.5 h-3.5", pinnedNews.length > 0 && "fill-accent text-accent")} />
-                    Briefcase
-                    {pinnedNews.length > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-accent text-brand text-[9px] font-black ml-1 animate-pulse">
-                        {pinnedNews.length}
-                      </span>
-                    )}
-                  </button>
-                </div>
-
-                {/* Collapsible Intelligence Briefcase Panel */}
-                <AnimatePresence>
-                  {isBriefcaseOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -20, height: 0 }}
-                      animate={{ opacity: 1, y: 0, height: "auto" }}
-                      exit={{ opacity: 0, y: -20, height: 0 }}
-                      className="w-full bg-accent/5 border border-accent/20 rounded-3xl p-6 overflow-hidden backdrop-blur-md text-left"
-                    >
-                      <div className="flex items-center justify-between border-b border-accent/10 pb-4 mb-4">
-                        <div className="flex items-center gap-2.5">
-                          <Bookmark className="w-5 h-5 text-accent fill-accent" />
-                          <div>
-                            <h4 className="text-sm font-extrabold text-white tracking-wider uppercase">My Intelligence Briefcase</h4>
-                            <p className="text-[9px] text-white/40 uppercase tracking-widest font-semibold">Curate dynamic bulletins for advanced tactical synthesis</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          {pinnedNews.length > 0 && (
-                            <button
-                              onClick={() => setPinnedNews([])}
-                              className="text-white/40 hover:text-red-400 text-[10px] font-extrabold uppercase tracking-widest transition-colors"
-                            >
-                              Clear All
-                            </button>
-                          )}
-                          <button
-                            onClick={() => setIsBriefcaseOpen(false)}
-                            className="p-1 hover:bg-white/5 rounded text-white/40 hover:text-white transition-all"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {pinnedNews.length === 0 ? (
-                        <div className="text-center py-8 text-white/30 text-xs italic">
-                          Your briefcase is empty. Click the bookmark icon on any bulletin below to pin it here.
-                        </div>
-                      ) : (
-                        <div className="grid lg:grid-cols-12 gap-6">
-                          <div className="lg:col-span-5 flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                            {pinnedNews.map((article, idx) => (
-                              <div 
-                                key={idx} 
-                                className="group flex items-start justify-between gap-4 p-3 bg-white/5 border border-white/5 rounded-xl hover:border-accent/20 transition-all"
-                              >
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                    <span className="text-[9px] font-bold text-accent uppercase tracking-wider">{article.source}</span>
-                                    {article.sentiment && (
-                                      <span className={cn(
-                                        "text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider",
-                                        article.sentiment === "Bullish" ? "bg-emerald-500/10 text-emerald-400" :
-                                        article.sentiment === "Bearish" ? "bg-red-500/10 text-red-400" :
-                                        "bg-white/5 text-white/40"
-                                      )}>
-                                        {article.sentiment}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <h5 className="text-xs font-bold text-white leading-snug line-clamp-1 group-hover:text-accent transition-colors">
-                                    {article.title}
-                                  </h5>
-                                  <p className="text-[10px] text-white/40 line-clamp-1 mt-0.5 leading-relaxed">
-                                    {article.summary}
-                                  </p>
-                                </div>
-                                <button
-                                  onClick={() => togglePinNews(article)}
-                                  className="p-1 text-white/30 hover:text-red-400 hover:bg-white/5 rounded transition-all shrink-0"
-                                  title="Remove from briefcase"
-                                >
-                                  <X className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="lg:col-span-7 border-t lg:border-t-0 lg:border-l border-white/5 pt-6 lg:pt-0 lg:pl-6 flex flex-col justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between mb-3">
-                                <span className="text-[10px] font-extrabold uppercase tracking-widest text-accent">Strategic Synthesis Brief</span>
-                                {briefcaseAnalysis && (
-                                  <button
-                                    onClick={() => {
-                                      const element = document.createElement("a");
-                                      const file = new Blob([briefcaseAnalysis], {type: 'text/plain'});
-                                      element.href = URL.createObjectURL(file);
-                                      element.download = `Sovereign_Briefing_${new Date().toISOString().split('T')[0]}.txt`;
-                                      document.body.appendChild(element);
-                                      element.click();
-                                      document.body.removeChild(element);
-                                    }}
-                                    className="flex items-center gap-1 text-[9px] font-bold text-white/50 hover:text-accent uppercase tracking-widest transition-colors"
-                                  >
-                                    <Download className="w-3.5 h-3.5" />
-                                    Export Brief
-                                  </button>
-                                )}
-                              </div>
-
-                              {synthesizingBriefcase ? (
-                                <div className="flex flex-col items-center justify-center py-10 text-center">
-                                  <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-3" />
-                                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/40 animate-pulse">Running Deep Sovereign Synthesis Engine...</span>
-                                  <span className="text-[8px] text-accent/50 font-mono mt-1">CROSS-CORRELATING REGIONAL TARIFFS & ENERGY FLOWS...</span>
-                                </div>
-                              ) : briefcaseAnalysis ? (
-                                <div className="bg-brand-light/30 border border-white/5 rounded-xl p-4 text-[11px] leading-relaxed text-white/80 max-h-[180px] overflow-y-auto whitespace-pre-line text-left custom-scrollbar">
-                                  {briefcaseAnalysis}
-                                </div>
-                              ) : (
-                                <div className="flex flex-col items-center justify-center py-10 text-center bg-white/5 border border-dashed border-white/10 rounded-xl">
-                                  <Sparkles className="w-5 h-5 text-accent/40 mb-2 animate-pulse" />
-                                  <p className="text-[10px] text-white/40 font-semibold uppercase tracking-wider">Strategic Synthesis Idle</p>
-                                  <p className="text-[9px] text-white/30 mt-1 max-w-xs">Click synthesize below to run our sovereign LLM over your selection.</p>
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="mt-4 pt-3 border-t border-white/5">
-                              <button
-                                onClick={handleSynthesizeBriefcase}
-                                disabled={synthesizingBriefcase || pinnedNews.length === 0}
-                                className="w-full py-2.5 bg-accent text-brand rounded-xl text-[10px] font-extrabold uppercase tracking-widest hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-accent/10"
-                              >
-                                <Sparkles className="w-3.5 h-3.5" />
-                                Synthesize Selected ({pinnedNews.length}) bulletins
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Featured Article */}
-                <div className="w-full">
-                  {loadingNewsletter ? (
-                    <div className="aspect-video bg-white/5 rounded-3xl animate-pulse flex items-center justify-center">
-                      <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                    </div>
-                  ) : filteredNewsletterNews.length > 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="group relative aspect-[16/10] lg:aspect-[21/9] rounded-3xl overflow-hidden border border-white/10 bg-brand"
-                    >
-                      <img 
-                        src={`https://picsum.photos/seed/${activeNewsTopic}-featured/1200/800`} 
-                        alt={filteredNewsletterNews[0].title}
-                        className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-brand via-brand/40 to-transparent" />
-                      <div className="absolute inset-0 p-8 lg:p-12 flex flex-col justify-end items-center text-center">
-                        <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
-                          <span className="px-3 py-1 rounded-full bg-accent text-brand text-[10px] font-bold uppercase tracking-widest">Featured</span>
-                          <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{filteredNewsletterNews[0].date}</span>
-                          
-                          {/* Sentiment Pill */}
-                          {(filteredNewsletterNews[0].sentiment || "Neutral") && (
-                            <span className={cn(
-                              "px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border flex items-center gap-1",
-                              (filteredNewsletterNews[0].sentiment || "Neutral") === "Bullish" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
-                              (filteredNewsletterNews[0].sentiment || "Neutral") === "Bearish" ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                              "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                            )}>
-                              {(filteredNewsletterNews[0].sentiment || "Neutral") === "Bullish" ? <TrendingUp className="w-3 h-3" /> : null}
-                              {(filteredNewsletterNews[0].sentiment || "Neutral") === "Bearish" ? <ArrowDownRight className="w-3 h-3" /> : null}
-                              {filteredNewsletterNews[0].sentiment || "Neutral"}
-                            </span>
-                          )}
-
-                          {/* Impact Pill */}
-                          {(filteredNewsletterNews[0].impact || "Medium") && (
-                            <span className={cn(
-                              "px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest border",
-                              (filteredNewsletterNews[0].impact || "Medium") === "High" ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                              (filteredNewsletterNews[0].impact || "Medium") === "Medium" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
-                              "bg-blue-500/10 text-blue-400 border-blue-500/20"
-                            )}>
-                              Impact: {filteredNewsletterNews[0].impact || "Medium"}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight tracking-tight group-hover:text-accent transition-colors max-w-3xl mx-auto">
-                          {filteredNewsletterNews[0].title}
-                        </h3>
-                        <p className="text-white/60 text-lg mb-8 line-clamp-3 leading-relaxed max-w-2xl mx-auto">
-                          {filteredNewsletterNews[0].summary}
-                        </p>
-                        <div className="flex flex-wrap items-center justify-center gap-6">
-                          <div className="flex items-center gap-2">
-                            <span className="text-white/40 text-xs uppercase tracking-widest">Source:</span>
-                            <span className="text-accent text-xs font-bold uppercase tracking-widest">{filteredNewsletterNews[0].source}</span>
-                          </div>
-
-                          <div className="flex items-center gap-3">
-                            {/* Pin Button */}
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                togglePinNews(filteredNewsletterNews[0]);
-                              }}
-                              className={cn(
-                                "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all",
-                                pinnedNews.some(item => item.title === filteredNewsletterNews[0].title)
-                                  ? "bg-accent text-brand border-accent"
-                                  : "bg-white/5 border-white/10 text-white/60 hover:text-white"
-                              )}
-                            >
-                              <Bookmark className={cn("w-3 h-3", pinnedNews.some(item => item.title === filteredNewsletterNews[0].title) && "fill-brand")} />
-                              {pinnedNews.some(item => item.title === filteredNewsletterNews[0].title) ? "Pinned" : "Pin Article"}
-                            </button>
-
-                            <button className="flex items-center gap-2 text-white font-bold uppercase tracking-widest text-xs group/btn">
-                              Read Full Insight
-                              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <div className="aspect-video bg-white/5 border border-dashed border-white/10 rounded-3xl flex flex-col items-center justify-center p-8 text-center text-white/30">
-                      <Newspaper className="w-10 h-10 text-white/20 mb-3" />
-                      <p className="text-base font-bold text-white/60">No items match filters</p>
-                      <p className="text-xs text-white/40 mt-1 mb-4">Try relaxing your search query or sentiment options.</p>
-                      <button
-                        onClick={() => {
-                          setNewsSearchQuery("");
-                          setNewsSentimentFilter("All");
-                          setNewsImpactFilter("All");
-                        }}
-                        className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-white transition-all"
-                      >
-                        Reset All Filters
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Sidebar Articles -> Now Below Featured */}
-                <div className="w-full grid md:grid-cols-2 gap-6">
-                  {loadingNewsletter ? (
-                    Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="h-32 bg-white/5 rounded-2xl animate-pulse" />
-                    ))
-                  ) : filteredNewsletterNews.slice(1).map((article, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      className="group p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-accent/30 transition-all cursor-pointer flex flex-col items-start text-left relative"
-                    >
-                      <div className="flex items-center justify-between w-full mb-3 gap-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-accent text-[10px] font-bold uppercase tracking-widest">{article.source}</span>
-                          <span className="w-1 h-1 bg-white/20 rounded-full" />
-                          <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{article.date}</span>
-                          
-                          {/* Sentiment badges */}
-                          {article.sentiment && (
-                            <span className={cn(
-                              "text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider",
-                              article.sentiment === "Bullish" ? "bg-emerald-500/10 text-emerald-400" :
-                              article.sentiment === "Bearish" ? "bg-rose-500/10 text-rose-400" :
-                              "bg-amber-500/10 text-amber-400"
-                            )}>
-                              {article.sentiment}
-                            </span>
-                          )}
-
-                          {/* Impact badges */}
-                          {article.impact && (
-                            <span className={cn(
-                              "text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider",
-                              article.impact === "High" ? "bg-red-500/10 text-red-400" :
-                              article.impact === "Medium" ? "bg-amber-500/10 text-amber-400" :
-                              "bg-blue-500/10 text-blue-400"
-                            )}>
-                              {article.impact}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Pin bookmark icon */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            togglePinNews(article);
-                          }}
-                          className="p-1 hover:bg-white/5 rounded-full text-white/40 hover:text-accent transition-all shrink-0"
-                          title="Pin bulletin"
-                        >
-                          <Bookmark className={cn("w-3.5 h-3.5", pinnedNews.some(item => item.title === article.title) && "fill-accent text-accent")} />
-                        </button>
-                      </div>
-
-                      <h4 className="text-lg font-bold text-white mb-2 group-hover:text-accent transition-colors line-clamp-2">
-                        {article.title}
-                      </h4>
-                      <p className="text-white/40 text-sm line-clamp-2 leading-relaxed">
-                        {article.summary}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-                <AIDispatchCompiler articles={filteredNewsletterNews} topic={activeNewsTopic} />
-              </div>
-
-              <NewsletterSubscription />
-            </div>
-          </section>
-
-          {/* 9. Feature: Research Hub & Sovereign Oracle */}
-          <section id="research-section" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
-            <div id="research" className="bg-brand-light/30 border border-white/10 rounded-3xl p-8 shadow-2xl">
-            <div className="mb-8 border-b border-white/5 pb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
-                <Search className="w-3 h-3" />
-                Intelligence Story
-              </div>
-              <h3 className="text-2xl font-bold mb-4">The Industrial Oracle</h3>
-              <p className="text-white/50 text-sm leading-relaxed">
-                "Data without context is just noise," Prashant often says. Our Research Hub is the "Industrial Oracle"—a synthesis of human expertise and machine learning that filters the global noise into actionable strategic signals. We don't just report on markets; we interpret their soul.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <h3 className="text-xl font-bold">{t.research.title}</h3>
-              <div className="flex flex-wrap items-center gap-3">
-                <button
-                  onClick={handleSynthesizeSectorOutlook}
-                  disabled={synthesizingSector}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded bg-accent/10 border border-accent/20 text-accent hover:bg-accent hover:text-brand transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">Synthesize Sector Outlook</span>
-                </button>
-                <button
-                  onClick={handleGeneratePdf}
-                  disabled={generatingPdf}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded bg-accent text-brand hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {generatingPdf ? (
-                    <>
-                      <div className="w-3 h-3 border-2 border-brand border-t-transparent rounded-full animate-spin" />
-                      <span className="text-[10px] font-bold uppercase tracking-widest">{t.research.generatingPdf}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Search className="w-3 h-3" />
-                      <span className="text-[10px] font-bold uppercase tracking-widest">{t.research.generatePdf}</span>
-                    </>
-                  )}
-                </button>
-                <div className="flex items-center gap-2 px-2 py-1 rounded bg-accent/10 border border-accent/20">
-                  <Globe className="w-3 h-3 text-accent" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-accent">{t.research.subtitle}</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Tabs */}
-            <div className="flex border-b border-white/10 mb-8 overflow-x-auto scrollbar-hide">
-              {[
-                { id: 'materials', label: t.sectors.materials },
-                { id: 'energy', label: t.sectors.energy },
-                { id: 'shipping', label: t.sectors.shipping },
-                { id: 'steel', label: t.sectors.steel },
-                { id: 'chemicals', label: t.sectors.chemicals },
-                { id: 'mining', label: t.sectors.mining },
-                { id: 'agribusiness', label: t.sectors.agribusiness },
-                { id: 'logistics', label: t.sectors.logistics },
-                { id: 'ai', label: t.sectors.ai },
-                { id: 'pharma', label: t.sectors.pharma },
-                { id: 'other', label: t.sectors.other }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveResearchTab(tab.id as any);
-                    setResearchSourceFilter("");
-                    setResearchDateFilter("");
-                    trackUsage(tab.id);
-                  }}
-                  onMouseEnter={() => {
-                    // Predictive Pre-fetching
-                    fetchResearch(tab.id as any);
-                  }}
-                  className={cn(
-                    "px-6 py-3 text-sm font-bold uppercase tracking-widest transition-all border-b-2 whitespace-nowrap",
-                    activeResearchTab === tab.id 
-                      ? "border-accent text-accent" 
-                      : "border-transparent text-white/40 hover:text-white"
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Sector Outlook Collapsible Panel */}
-            <AnimatePresence>
-              {showSectorSynthesisModal && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mb-8 p-6 bg-accent/5 border border-accent/20 rounded-3xl overflow-hidden text-left"
-                >
-                  <div className="flex items-center justify-between border-b border-accent/10 pb-4 mb-4">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-accent animate-pulse" />
-                      <h4 className="text-xs font-extrabold uppercase tracking-widest text-white">Sovereign Sector Macro-Outlook: {activeResearchTab.toUpperCase()}</h4>
-                    </div>
-                    <button
-                      onClick={() => setShowSectorSynthesisModal(false)}
-                      className="text-white/40 hover:text-white transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {synthesizingSector ? (
-                    <div className="flex flex-col items-center justify-center py-8 text-center">
-                      <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-3" />
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-white/40 animate-pulse">Assembling Sovereign Micro-Outlook Matrix...</span>
-                      <span className="text-[8px] text-accent/50 font-mono mt-1">CROSS-CORRELATING REGIONAL DATA SOURCES...</span>
-                    </div>
-                  ) : sectorSynthesis ? (
-                    <div className="space-y-4">
-                      <div className="text-xs leading-relaxed text-white/80 whitespace-pre-line bg-brand-light/20 border border-white/5 rounded-xl p-4 max-h-[300px] overflow-y-auto custom-scrollbar">
-                        {sectorSynthesis}
-                      </div>
-                      <div className="flex justify-end">
-                        <button
-                          onClick={() => {
-                            const element = document.createElement("a");
-                            const file = new Blob([sectorSynthesis], {type: 'text/plain'});
-                            element.href = URL.createObjectURL(file);
-                            element.download = `Sovereign_Sector_Outlook_${activeResearchTab}_${new Date().toISOString().split('T')[0]}.txt`;
-                            document.body.appendChild(element);
-                            element.click();
-                            document.body.removeChild(element);
-                          }}
-                          className="flex items-center gap-1.5 text-[9px] font-bold text-accent hover:text-white uppercase tracking-widest transition-colors"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                          Download Sector Outlook
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Filters */}
-            <div className="flex flex-wrap gap-4 mb-8">
-              <div className="flex-1 min-w-[200px]">
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">{t.research.filters.source}</label>
-                <select 
-                  value={researchSourceFilter}
-                  onChange={(e) => setResearchSourceFilter(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs text-white focus:outline-none focus:border-accent transition-colors appearance-none"
-                >
-                  <option value="" className="bg-brand">{t.research.filters.allSources}</option>
-                  {researchSources.map(source => (
-                    <option key={source} value={source} className="bg-brand">{source}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex-1 min-w-[200px]">
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-2">{t.research.filters.date}</label>
-                <select 
-                  value={researchDateFilter}
-                  onChange={(e) => setResearchDateFilter(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-xs text-white focus:outline-none focus:border-accent transition-colors appearance-none"
-                >
-                  <option value="" className="bg-brand">{t.research.filters.allDates}</option>
-                  {researchDates.map(date => (
-                    <option key={date} value={date} className="bg-brand">{date}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Research Visualizations */}
-            {!loadingResearch && researchChartData.length > 0 && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8 grid md:grid-cols-2 gap-6"
-              >
-                {/* Bar Chart */}
-                <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-white/60">Type Distribution</h4>
-                    <BarChart3 className="w-4 h-4 text-accent/40" />
-                  </div>
-                  <div className="h-48 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <ReBarChart data={researchChartData} layout="vertical" margin={{ left: -20, right: 20 }}>
-                        <XAxis type="number" hide />
-                        <YAxis 
-                          dataKey="name" 
-                          type="category" 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: 700 }}
-                          width={80}
-                        />
-                        <Tooltip 
-                          cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                          contentStyle={{ 
-                            backgroundColor: '#0a0a0a', 
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: '8px',
-                            fontSize: '10px'
-                          }}
-                        />
-                        <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={12}>
-                          {researchChartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#00d4ff' : '#0088aa'} />
-                          ))}
-                        </Bar>
-                      </ReBarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Pie Chart */}
-                <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-white/60">Percentage Share</h4>
-                    <Activity className="w-4 h-4 text-accent/40" />
-                  </div>
-                  <div className="h-48 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RePieChart>
-                        <Pie
-                          data={researchChartData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={40}
-                          outerRadius={60}
-                          paddingAngle={5}
-                          dataKey="value"
-                        >
-                          {researchChartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#00d4ff' : '#0088aa'} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#0a0a0a', 
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: '8px',
-                            fontSize: '10px'
-                          }}
-                        />
-                        <Legend 
-                          verticalAlign="bottom" 
-                          height={36}
-                          wrapperStyle={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}
-                        />
-                      </RePieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeResearchTab}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
-              >
-                {loadingResearch ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-16 bg-white/5 rounded-xl animate-pulse" />
-                  ))
-                ) : (
-                  filteredResearchReports.map((item, i) => (
-                    <div key={i} className="flex flex-col gap-2">
-                      <motion.div
-                        onClick={() => handleFetchResearchInsight(item)}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
-                        className={cn(
-                          "flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group border text-left",
-                          selectedResearchItem?.title === item.title 
-                            ? "border-accent bg-accent/5" 
-                            : "border-transparent"
-                        )}
-                      >
-                        <div className="flex items-center gap-4 min-w-0 flex-1">
-                          <div className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center transition-colors shrink-0",
-                            selectedResearchItem?.title === item.title 
-                              ? "bg-accent text-brand" 
-                              : "bg-accent/10 text-accent group-hover:bg-accent group-hover:text-brand"
-                          )}>
-                            {activeResearchTab === 'materials' ? <Building2 className="w-5 h-5" /> : 
-                             activeResearchTab === 'energy' ? <Zap className="w-5 h-5" /> : 
-                             activeResearchTab === 'shipping' ? <Compass className="w-5 h-5" /> :
-                             activeResearchTab === 'steel' ? <Layers className="w-5 h-5" /> :
-                             activeResearchTab === 'chemicals' ? <Activity className="w-5 h-5" /> :
-                             activeResearchTab === 'mining' ? <Target className="w-5 h-5" /> :
-                             <Cpu className="w-5 h-5" />}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <h4 className="text-sm font-bold group-hover:text-accent transition-colors truncate">{item.title}</h4>
-                            <p className="text-[10px] text-white/40 uppercase tracking-widest flex items-center gap-2 flex-wrap">
-                              <span className="text-accent/60 font-black">{item.source}</span>
-                              <span className="w-1 h-1 bg-white/20 rounded-full" />
-                              <span>{item.type}</span>
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 shrink-0 ml-4">
-                          <span className="text-xs text-white/40 whitespace-nowrap hidden sm:block">{item.date}</span>
-                          
-                          {/* AI Action Button */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleFetchResearchInsight(item);
-                            }}
-                            className={cn(
-                              "p-2 rounded-lg transition-all",
-                              selectedResearchItem?.title === item.title
-                                ? "bg-accent text-brand"
-                                : "bg-white/5 text-accent hover:bg-accent/10"
-                            )}
-                            title="Generate AI Sovereign Deep Dive Abstract"
-                          >
-                            <Sparkles className="w-3.5 h-3.5" />
-                          </button>
-
-                          {/* Save bookmark button */}
-                          <button 
-                            onClick={(e) => {
-                              e.preventDefault(); e.stopPropagation();
-                              toggleSaveWorkspace(item, 'research');
-                            }}
-                            className={cn(
-                              "p-2 rounded-lg transition-all",
-                              workspace.find(i => i.title === item.title) ? "bg-accent text-brand" : "bg-white/5 text-white/40 hover:text-white"
-                            )}
-                          >
-                            <Bookmark className="w-3.5 h-3.5" />
-                          </button>
-                          
-                          {item.url && (
-                            <a
-                              href={item.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-white/40 hover:text-accent transition-all"
-                              title="Open source publication URL"
-                            >
-                              <ArrowUpRight className="w-4 h-4" />
-                            </a>
-                          )}
-                        </div>
-                      </motion.div>
-
-                      {/* Expanded Abstract Drawer */}
-                      <AnimatePresence>
-                        {selectedResearchItem?.title === item.title && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="bg-brand-light/20 border border-accent/20 rounded-xl p-5 ml-4 sm:ml-14 text-left overflow-hidden text-xs"
-                          >
-                            <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
-                              <span className="text-[10px] font-extrabold uppercase tracking-widest text-accent flex items-center gap-1.5">
-                                <Sparkles className="w-3 h-3 text-accent" />
-                                On-Demand AI Intelligence Dossier
-                              </span>
-                              <button 
-                                onClick={() => setSelectedResearchItem(null)}
-                                className="text-white/40 hover:text-white text-[10px] font-bold uppercase tracking-widest"
-                              >
-                                Close
-                              </button>
-                            </div>
-
-                            {loadingResearchInsight ? (
-                              <div className="flex flex-col items-center justify-center py-6 text-center">
-                                <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin mb-2" />
-                                <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest animate-pulse">Securing satellite ground intelligence feed...</span>
-                              </div>
-                            ) : selectedResearchInsight ? (
-                              <div className="text-white/80 leading-relaxed whitespace-pre-line">
-                                {selectedResearchInsight}
-                              </div>
-                            ) : (
-                              <span className="text-white/40 italic">Could not load insight. Please try again.</span>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  ))
-                )}
-                {!loadingResearch && (!researchReports[activeResearchTab] || researchReports[activeResearchTab].length === 0) && (
-                  <p className="text-center text-white/40 py-8">No research reports found for this category.</p>
-                )}
-                
-                <div className="pt-6 border-t border-white/5 mt-6">
-                  <div className="flex items-center justify-between text-[10px] text-white/30 uppercase tracking-widest">
-                    <p>Sourcing: IEA, Bloomberg, Reuters, Deloitte, McKinsey</p>
-                    <p>Updated: {format(new Date(), 'MMM yyyy')}</p>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Sovereign Geopolitical Stress-Testing Sandbox */}
-            <div className="mt-12 pt-8 border-t border-white/10 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase tracking-widest mb-4">
-                <ShieldAlert className="w-3 h-3" />
-                Stress-Testing Suite
-              </div>
-              <h4 className="text-lg font-bold text-white mb-2 uppercase tracking-wide">Dynamic Macro Geopolitical Stress Sandbox</h4>
-              <p className="text-white/40 text-xs leading-relaxed mb-6">
-                Test the resilience of the <span className="text-accent font-extrabold">{activeResearchTab.toUpperCase()}</span> sector under catastrophic geopolitical shocks. Run advanced stress simulations to identify supply-chain vulnerabilities and formulate sovereign hedging playbooks.
-              </p>
-
-              <div className="grid lg:grid-cols-12 gap-6 items-stretch">
-                {/* Control Panel */}
-                <div className="lg:col-span-5 bg-white/5 border border-white/5 rounded-2xl p-5 flex flex-col justify-between">
-                  <div>
-                    <label className="block text-[10px] font-extrabold uppercase tracking-widest text-white/40 mb-3">Select Geopolitical Stressor</label>
-                    <div className="space-y-2.5">
-                      {[
-                        { label: "OPEC+ Sudden Supply Cut (-15% Global Production)", icon: <Zap className="w-3.5 h-3.5 text-amber-400" /> },
-                        { label: "Sino-US Sea Route Blockade (Malacca Strait Interdiction)", icon: <Compass className="w-3.5 h-3.5 text-blue-400" /> },
-                        { label: "US Federal Reserve Stagflation Hard-Landing (+150bps)", icon: <TrendingUp className="w-3.5 h-3.5 text-red-400" /> },
-                        { label: "Sovereign Debt Default & Sudden Currency Devaluations", icon: <Layers className="w-3.5 h-3.5 text-purple-400" /> }
-                      ].map((item) => (
-                        <button
-                          key={item.label}
-                          onClick={() => {
-                            setStressScenario(item.label);
-                            setStressTestResult(null);
-                          }}
-                          className={cn(
-                            "w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-xs text-left",
-                            stressScenario === item.label
-                              ? "bg-red-500/10 border-red-500/30 text-white font-bold"
-                              : "bg-white/5 border-transparent text-white/60 hover:bg-white/10"
-                          )}
-                        >
-                          {item.icon}
-                          <span className="line-clamp-1">{item.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleRunStressTest}
-                    disabled={runningStressTest}
-                    className="w-full mt-6 py-3 bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg shadow-red-500/10"
-                  >
-                    {runningStressTest ? (
-                      <>
-                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Simulating Geopolitical Shocks...
-                      </>
-                    ) : (
-                      <>
-                        <ShieldAlert className="w-3.5 h-3.5" />
-                        Execute Stress Simulation
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                {/* Scoreboard Result Screen */}
-                <div className="lg:col-span-7 bg-red-500/5 border border-red-500/10 rounded-2xl p-5 flex flex-col justify-between">
-                  {runningStressTest ? (
-                    <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-                      <div className="w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin mb-4" />
-                      <p className="text-[10px] font-black uppercase tracking-widest text-red-400 animate-pulse">Running Geopolitical Monte Carlo Sandbox...</p>
-                      <p className="text-[8px] text-white/30 font-mono mt-1">CALCULATING CRUDE PRICE ELASTICITY & SOVEREIGN DEFAULT INDEXES...</p>
-                    </div>
-                  ) : stressTestResult ? (
-                    <div className="space-y-5">
-                      {/* Metric Banner */}
-                      <div className="flex items-center justify-between border-b border-red-500/10 pb-3">
-                        <div>
-                          <span className="text-[9px] font-extrabold uppercase tracking-widest text-white/40">Sovereign Sector Impact Rating</span>
-                          <h5 className="text-sm font-black text-white uppercase tracking-wider mt-0.5">{stressTestResult.riskRating}</h5>
-                        </div>
-                        <span className={cn(
-                          "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border",
-                          stressTestResult.ratingColor === "red" ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                          stressTestResult.ratingColor === "orange" ? "bg-amber-500/10 text-amber-500 border-amber-500/20" :
-                          stressTestResult.ratingColor === "yellow" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" :
-                          "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                        )}>
-                          {stressTestResult.riskRating}
-                        </span>
-                      </div>
-
-                      {/* Slide bars */}
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        {/* inflation */}
-                        <div className="bg-white/5 border border-white/5 rounded-xl p-3">
-                          <div className="flex justify-between text-[10px] font-bold text-white/60 uppercase tracking-widest mb-1.5">
-                            <span>Cost Inflation Impact</span>
-                            <span className="text-red-400 font-extrabold">+{stressTestResult.inflationImpactPercent}%</span>
-                          </div>
-                          <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                            <div 
-                              className="bg-red-500 h-full rounded-full transition-all duration-1000" 
-                              style={{ width: `${stressTestResult.inflationImpactPercent}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* delay */}
-                        <div className="bg-white/5 border border-white/5 rounded-xl p-3">
-                          <div className="flex justify-between text-[10px] font-bold text-white/60 uppercase tracking-widest mb-1.5">
-                            <span>Supply Delay Index</span>
-                            <span className="text-amber-500 font-extrabold">+{stressTestResult.delayImpactPercent}%</span>
-                          </div>
-                          <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                            <div 
-                              className="bg-amber-500 h-full rounded-full transition-all duration-1000" 
-                              style={{ width: `${stressTestResult.delayImpactPercent}%` }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Playbook narrative */}
-                      <div className="space-y-2 text-left">
-                        <span className="text-[9px] font-extrabold uppercase tracking-widest text-red-400">Tactical Playbook Response</span>
-                        <p className="text-xs font-bold text-white leading-relaxed">{stressTestResult.playbookSummary}</p>
-                        <div className="text-[11px] leading-relaxed text-white/70 whitespace-pre-line bg-brand-light/30 border border-white/5 rounded-xl p-3 max-h-[140px] overflow-y-auto custom-scrollbar">
-                          {stressTestResult.tacticalPlaybook}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center py-16 text-center">
-                      <ShieldAlert className="w-6 h-6 text-red-400/40 mb-3 animate-pulse" />
-                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/40">Macro Geopolitical Stress Terminal Idle</p>
-                      <p className="text-[9px] text-white/30 mt-1 max-w-xs">Select a catastrophic macro Geopolitical Shock Scenario on the left and execute the simulation.</p>
-                    </div>
-                  )}
-
-                  {stressTestResult && (
-                    <div className="mt-4 border-t border-red-500/10 pt-3 flex justify-between items-center text-[8px] text-white/30 font-mono">
-                      <span>MONTE CARLO SEED: #{(Math.floor(Math.random() * 90000) + 10000)}</span>
-                      <span>SURVVI CRITICAL SUITE V1.02</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Video Analysis Section */}
-            <div className="mt-12">
-              <div className="flex items-center gap-2 mb-6">
-                <Play className="w-4 h-4 text-accent" />
-                <h4 className="text-sm font-bold uppercase tracking-widest">Global Market Video Analysis</h4>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  { title: 'The Future of Green Cement', source: 'World Economic Forum', img: 'https://picsum.photos/seed/cement-video/400/225' },
-                  { title: 'Energy Transition 2026', source: 'Bloomberg Markets', img: 'https://picsum.photos/seed/energy-video/400/225' }
-                ].map((video, i) => (
-                  <div key={i} className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer border border-white/5">
-                    <img 
-                      src={video.img} 
-                      alt={video.title} 
-                      className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-brand/40 group-hover:bg-brand/10 transition-colors" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Play className="w-4 h-4 text-white fill-white" />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-brand to-transparent">
-                      <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-1">{video.source}</p>
-                      <p className="text-xs font-bold leading-tight line-clamp-1">{video.title}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
+      {/* Sovereign Intelligence Terminal */}
+      <SovereignIntelligenceTerminal 
+        language={language}
+        isPremium={isPremium}
+        time={time}
+        terminalTab={terminalTab}
+        setTerminalTab={setTerminalTab}
+        onMacroClick={() => setShowMacro(true)}
+        
+        loadingNewsletter={loadingNewsletter}
+        newsletterNews={newsletterNews}
+        newsletterDate={newsletterDate}
+        pinnedNews={pinnedNews}
+        setPinnedNews={setPinnedNews}
+        setSelectedResearchItem={handleFetchResearchInsight}
+        workspace={workspace}
+        setWorkspace={setWorkspace}
+        
+        activeResearchTab={activeResearchTab}
+        setActiveResearchTab={setActiveResearchTab}
+        loadingResearch={loadingResearch}
+        researchChartData={researchChartData}
+        researchSourceFilter={researchSourceFilter}
+        setResearchSourceFilter={setResearchSourceFilter}
+        researchSources={researchSources}
+        researchDateFilter={researchDateFilter}
+        setResearchDateFilter={setResearchDateFilter}
+        researchDates={researchDates}
+        filteredResearch={filteredResearchReports}
+      />
       {/* Global Presence Section */}
       <section id="global-presence" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="mb-12 text-center">
@@ -4255,7 +3119,7 @@ Ensure the output is valid JSON only.`,
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-accent mt-0.5">✓</span>
-                    <p className="text-xs text-white/70">1-on-1 direct board access with Prashant</p>
+                    <p className="text-xs text-white/70">Direct 1-on-1 access to analysts</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-accent mt-0.5">✓</span>
