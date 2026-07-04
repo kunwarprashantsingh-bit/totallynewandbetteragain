@@ -5,7 +5,7 @@
 
 import { jsPDF } from 'jspdf';
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
-import { HeroSection } from './components/HeroSection';
+import { HeroSection } from './components/herosection';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   TrendingUp, 
