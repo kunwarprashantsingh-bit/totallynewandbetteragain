@@ -186,7 +186,7 @@ const Navbar = ({ onMacroClick, language, setLanguage, darkMode, setDarkMode, wo
         <div className="flex items-center justify-between">
           {/* Left: Logo & Branding */}
           <div className="flex items-center gap-4 cursor-pointer min-w-[220px]" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <div className="w-10 h-10 border-2 border-accent rounded-lg flex items-center justify-center font-serif text-accent font-bold text-xl bg-brand/50 shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)] transition-shadow duration-300">
+            <div className="w-10 h-10 border border-accent/40 rounded-xl flex items-center justify-center font-display text-accent font-bold text-lg bg-gradient-to-br from-brand-light to-black shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.15)] hover:shadow-[0_0_25px_rgba(197,160,89,0.3)] hover:border-accent transition-all duration-300">
               S
             </div>
             <div className="h-8 w-px bg-white/10 mx-1" />
@@ -201,10 +201,10 @@ const Navbar = ({ onMacroClick, language, setLanguage, darkMode, setDarkMode, wo
 
           {/* Center: Branding & Slogan */}
           <div className="flex flex-col items-center justify-center text-center flex-1">
-            <h1 className="text-sm md:text-lg font-bold tracking-[0.4em] text-accent uppercase leading-none">
+            <h1 className="text-xs md:text-base font-display font-semibold tracking-[0.55em] text-accent uppercase leading-none">
               Survvi Opulence Insights
             </h1>
-            <span className="text-[6px] md:text-[8px] uppercase tracking-[0.6em] text-text/30 font-medium mt-2">
+            <span className="text-[6px] md:text-[7px] uppercase tracking-[0.7em] text-text/30 font-medium mt-2.5">
               {t.slogan}
             </span>
           </div>
@@ -1142,10 +1142,22 @@ Keep the formatting clean, bulleted, and in a high-caliber professional report s
   };
 
   const handleRunStressTest = async () => {
+    if (!stressScenario) return;
+    
     setRunningStressTest(true);
     setStressTestResult(null);
+    
+    const categoryLabel = activeResearchTab.toUpperCase();
+    const cacheKey = `stress_test_${categoryLabel}_${stressScenario}`;
+    
     try {
-      const categoryLabel = activeResearchTab.toUpperCase();
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        setStressTestResult(JSON.parse(cached));
+        setRunningStressTest(false);
+        return;
+      }
+      
       const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Stress-Testing Specialist.
@@ -1168,7 +1180,9 @@ Ensure the output is valid JSON only.`,
       });
 
       if (response.text) {
-        setStressTestResult(JSON.parse(response.text));
+        const parsedResult = JSON.parse(response.text);
+        localStorage.setItem(cacheKey, JSON.stringify(parsedResult));
+        setStressTestResult(parsedResult);
       } else {
         throw new Error("No response text");
       }
@@ -1812,7 +1826,7 @@ Ensure the output is valid JSON only.`,
                             </div>
                             <ul className="text-xs text-white/60 space-y-2 mb-6">
                               <li className="flex items-center gap-2">✓ All Sovereign Analytics Benefits</li>
-                              <li className="flex items-center gap-2">✓ 1-on-1 Advising with Kunwar</li>
+                              <li className="flex items-center gap-2">✓ 1-on-1 Advising with Prashant</li>
                               <li className="flex items-center gap-2">✓ Custom Digital Twin Scenarios</li>
                               <li className="flex items-center gap-2">✓ Private Geopolitical Defense briefings</li>
                             </ul>
@@ -2004,51 +2018,51 @@ Ensure the output is valid JSON only.`,
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
         {/* Background Gradients */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-deep/10 blur-[120px] rounded-full" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/15 blur-[150px] rounded-full animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent-deep/5 blur-[150px] rounded-full" />
         
-        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-12 items-center z-10">
+        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-16 items-center z-10">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest mb-8">
-              <Activity className="w-3 h-3" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/25 text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-8 shadow-[0_0_15px_rgba(197,160,89,0.05)]">
+              <Activity className="w-3.5 h-3.5 animate-pulse" />
               {t.hero.badge}
             </div>
-            <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tighter">
+            <h1 className="text-5xl md:text-7xl font-display font-extrabold mb-8 leading-[1.1] tracking-tight bg-gradient-to-br from-white via-white to-accent bg-clip-text text-transparent">
               {t.hero.title}
             </h1>
-            <p className="text-xl text-text/60 max-w-lg mb-10 leading-relaxed">
+            <p className="text-lg md:text-xl text-text/50 font-light max-w-lg mb-10 leading-relaxed">
               {t.hero.subtitle}
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="bg-accent text-brand px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-lg shadow-accent/20">
+              <button className="bg-gradient-to-r from-accent to-accent-deep hover:from-accent-deep hover:to-accent text-brand px-8 py-4 rounded-full font-bold text-base hover:scale-105 hover:shadow-[0_4px_25px_rgba(197,160,89,0.35)] transition-all duration-300 transform active:scale-95">
                 {t.hero.cta1}
               </button>
-              <button className="border border-text/20 px-8 py-4 rounded-full font-bold text-lg hover:bg-surface transition-colors">
+              <button className="border border-white/10 hover:border-accent/40 px-8 py-4 rounded-full font-bold text-base hover:bg-white/5 transition-all duration-300 transform hover:-translate-y-0.5 text-text/90">
                 {t.hero.cta2}
               </button>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
             {/* 2. Feature: Dynamic Market Visualization Deck */}
-            <div className="bg-brand-light/40 backdrop-blur-2xl border border-text/10 rounded-3xl p-8 shadow-2xl">
+            <div className="bg-brand-light/60 backdrop-blur-2xl border border-white/5 rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:border-accent/10 transition-colors duration-500">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h3 className="text-lg font-bold">{t.hero.indexTitle}</h3>
+                  <h3 className="text-lg font-bold font-display tracking-tight text-white">{t.hero.indexTitle}</h3>
                   <p className="text-xs text-text/40">{t.hero.indexSubtitle}</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-accent font-mono font-bold">+4.2%</span>
-                  <p className="text-[10px] text-text/40 uppercase tracking-widest">{t.hero.changeLabel}</p>
+                  <span className="text-accent font-mono font-bold text-lg">+4.2%</span>
+                  <p className="text-[9px] text-text/40 uppercase tracking-widest">{t.hero.changeLabel}</p>
                 </div>
               </div>
               
@@ -2061,45 +2075,45 @@ Ensure the output is valid JSON only.`,
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
                     <defs>
-                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#00d4ff" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#00d4ff" stopOpacity={0}/>
+                      <linearGradient id="colorHeroValue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.25}/>
+                        <stop offset="95%" stopColor="var(--accent)" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <YAxis hide domain={['auto', 'auto']} />
                     <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
                     <Tooltip 
-                      contentStyle={{ backgroundColor: '#0a2540', border: '1px solid #ffffff10', borderRadius: '12px' }}
-                      itemStyle={{ color: '#00d4ff' }}
+                      contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                      itemStyle={{ color: 'var(--accent)' }}
                     />
-                    <Area type="monotone" dataKey="value" stroke="#00d4ff" fillOpacity={1} fill="url(#colorValue)" strokeWidth={3} />
+                    <Area type="monotone" dataKey="value" stroke="var(--accent)" fillOpacity={1} fill="url(#colorHeroValue)" strokeWidth={2.5} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
 
               <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-white/5">
                 <div className="text-center">
-                  <p className="text-[10px] text-white/40 uppercase mb-1">{t.hero.volatility}</p>
-                  <p className="font-mono font-bold text-sm text-accent">{t.hero.low}</p>
+                  <p className="text-[10px] text-white/40 uppercase mb-1 tracking-wider">{t.hero.volatility}</p>
+                  <p className="font-mono font-semibold text-sm text-accent">{t.hero.low}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[10px] text-white/40 uppercase mb-1">{t.hero.sentiment}</p>
-                  <p className="font-mono font-bold text-sm text-accent">{t.hero.bullish}</p>
+                  <p className="text-[10px] text-white/40 uppercase mb-1 tracking-wider">{t.hero.sentiment}</p>
+                  <p className="font-mono font-semibold text-sm text-accent">{t.hero.bullish}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[10px] text-white/40 uppercase mb-1">{t.hero.liquidity}</p>
-                  <p className="font-mono font-bold text-sm text-accent">{t.hero.high}</p>
+                  <p className="text-[10px] text-white/40 uppercase mb-1 tracking-wider">{t.hero.liquidity}</p>
+                  <p className="font-mono font-semibold text-sm text-accent">{t.hero.high}</p>
                 </div>
               </div>
             </div>
 
             {/* Floating Info Card */}
-            <div className="absolute -bottom-6 -left-6 bg-white text-brand p-6 rounded-2xl shadow-xl max-w-[200px]">
+            <div className="absolute -bottom-6 -left-6 bg-brand-light/95 backdrop-blur-xl border border-accent/30 text-text p-5 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.4)] max-w-[220px] hover:scale-[1.02] transition-transform duration-300">
               <div className="flex items-center gap-2 mb-2">
-                <ShieldCheck className="w-4 h-4 text-accent-deep" />
-                <span className="text-[10px] font-bold uppercase tracking-tighter">{t.hero.verified}</span>
+                <ShieldCheck className="w-4 h-4 text-accent" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-accent">{t.hero.verified}</span>
               </div>
-              <p className="text-xs font-medium leading-tight">{t.hero.sourceInfo}</p>
+              <p className="text-xs font-light text-text/80 leading-relaxed">{t.hero.sourceInfo}</p>
             </div>
           </motion.div>
         </div>
@@ -2143,52 +2157,52 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 4. Feature: AI-Driven Industrial Predictor */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="bg-gradient-to-br from-brand-light to-brand border border-text/10 rounded-[40px] p-12 relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 right-0 p-12 opacity-10">
+      <section className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+        <div className="bg-gradient-to-br from-[#0c0f14] via-brand-light to-brand border border-white/5 rounded-[40px] p-12 relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.5)] hover:border-accent/15 transition-all duration-500 group">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-105 transition-all duration-700">
             <Cpu className="w-64 h-64 text-accent" />
           </div>
           
           <div className="relative z-10 max-w-2xl">
-            <h2 className="text-4xl font-bold mb-6 tracking-tight">{t.predictor.title}</h2>
-            <p className="text-text/60 mb-8 leading-relaxed">
+            <h2 className="text-3xl md:text-4xl font-display font-extrabold mb-6 tracking-tight text-white leading-tight">{t.predictor.title}</h2>
+            <p className="text-text/50 font-light mb-8 leading-relaxed text-base md:text-lg">
               {t.predictor.description}
             </p>
             
-            <div className="flex gap-2 mb-8">
+            <div className="flex gap-3 mb-8">
               <input 
                 type="text" 
                 placeholder={t.predictor.placeholder}
-                className="flex-1 bg-surface border border-text/10 rounded-full px-6 py-3 text-sm focus:outline-none focus:border-accent transition-colors"
+                className="flex-1 bg-brand/50 border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/10 transition-all placeholder:text-white/30"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') fetchInsight((e.target as HTMLInputElement).value);
                 }}
               />
               <button 
                 onClick={() => fetchInsight("Current energy trends")}
-                className="bg-accent text-brand p-3 rounded-full hover:scale-105 transition-transform shadow-lg shadow-accent/20"
+                className="bg-gradient-to-r from-accent to-accent-deep text-brand p-4 rounded-full hover:scale-105 hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 shrink-0 active:scale-95"
               >
                 <Search className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="bg-brand/40 border border-text/5 rounded-2xl p-6 min-h-[120px] flex flex-col">
+            <div className="bg-brand/60 backdrop-blur-md border border-white/5 rounded-2xl p-6 min-h-[120px] flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-accent">{t.predictor.engine}</span>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-accent">{t.predictor.engine}</span>
               </div>
               {loadingInsight ? (
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex-1 flex items-center justify-center py-4">
                   <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : (
-                <p className="text-sm text-text/80 italic leading-relaxed">
+                <p className="text-sm md:text-base text-text/80 italic leading-relaxed font-light">
                   "{aiInsight || t.predictor.default}"
                 </p>
               )}
               {insightSources.length > 0 && !loadingInsight && (
                 <div className="mt-4 pt-4 border-t border-white/5">
-                  <p className="text-[10px] font-bold text-text/40 uppercase tracking-widest mb-2">Sources</p>
+                  <p className="text-[10px] font-mono font-bold text-text/40 uppercase tracking-widest mb-2">Sources</p>
                   <div className="flex flex-wrap gap-2">
                     {insightSources.map((source, idx) => (
                       <a 
@@ -2196,7 +2210,7 @@ Ensure the output is valid JSON only.`,
                         href={source.uri} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-[10px] text-accent hover:underline bg-accent/5 px-2 py-1 rounded-md border border-accent/10"
+                        className="text-[10px] text-accent hover:text-white bg-accent/5 hover:bg-accent/20 px-2.5 py-1 rounded-md border border-accent/10 transition-colors"
                       >
                         {source.title || "Source"}
                       </a>
@@ -2210,7 +2224,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* CEO's Vision & Our Story */}
-      <section id="story" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
+      <section id="story" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -2323,50 +2337,62 @@ Ensure the output is valid JSON only.`,
             </div>
             
             <div className="space-y-6">
-              <div className="p-6 bg-brand-light/10 border border-white/10 rounded-2xl relative hover:border-accent/30 transition-colors group">
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Globe className="w-16 h-16 text-accent" />
+              <div className="p-8 bg-brand-light/35 backdrop-blur-md border border-white/5 rounded-3xl relative hover:border-accent/30 hover:shadow-[0_20px_50px_rgba(197,160,89,0.05)] transition-all duration-500 group">
+                <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 transition-all duration-500">
+                  <Globe className="w-20 h-20 text-accent" />
                 </div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl bg-accent/10 overflow-hidden border border-white/20 shrink-0">
-                    <img src="/Prashant.jpg" alt="Prashant Singh" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Prashant+Singh&background=0D1117&color=6EE7B7' }} />
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-16 h-16 rounded-2xl bg-accent/10 overflow-hidden border border-white/10 shrink-0 shadow-lg">
+                    <img 
+                      src="/Prashant.jpg" 
+                      alt="Prashant Singh" 
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" 
+                      referrerPolicy="no-referrer" 
+                      onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Prashant+Singh&background=0D1117&color=C5A059' }} 
+                    />
                   </div>
                   <div>
-                    <h4 className="text-xl font-bold text-white mb-1">Prashant Singh</h4>
-                    <p className="text-accent text-[10px] font-bold uppercase tracking-widest">Co-Founder & Managing Director</p>
+                    <h4 className="text-xl font-display font-semibold text-white mb-1">{t.founders?.prashant || "Prashant Singh"}</h4>
+                    <p className="text-accent text-[10px] font-mono font-bold uppercase tracking-widest">Co-Founder & Managing Director</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-5">
                   {['Strategy', 'Research', 'Expert Network'].map((tag, i) => (
-                    <span key={i} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-white/70 uppercase tracking-wider">{tag}</span>
+                    <span key={i} className="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[9px] font-mono font-bold text-white/60 uppercase tracking-wider">{tag}</span>
                   ))}
                 </div>
-                <p className="text-white/60 text-sm mb-4 leading-relaxed">Prashant Singh is the Co-Founder & Managing Director of Survvi Opulence Insights, where he advises corporations, investors, financial institutions, and development organizations on high-impact strategic, commercial, and investment decisions. With nearly two decades of international consulting experience, he has led complex engagements across North America, Europe, the Middle East, Africa, and Asia, helping clients navigate uncertainty through rigorous research, independent analysis, and commercially grounded advice. His work has supported major capital investments, corporate strategy, and market intelligence initiatives for multinational enterprises and organizations including the World Bank Group and the International Finance Corporation (IFC). Guided by the belief that intellectual honesty precedes commercial success, Prashant is committed to delivering objective insights, transparent analysis, and practical recommendations that enable clients to make confident, evidence-based decisions.</p>
-                <blockquote className="border-l-2 border-accent/50 pl-4 py-1 text-white/80 italic text-sm">
+                <p className="text-text/60 font-light text-sm mb-5 leading-relaxed">Prashant Singh is the Co-Founder & Managing Director of Survvi Opulence Insights, where he advises corporations, investors, financial institutions, and development organizations on high-impact strategic, commercial, and investment decisions. With nearly two decades of international consulting experience, he has led complex engagements across North America, Europe, the Middle East, Africa, and Asia, helping clients navigate uncertainty through rigorous research, independent analysis, and commercially grounded advice. His work has supported major capital investments, corporate strategy, and market intelligence initiatives for multinational enterprises and organizations including the World Bank Group and the International Finance Corporation (IFC). Guided by the belief that intellectual honesty precedes commercial success, Prashant is committed to delivering objective insights, transparent analysis, and practical recommendations that enable clients to make confident, evidence-based decisions.</p>
+                <blockquote className="border-l-2 border-accent/40 pl-4 py-1 text-text/70 italic text-sm font-light">
                   "True insight isn't just about data; it's about anticipating the ripple effects of global change before they hit the market."
                 </blockquote>
               </div>
 
-              <div className="p-6 bg-brand-light/10 border border-white/10 rounded-2xl relative hover:border-accent/30 transition-colors group">
-                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Globe className="w-16 h-16 text-accent" />
+              <div className="p-8 bg-brand-light/35 backdrop-blur-md border border-white/5 rounded-3xl relative hover:border-accent/30 hover:shadow-[0_20px_50px_rgba(197,160,89,0.05)] transition-all duration-500 group">
+                <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 transition-all duration-500">
+                  <Globe className="w-20 h-20 text-accent" />
                 </div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl bg-accent/10 overflow-hidden border border-white/20 shrink-0">
-                    <img src="/Carolina.jpg" alt="Carolina Pereira" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Carolina+Pereira&background=0D1117&color=6EE7B7' }} />
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-16 h-16 rounded-2xl bg-accent/10 overflow-hidden border border-white/10 shrink-0 shadow-lg">
+                    <img 
+                      src="/Carolina.jpg" 
+                      alt="Carolina Pereira" 
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out" 
+                      referrerPolicy="no-referrer" 
+                      onError={(e) => { e.currentTarget.src = 'https://ui-avatars.com/api/?name=Carolina+Pereira&background=0D1117&color=C5A059' }} 
+                    />
                   </div>
                   <div>
-                    <h4 className="text-xl font-bold text-white mb-1">Carolina Pereira</h4>
-                    <p className="text-accent text-[10px] font-bold uppercase tracking-widest">Co-Founder & Managing Director</p>
+                    <h4 className="text-xl font-display font-semibold text-white mb-1">{t.founders?.carolina || "Carolina Pereira"}</h4>
+                    <p className="text-accent text-[10px] font-mono font-bold uppercase tracking-widest">Co-Founder & Managing Director</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-5">
                   {['Statistics', 'Strategy', 'Client Management'].map((tag, i) => (
-                    <span key={i} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-bold text-white/70 uppercase tracking-wider">{tag}</span>
+                    <span key={i} className="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[9px] font-mono font-bold text-white/60 uppercase tracking-wider">{tag}</span>
                   ))}
                 </div>
-                <p className="text-white/60 text-sm mb-4 leading-relaxed">Carolina Pereira is the Co-Founder & Managing Director of Survvi Opulence Insights, where she helps clients transform complex strategic objectives into disciplined execution and measurable business outcomes. She brings extensive international consulting experience leading high-value advisory engagements across industrial, infrastructure, and investment sectors, with expertise spanning commercial due diligence, operational strategy, project execution, and investment feasibility. Having worked with multinational corporations, private investors, and international institutions including the World Bank Group and the International Finance Corporation (IFC), Carolina is recognized for her ability to align strategy, operations, and stakeholder interests in complex, cross-border environments. Guided by a commitment to analytical rigor, operational excellence, and client success, she delivers practical, evidence-based solutions that help organizations manage risk, improve performance, and make confident strategic decisions.</p>
-                <blockquote className="border-l-2 border-accent/50 pl-4 py-1 text-white/80 italic text-sm">
+                <p className="text-text/60 font-light text-sm mb-5 leading-relaxed">Carolina Pereira is the Co-Founder & Managing Director of Survvi Opulence Insights, where she helps clients transform complex strategic objectives into disciplined execution and measurable business outcomes. She brings extensive international consulting experience leading high-value advisory engagements across industrial, infrastructure, and investment sectors, with expertise spanning commercial due diligence, operational strategy, project execution, and investment feasibility. Having worked with multinational corporations, private investors, and international institutions including the World Bank Group and the International Finance Corporation (IFC), Carolina is recognized for her ability to align strategy, operations, and stakeholder interests in complex, cross-border environments. Guided by a commitment to analytical rigor, operational excellence, and client success, she delivers practical, evidence-based solutions that help organizations manage risk, improve performance, and make confident strategic decisions.</p>
+                <blockquote className="border-l-2 border-accent/40 pl-4 py-1 text-text/70 italic text-sm font-light">
                   "Data without context is noise. We transform complex statistical patterns into strategic foresight that empowers decisive action."
                 </blockquote>
               </div>
@@ -2387,8 +2413,8 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 5. Feature: Our Methodology */}
-      <section id="solutions" className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+      <section id="solutions" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
             <Layers className="w-3 h-3" />
             The Survvi Opulence Insights Way
@@ -2399,7 +2425,7 @@ Ensure the output is valid JSON only.`,
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <FeatureCard 
             index={0}
             icon={TrendingUp}
@@ -2656,7 +2682,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 6. Feature: Interactive Material Library (3D Cards) */}
-      <section id="materials" className="py-24 bg-brand-light/10">
+      <section id="materials" className="py-14 md:py-16 bg-brand-light/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
             <div className="max-w-xl">
@@ -2666,7 +2692,7 @@ Ensure the output is valid JSON only.`,
               </div>
               <h2 className="text-4xl font-bold mb-4 tracking-tight">The Future of Foundations</h2>
               <p className="text-white/50">
-                Kunwar's vision for building materials goes beyond supply chains. It's about the "Molecular Revolution"—transforming how we perceive the very atoms of our infrastructure. We don't just track cement; we track the evolution of human shelter.
+                Prashant's vision for building materials goes beyond supply chains. It's about the "Molecular Revolution"—transforming how we perceive the very atoms of our infrastructure. We don't just track cement; we track the evolution of human shelter.
               </p>
             </div>
             <button className="flex items-center gap-2 text-accent font-bold hover:gap-4 transition-all">
@@ -2709,7 +2735,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 7. Feature: Energy Transition Tracker (Live Data) */}
-      <section id="energy" className="py-24 px-6 max-w-7xl mx-auto">
+      <section id="energy" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-6">
@@ -2718,7 +2744,7 @@ Ensure the output is valid JSON only.`,
             </div>
             <h2 className="text-4xl font-bold mb-6 tracking-tight">Powering the Transition</h2>
             <p className="text-white/60 mb-8 leading-relaxed">
-              "Energy is the lifeblood of civilization, but its current form is unsustainable," Kunwar notes. Our energy story is one of transition—moving from extraction to optimization. We help legacy giants navigate the turbulent waters of decarbonization while ensuring global stability.
+              "Energy is the lifeblood of civilization, but its current form is unsustainable," Prashant notes. Our energy story is one of transition—moving from extraction to optimization. We help legacy giants navigate the turbulent waters of decarbonization while ensuring global stability.
             </p>
             <div className="space-y-8">
               {[
@@ -2747,11 +2773,71 @@ Ensure the output is valid JSON only.`,
               Updated daily at 00:00 GMT.
             </p>
           </div>
-          
-          {/* 6. Astraeus News Hub */}
-          <section id="news" className="py-24 px-6 bg-brand-light/20 relative overflow-hidden rounded-3xl mb-12 border border-white/5">
+
+          {/* Right Column: Custom Interactive Energy Transition Visualization Card */}
+          <div className="bg-brand-light/40 backdrop-blur-md border border-white/5 rounded-3xl p-8 shadow-xl">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-bold font-display tracking-tight text-white">Sovereign Grid Transition Model</h3>
+                <p className="text-xs text-white/40">Clean vs. Legacy Generation Decoupling Curve</p>
+              </div>
+              <div className="text-right">
+                <span className="text-emerald-400 font-mono font-bold text-lg">+12.4%</span>
+                <p className="text-[9px] text-white/40 uppercase tracking-widest">YTD Renewables Growth</p>
+              </div>
+            </div>
+
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={[
+                  { year: '2020', clean: 20, fossil: 80 },
+                  { year: '2021', clean: 24, fossil: 76 },
+                  { year: '2022', clean: 28, fossil: 72 },
+                  { year: '2023', clean: 31, fossil: 69 },
+                  { year: '2024', clean: 34, fossil: 66 },
+                  { year: '2025', clean: 38, fossil: 62 },
+                  { year: '2026', clean: 42, fossil: 58 },
+                ]}>
+                  <defs>
+                    <linearGradient id="colorClean" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="colorFossil" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="year" stroke="rgba(255,255,255,0.2)" fontSize={10} tickLine={false} />
+                  <YAxis hide domain={['auto', 'auto']} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#020617', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                    itemStyle={{ color: 'var(--accent)' }}
+                  />
+                  <Area type="monotone" dataKey="clean" name="Renewable Power" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorClean)" />
+                  <Area type="monotone" dataKey="fossil" name="Fossil Base" stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3 3" fillOpacity={1} fill="url(#colorFossil)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/5">
+              <div>
+                <p className="text-[9px] text-white/40 uppercase mb-1 tracking-wider">Carbon Offsetting</p>
+                <p className="font-mono font-semibold text-xs text-emerald-400">42,500 Mt CO2e / yr</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[9px] text-white/40 uppercase mb-1 tracking-wider">ESG Rating</p>
+                <p className="font-mono font-semibold text-xs text-accent">Sovereign Grade A+</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Feature: Astraeus News Hub */}
+      <section id="news" className="py-14 md:py-16 px-6 bg-brand-light/20 relative overflow-hidden rounded-3xl mb-12 border border-white/5 max-w-7xl mx-auto">
             <div className="max-w-7xl mx-auto relative z-10">
-              <div className="flex flex-col items-center text-center mb-16 gap-8">
+              <div className="flex flex-col items-center text-center mb-10 gap-6">
                 <div className="max-w-2xl">
                   <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
                     <Newspaper className="w-3 h-3" />
@@ -3281,7 +3367,9 @@ Ensure the output is valid JSON only.`,
             </div>
           </section>
 
-          <div id="research" className="bg-brand-light/30 border border-white/10 rounded-3xl p-8 shadow-2xl">
+          {/* 9. Feature: Research Hub & Sovereign Oracle */}
+          <section id="research-section" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+            <div id="research" className="bg-brand-light/30 border border-white/10 rounded-3xl p-8 shadow-2xl">
             <div className="mb-8 border-b border-white/5 pb-8">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
                 <Search className="w-3 h-3" />
@@ -3289,7 +3377,7 @@ Ensure the output is valid JSON only.`,
               </div>
               <h3 className="text-2xl font-bold mb-4">The Industrial Oracle</h3>
               <p className="text-white/50 text-sm leading-relaxed">
-                "Data without context is just noise," Kunwar often says. Our Research Hub is the "Industrial Oracle"—a synthesis of human expertise and machine learning that filters the global noise into actionable strategic signals. We don't just report on markets; we interpret their soul.
+                "Data without context is just noise," Prashant often says. Our Research Hub is the "Industrial Oracle"—a synthesis of human expertise and machine learning that filters the global noise into actionable strategic signals. We don't just report on markets; we interpret their soul.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -3871,11 +3959,10 @@ Ensure the output is valid JSON only.`,
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Global Presence Section */}
-      <section id="global-presence" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
+      <section id="global-presence" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="mb-12 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
             <Navigation className="w-3 h-3" />
@@ -3932,7 +4019,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* Scenario Modeler Section */}
-      <section id="scenario-modeler" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
+      <section id="scenario-modeler" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
         <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
           <ScenarioModeler language={language} />
         </div>
@@ -3959,7 +4046,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* Predictive Analytics Section */}
-      <section id="predictive-analytics" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
+      <section id="predictive-analytics" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
         <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
           <PredictiveAnalytics language={language} />
         </div>
@@ -3986,7 +4073,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* Mining & IoT Stories */}
-      <section id="mining-iot" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
+      <section id="mining-iot" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="grid md:grid-cols-2 gap-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -3999,7 +4086,7 @@ Ensure the output is valid JSON only.`,
             </div>
             <h3 className="text-2xl font-bold mb-4">Mining & Metals: <span className="text-accent">Deep Earth Intelligence</span></h3>
             <p className="text-white/50 leading-relaxed mb-6">
-              "We are moving from extraction to precision," Kunwar explains. Our Mining story is about the "Invisible Mine"—using AI and IoT to extract value with minimal footprint. We help firms transition to the "Green Metal" era, where efficiency is the new currency.
+              "We are moving from extraction to precision," Prashant explains. Our Mining story is about the "Invisible Mine"—using AI and IoT to extract value with minimal footprint. We help firms transition to the "Green Metal" era, where efficiency is the new currency.
             </p>
             <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
               <span>Autonomous Operations</span>
@@ -4020,7 +4107,7 @@ Ensure the output is valid JSON only.`,
             </div>
             <h3 className="text-2xl font-bold mb-4">Industrial IoT: <span className="text-accent">The Neural Factory</span></h3>
             <p className="text-white/50 leading-relaxed mb-6">
-              Kunwar's vision for IoT isn't just about sensors; it's about "Industrial Consciousness." We build the neural pathways that allow factories to sense, think, and adapt in real-time. It's the transition from static production to living systems.
+              Prashant's vision for IoT isn't just about sensors; it's about "Industrial Consciousness." We build the neural pathways that allow factories to sense, think, and adapt in real-time. It's the transition from static production to living systems.
             </p>
             <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
               <span>Predictive Maintenance</span>
@@ -4032,7 +4119,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* Client Intelligence Suite Section */}
-      <section id="market-insights" className="py-24 px-6 max-w-7xl mx-auto">
+      <section id="market-insights" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
         <MarketInsightTool />
       </section>
       
@@ -4062,7 +4149,7 @@ Ensure the output is valid JSON only.`,
         )}
       </div>
 
-      <section id="pricing" className="py-24 bg-[#07090c] text-white border-y border-white/5 relative overflow-hidden">
+      <section id="pricing" className="py-14 md:py-16 bg-[#07090c] text-white border-y border-white/5 relative overflow-hidden">
         {/* Glow Effects */}
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -4168,7 +4255,7 @@ Ensure the output is valid JSON only.`,
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-accent mt-0.5">✓</span>
-                    <p className="text-xs text-white/70">1-on-1 direct board access with Kunwar</p>
+                    <p className="text-xs text-white/70">1-on-1 direct board access with Prashant</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <span className="text-accent mt-0.5">✓</span>
@@ -4189,7 +4276,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 9. Feature: Sustainability Impact Calculator */}
-      <section id="calculator" className="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
+      <section id="calculator" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="bg-accent-deep/20 border border-accent/20 rounded-[40px] p-12 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-12 opacity-5">
             <Activity className="w-64 h-64 text-accent" />
@@ -4257,8 +4344,8 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 10. Feature: Global Project Map */}
-      <section id="map" className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+      <section id="map" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-10">
           <h2 className="text-4xl font-bold tracking-tight mb-4">Global Footprint</h2>
           <p className="text-white/40 max-w-2xl mx-auto">500+ projects across 6 continents. Our intelligence knows no borders.</p>
         </div>
@@ -4300,7 +4387,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 11. Feature: Expert Network Carousel */}
-      <section className="py-24 bg-brand-light/10">
+      <section className="py-14 md:py-16 bg-brand-light/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16 gap-6">
             <div>
@@ -4372,7 +4459,7 @@ Ensure the output is valid JSON only.`,
       </section>
 
       {/* 12. Feature: Industrial Oracle Subscription */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
+      <section className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
         <div className="bg-accent text-brand rounded-[40px] p-16 text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)', backgroundSize: '10px 10px' }} />
           
