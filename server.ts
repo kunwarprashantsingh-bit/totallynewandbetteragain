@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import YahooFinanceImport from "yahoo-finance2";
 import Parser from "rss-parser";
@@ -22,6 +23,22 @@ async function startServer() {
   app.use(express.json());
 
   // API Routes
+  app.get("/source.zip", (req, res) => {
+    const zipPath = path.join(process.cwd(), "public", "source.zip");
+    if (fs.existsSync(zipPath)) {
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader("Content-Disposition", "attachment; filename=source.zip");
+      return res.sendFile(zipPath);
+    }
+    const rootZipPath = path.join(process.cwd(), "source.zip");
+    if (fs.existsSync(rootZipPath)) {
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader("Content-Disposition", "attachment; filename=source.zip");
+      return res.sendFile(rootZipPath);
+    }
+    res.status(404).send("source.zip is currently being regenerated, please refresh in 5 seconds.");
+  });
+
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
   });
