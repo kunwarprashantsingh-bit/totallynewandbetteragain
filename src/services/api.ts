@@ -85,59 +85,59 @@ const MOCK_NEWS = [
 
 const MOCK_REPORTS: Record<string, ResearchReport[]> = {
   'Building Materials': [
-    { title: "2026 Global Cement Market Analysis", type: "Report", source: "IEA", date: "Jan 2026", url: "https://www.iea.org/reports/cement" },
-    { title: "Sustainable Steel: Future Trends", type: "Whitepaper", source: "Deloitte", date: "Feb 2026", url: "https://www2.deloitte.com/global/en/pages/energy-and-resources/articles/decarbonizing-steel.html" },
-    { title: "Lumber Supply Chain Resilience", type: "Analysis", source: "Bloomberg", date: "Mar 2026", url: "https://www.bloomberg.com/markets/commodities" }
+    { title: "2026 Global Cement Market Analysis", type: "Report", source: "IEA", date: "Jan 2026", url: "https://www.iea.org/reports/cement", summary: "Comprehensive analysis of global cement demand, production volumes, and decarbonization strategies in G10 economies.", impact: "High" },
+    { title: "Sustainable Steel: Future Trends", type: "Whitepaper", source: "Deloitte", date: "Feb 2026", url: "https://www2.deloitte.com/global/en/pages/energy-and-resources/articles/decarbonizing-steel.html", summary: "An in-depth guide to electric arc furnace adoption and green hydrogen integration in heavy steel smelting operations.", impact: "Medium" },
+    { title: "Lumber Supply Chain Resilience", type: "Analysis", source: "Bloomberg", date: "Mar 2026", url: "https://www.bloomberg.com/markets/commodities", summary: "Assessing softwood lumber import tariffs and shipping logjams across North American trade terminals.", impact: "Low" }
   ],
   'Energy': [
-    { title: "World Energy Outlook 2026", type: "Report", source: "IEA", date: "Jan 2026", url: "https://www.iea.org/reports/world-energy-outlook-2023" },
-    { title: "The Future of Natural Gas", type: "Analysis", source: "BP", date: "Feb 2026", url: "https://www.bp.com/en/global/corporate/energy-economics/energy-outlook.html" },
-    { title: "Renewable Energy Integration", type: "Whitepaper", source: "McKinsey", date: "Mar 2026", url: "https://www.mckinsey.com/industries/electric-power-and-natural-gas/our-insights" }
+    { title: "World Energy Outlook 2026", type: "Report", source: "IEA", date: "Jan 2026", url: "https://www.iea.org/reports/world-energy-outlook-2023", summary: "Global strategic outlook outlining capacity expansion thresholds for clean energy and fossil fuel dependencies.", impact: "High" },
+    { title: "The Future of Natural Gas", type: "Analysis", source: "BP", date: "Feb 2026", url: "https://www.bp.com/en/global/corporate/energy-economics/energy-outlook.html", summary: "Cross-border LNG transport routes, capacity expansions, and regional spot price indexes in the Eurasian market.", impact: "High" },
+    { title: "Renewable Energy Integration", type: "Whitepaper", source: "McKinsey", date: "Mar 2026", url: "https://www.mckinsey.com/industries/electric-power-and-natural-gas/our-insights", summary: "Grid modernization bottlenecks and battery storage capacity metrics for large-scale solar and wind arrays.", impact: "Medium" }
   ],
   'Shipping': [
-    { title: "BDI Historical Trends and 2026 Forecast", type: "Report", source: "Maritime Institute", date: "Jan 2026", url: "https://www.balticexchange.com/en/data-services/market-reports.html" },
-    { title: "Global Shipping Routes in a Decarbonizing World", type: "Analysis", source: "Lloyd's List", date: "Feb 2026", url: "https://lloydslist.maritimeintelligence.informa.com/" },
-    { title: "Dry Bulk Market Dynamics", type: "Whitepaper", source: "Clarksons", date: "Mar 2026", url: "https://www.clarksons.com/research/" }
+    { title: "BDI Historical Trends and 2026 Forecast", type: "Report", source: "Maritime Institute", date: "Jan 2026", url: "https://www.balticexchange.com/en/data-services/market-reports.html", summary: "Analytical deep-dive into the Baltic Dry Index and vessel capacity projections across major global maritime corridors.", impact: "High" },
+    { title: "Global Shipping Routes in a Decarbonizing World", type: "Analysis", source: "Lloyd's List", date: "Feb 2026", url: "https://lloydslist.maritimeintelligence.informa.com/", summary: "Evaluating carbon fuel tax levies and speed-limitation impacts on trans-pacific trade channels.", impact: "Medium" },
+    { title: "Dry Bulk Market Dynamics", type: "Whitepaper", source: "Clarksons", date: "Mar 2026", url: "https://www.clarksons.com/research/", summary: "Analysis of Capesize and Panamax vessel utilization metrics under supply chain bottlenecks and canal drought conditions.", impact: "Low" }
   ],
   'Steel': [
-    { title: "Global Steel Demand 2026", type: "Report", source: "World Steel", date: "Jan 2026", url: "https://worldsteel.org/steel-topics/statistics/" },
-    { title: "Green Hydrogen in Metallurgy", type: "Analysis", source: "ArcelorMittal", date: "Feb 2026", url: "https://corporate.arcelormittal.com/climate-action" },
-    { title: "Scrap Metal Supply Chain", type: "Whitepaper", source: "BIR", date: "Mar 2026", url: "https://www.bir.org/market-reports" }
+    { title: "Global Steel Demand 2026", type: "Report", source: "World Steel", date: "Jan 2026", url: "https://worldsteel.org/steel-topics/statistics/", summary: "Evaluating steel consumption forecasts across infrastructure development projects and automotive manufacturing hubs.", impact: "High" },
+    { title: "Green Hydrogen in Metallurgy", type: "Analysis", source: "ArcelorMittal", date: "Feb 2026", url: "https://corporate.arcelormittal.com/climate-action", summary: "Technical review of hydrogen-based direct reduced iron (DRI) smelting projects in Western Europe.", impact: "Medium" },
+    { title: "Scrap Metal Supply Chain", type: "Whitepaper", source: "BIR", date: "Mar 2026", url: "https://www.bir.org/market-reports", summary: "Evaluating geopolitical export restrictions on ferrous and non-ferrous scrap metal inputs.", impact: "Low" }
   ],
   'Chemicals': [
-    { title: "Petrochemical Market Outlook", type: "Report", source: "IHS Markit", date: "Jan 2026", url: "https://main.ihsmarkit.com/products/chemical-market-advisory-services.html" },
-    { title: "Sustainable Polymers Research", type: "Analysis", source: "BASF", date: "Feb 2026", url: "https://www.basf.com/global/en/who-we-are/sustainability.html" },
-    { title: "Specialty Chemicals Growth", type: "Whitepaper", source: "Evonik", date: "Mar 2026", url: "https://corporate.evonik.com/en/responsibility/sustainability/" }
+    { title: "Petrochemical Market Outlook", type: "Report", source: "IHS Markit", date: "Jan 2026", url: "https://main.ihsmarkit.com/products/chemical-market-advisory-services.html", summary: "Evaluating ethylene and propylene production margins amid natural gas price fluctuations.", impact: "High" },
+    { title: "Sustainable Polymers Research", type: "Analysis", source: "BASF", date: "Feb 2026", url: "https://www.basf.com/global/en/who-we-are/sustainability.html", summary: "Innovation index for bio-based and biodegradable plastics scaling in high-volume packaging applications.", impact: "Medium" },
+    { title: "Specialty Chemicals Growth", type: "Whitepaper", source: "Evonik", date: "Mar 2026", url: "https://corporate.evonik.com/en/responsibility/sustainability/", summary: "Evaluating specialized coatings and high-performance additives demand in modern electronics manufacturing.", impact: "Low" }
   ],
   'Mining': [
-    { title: "Critical Minerals for Energy Transition", type: "Report", source: "IEA", date: "Jan 2026", url: "https://www.iea.org/reports/the-role-of-critical-minerals-in-clean-energy-transitions" },
-    { title: "Lithium Supply-Demand Gap", type: "Analysis", source: "Albemarle", date: "Feb 2026", url: "https://www.albemarle.com/sustainability" },
-    { title: "Rare Earth Mining in 2026", type: "Whitepaper", source: "USGS", date: "Mar 2026", url: "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries" }
+    { title: "Critical Minerals for Energy Transition", type: "Report", source: "IEA", date: "Jan 2026", url: "https://www.iea.org/reports/the-role-of-critical-minerals-in-clean-energy-transitions", summary: "Geopolitical risk and supply concentration indexes for lithium, cobalt, nickel, and copper.", impact: "High" },
+    { title: "Lithium Supply-Demand Gap", type: "Analysis", source: "Albemarle", date: "Feb 2026", url: "https://www.albemarle.com/sustainability", summary: "Evaluating brine extraction versus hard rock mining outputs across South American and Australian hubs.", impact: "High" },
+    { title: "Rare Earth Mining in 2026", type: "Whitepaper", source: "USGS", date: "Mar 2026", url: "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries", summary: "Tracking domestic mining permits and processing facility rollouts to mitigate reliance on foreign supplies.", impact: "Medium" }
   ],
   'Agribusiness': [
-    { title: "Global Fertilizer Market Trends", type: "Report", source: "IFA", date: "Jan 2026", url: "https://www.fertilizer.org/Public/Market_Resources/Market_Reports.aspx" },
-    { title: "Precision Agriculture Impact", type: "Analysis", source: "John Deere", date: "Feb 2026", url: "https://www.deere.com/en/our-company/sustainability/" },
-    { title: "Food Security and Supply Chains", type: "Whitepaper", source: "FAO", date: "Mar 2026", url: "https://www.fao.org/worldfoodsituation/foodpricesindex/en/" }
+    { title: "Global Fertilizer Market Trends", type: "Report", source: "IFA", date: "Jan 2026", url: "https://www.fertilizer.org/Public/Market_Resources/Market_Reports.aspx", summary: "Nitrogen, potash, and phosphate supply chains under high natural gas cost structures.", impact: "High" },
+    { title: "Precision Agriculture Impact", type: "Analysis", source: "John Deere", date: "Feb 2026", url: "https://www.deere.com/en/our-company/sustainability/", summary: "Evaluating GPS-guided machinery and machine-learning soil diagnostics on crop yield coefficients.", impact: "Medium" },
+    { title: "Food Security and Supply Chains", type: "Whitepaper", source: "FAO", date: "Mar 2026", url: "https://www.fao.org/worldfoodsituation/foodpricesindex/en/", summary: "Monitoring global grain price volatility indexes and wheat export restrictions across Eastern Europe.", impact: "High" }
   ],
   'Logistics': [
-    { title: "Supply Chain Resilience Index 2026", type: "Report", source: "DHL", date: "Jan 2026", url: "https://www.dhl.com/global-en/home/insights-and-innovation/thought-leadership/white-papers/global-connectedness-index.html" },
-    { title: "Last-Mile Delivery Optimization", type: "Analysis", source: "FedEx", date: "Feb 2026", url: "https://www.fedex.com/en-us/about/sustainability.html" },
-    { title: "Warehouse Automation Trends", type: "Whitepaper", source: "Amazon Robotics", date: "Mar 2026", url: "https://www.aboutamazon.com/news/operations/how-amazon-robotics-is-shaping-the-future-of-work" }
+    { title: "Supply Chain Resilience Index 2026", type: "Report", source: "DHL", date: "Jan 2026", url: "https://www.dhl.com/global-en/home/insights-and-innovation/thought-leadership/white-papers/global-connectedness-index.html", summary: "Comprehensive metric mapping warehouse capacity, multimodal transit delays, and nearshoring patterns.", impact: "High" },
+    { title: "Last-Mile Delivery Optimization", type: "Analysis", source: "FedEx", date: "Feb 2026", url: "https://www.fedex.com/en-us/about/sustainability.html", summary: "Assessing electric fleet rollouts and autonomous routing software efficiencies in major urban density centers.", impact: "Low" },
+    { title: "Warehouse Automation Trends", type: "Whitepaper", source: "Amazon Robotics", date: "Mar 2026", url: "https://www.aboutamazon.com/news/operations/how-amazon-robotics-is-shaping-the-future-of-work", summary: "A review of automated guided vehicles and computer vision item picking in major distribution facilities.", impact: "Medium" }
   ],
   'Industrial AI': [
-    { title: "AI in Manufacturing: 2026 Roadmap", type: "Report", source: "NVIDIA", date: "Jan 2026", url: "https://www.nvidia.com/en-us/industrial-ai/" },
-    { title: "Collaborative Robots (Cobots)", type: "Analysis", source: "ABB", date: "Feb 2026", url: "https://new.abb.com/products/robotics/collaborative-robots" },
-    { title: "Predictive Maintenance at Scale", type: "Whitepaper", source: "Siemens", date: "Mar 2026", url: "https://www.siemens.com/global/en/products/automation/topic-areas/predictive-maintenance.html" }
+    { title: "AI in Manufacturing: 2026 Roadmap", type: "Report", source: "NVIDIA", date: "Jan 2026", url: "https://www.nvidia.com/en-us/industrial-ai/", summary: "Evaluating deep learning models on computer vision defect detection and physical plant digital twins.", impact: "High" },
+    { title: "Collaborative Robots (Cobots)", type: "Analysis", source: "ABB", date: "Feb 2026", url: "https://new.abb.com/products/robotics/collaborative-robots", summary: "Analyzing safety barriers and throughput efficiency gains of human-robot collaborative work zones.", impact: "Medium" },
+    { title: "Predictive Maintenance at Scale", type: "Whitepaper", source: "Siemens", date: "Mar 2026", url: "https://www.siemens.com/global/en/products/automation/topic-areas/predictive-maintenance.html", summary: "A technical study on sensor frequency and anomaly detection algorithms in heavy rotary machinery.", impact: "Medium" }
   ],
   'Pharmaceuticals': [
-    { title: "Global Pharma Market Outlook 2026", type: "Report", source: "IQVIA", date: "Jan 2026", url: "https://www.iqvia.com/insights/the-iqvia-institute/reports" },
-    { title: "Biotech Innovation Trends", type: "Analysis", source: "Nature Medicine", date: "Feb 2026", url: "https://www.nature.com/nm/" },
-    { title: "Pharmaceutical Supply Chain Resilience", type: "Whitepaper", source: "Pfizer", date: "Mar 2026", url: "https://www.pfizer.com/about/responsibility" }
+    { title: "Global Pharma Market Outlook 2026", type: "Report", source: "IQVIA", date: "Jan 2026", url: "https://www.iqvia.com/insights/the-iqvia-institute/reports", summary: "Evaluating biological medicine approvals and regulatory pathway adjustments in G10 markets.", impact: "High" },
+    { title: "Biotech Innovation Trends", type: "Analysis", source: "Nature Medicine", date: "Feb 2026", url: "https://www.nature.com/nm/", summary: "Evaluating gene therapy delivery mechanisms, platform safety trials, and commercial scaling prospects.", impact: "Medium" },
+    { title: "Pharmaceutical Supply Chain Resilience", type: "Whitepaper", source: "Pfizer", date: "Mar 2026", url: "https://www.pfizer.com/about/responsibility", summary: "Mapping raw active ingredient (API) sourcing diversification to eliminate critical single-point failures.", impact: "High" }
   ],
   'Global Industrial': [
-    { title: "Industrial AI: The Next Decade", type: "Report", source: "Gartner", date: "Jan 2026", url: "https://www.gartner.com/en/information-technology/insights/industrial-ai" },
-    { title: "Supply Chain Digital Twins", type: "Analysis", source: "Accenture", date: "Feb 2026", url: "https://www.accenture.com/us-en/insights/consulting/supply-chain-digital-twins" },
-    { title: "The Circular Economy in Manufacturing", type: "Whitepaper", source: "WEF", date: "Mar 2026", url: "https://www.weforum.org/projects/circular-economy" }
+    { title: "Industrial AI: The Next Decade", type: "Report", source: "Gartner", date: "Jan 2026", url: "https://www.gartner.com/en/information-technology/insights/industrial-ai", summary: "Tracking generative AI deployment architectures on heavy industrial scheduling and asset planning.", impact: "High" },
+    { title: "Supply Chain Digital Twins", type: "Analysis", source: "Accenture", date: "Feb 2026", url: "https://www.accenture.com/us-en/insights/consulting/supply-chain-digital-twins", summary: "Evaluating end-to-end digital twin modeling across ocean carriers, overland freight, and regional warehousing.", impact: "Medium" },
+    { title: "The Circular Economy in Manufacturing", type: "Whitepaper", source: "WEF", date: "Mar 2026", url: "https://www.weforum.org/projects/circular-economy", summary: "Assessing closed-loop material re-utilization systems and manufacturing carbon offsets indices.", impact: "Low" }
   ]
 };
 
@@ -166,6 +166,12 @@ export async function getMarketInsights(query: string): Promise<{ text: string, 
       const err: any = new Error(`Failed to fetch insights from backend: ${response.status} ${errText}`);
       err.status = response.status;
       throw err;
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // Backend not running, throw error to trigger fallback mock data
+      throw new Error(`Response is not JSON (content-type: ${contentType})`);
     }
 
     const result = await response.json();
@@ -263,7 +269,8 @@ export async function getRealTimeNews() {
     if (!response.ok) throw new Error('Failed to fetch news');
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      throw new Error(`Response is not JSON (content-type: ${contentType})`);
+      // Backend not running (e.g. static hosting SPA fallback), gracefully use fallback news
+      return MOCK_NEWS;
     }
     const result = await response.json();
     
@@ -284,7 +291,7 @@ export async function getNewsletterNews(topic: string, date: string) {
     return cache[cacheKey].data;
   }
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `Generate 5 detailed news articles for the topic: ${topic} for the date: ${date}. 
       The articles should be re-written from global sources (any language) into professional English. 
@@ -334,9 +341,9 @@ export async function getResearchReports(category: string) {
     return cache[cacheKey].data;
   }
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: `List the top 10 current global research reports or major market analyses for the ${category} industry in 2026. For each report, provide the 'title', 'type' (e.g., Report, Analysis, Whitepaper), 'source' (e.g., IEA, Bloomberg, Deloitte), 'date' (e.g., Mar 2026), and 'url'.`,
+      contents: `List the top 10 current global research reports or major market analyses for the ${category} industry in 2026. For each report, provide the 'title', 'type' (e.g., Report, Analysis, Whitepaper), 'source' (e.g., IEA, Bloomberg, Deloitte), 'date' (e.g., Mar 2026), 'url', 'summary' (a brief 1-sentence description), and 'impact' (choose exactly one of: 'High', 'Medium', 'Low').`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -349,8 +356,10 @@ export async function getResearchReports(category: string) {
               source: { type: Type.STRING },
               date: { type: Type.STRING },
               url: { type: Type.STRING },
+              summary: { type: Type.STRING },
+              impact: { type: Type.STRING },
             },
-            required: ["title", "type", "source", "date", "url"],
+            required: ["title", "type", "source", "date", "url", "summary", "impact"],
           },
         },
       },
@@ -471,7 +480,7 @@ export async function getRegionalMacroNews(region: string) {
     return cache[cacheKey].data;
   }
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `As a senior geopolitical and macroeconomic analyst for Survvi Opulence Insights, provide 5 major news items and strategic updates for the region: ${region} as of March 2026. 
       Provide a diverse mixture of:
@@ -519,7 +528,7 @@ export async function getRegionalMacroNews(region: string) {
 
 export async function analyzeMacroIncident(region: string, incident: string) {
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `You are the lead geopolitical strategist and defense security advisor for Survvi Opulence Insights. 
       Analyze the hypothetical or real-time event/incident: "${incident}" and its strategic impact on the region: "${region}".
@@ -585,7 +594,7 @@ export async function getPredictiveAnalytics(sector: string) {
     return cache[cacheKey].data;
   }
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `As an AI market analyst for Survvi Opulence Insights, provide a 12-month predictive forecast for the ${sector} sector as of March 2026. 
       Include:
@@ -662,7 +671,7 @@ export async function getPredictiveModel(variables: Record<string, number>) {
     return cache[cacheKey].data;
   }
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `As an industrial market analyst for Survvi Opulence Insights, calculate the predictive impact of these variables: ${JSON.stringify(variables)}. 
       Focus on how they affect industrial costs (${SECTORS.slice(0, 4).join(', ')}). 
@@ -707,7 +716,7 @@ export async function getSupplyChainNodes() {
     return cache[cacheKey].data;
   }
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: "Identify 11 major global supply chain nodes (ports, industrial hubs, pharmaceutical distribution centers) for industrial sectors as of March 2026. Make sure to include Mumbai (Port of Mumbai / JNPT) as one of the prominent strategic hubs in South Asia. Include 'id', 'name', 'status' (optimal, congested, critical), 'lat', 'lng', and 'description' (current bottleneck details).",
       config: {
@@ -834,7 +843,7 @@ export async function getSupplyChainNodes() {
 
 export async function getComplianceRegulations(region: string) {
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `List 5 major ESG and industrial regulations for the region: ${region} in 2026. Include 'id', 'region', 'title', 'status' (active, upcoming, proposed), 'impactScore' (1-100), and 'description'.`,
       config: {
@@ -869,7 +878,7 @@ export async function getComplianceRegulations(region: string) {
 
 export async function getSentimentAnalysis(commodities: string[] = [...COMMODITIES.slice(0, 5)], dateRange: string = '7d') {
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `Provide daily sentiment analysis for the following commodities: ${commodities.join(', ')} for the last ${dateRange} as of March 2026. For each day and commodity, include 'commodity', 'sentiment' (-1 to 1), 'trend' (up, down, neutral), 'topKeywords' (array of strings), and 'date' (ISO string).`,
       config: {
@@ -903,7 +912,7 @@ export async function getSentimentAnalysis(commodities: string[] = [...COMMODITI
 
 export async function analyzeDocument(text: string) {
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `As a senior consultant at Survvi Opulence Insights, analyze this industrial project document and identify key risks and opportunities based on current 2026 market intelligence: ${text}`,
     }));
@@ -933,7 +942,8 @@ export async function getLiveMarketData(): Promise<MarketData[]> {
     if (!response.ok) throw new Error('Failed to fetch market data');
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      throw new Error(`Response is not JSON (content-type: ${contentType})`);
+      // Backend not running (e.g. static hosting SPA fallback), gracefully use mock data
+      return MOCK_MARKET_DATA;
     }
     const result = await response.json();
     
@@ -968,7 +978,7 @@ export const MOCK_MARKET_DATA: MarketData[] = [
 
 export async function generateResearchPDFContent(topic: string) {
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `Generate a detailed professional research briefing for today on the topic: ${topic}. 
       Include a title, an executive summary, 3 key trends, and a future outlook. Format it logically as it will be shown in a PDF.`,
@@ -1008,7 +1018,7 @@ export async function generateResearchPDFContent(topic: string) {
 
 export async function getAssetBriefing(name: string, symbol: string): Promise<{ text: string, sources?: { uri: string, title: string }[] }> {
   try {
-    const response = await withRetry(() => ai.models.generateContent({
+    const response: any = await withRetry(() => ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `You are an elite global commodities and macro logistics analyst at Survvi Opulence Insights.
       Provide a highly precise, data-driven intelligence briefing for the asset/index: "${name}" (${symbol}).
