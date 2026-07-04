@@ -74,9 +74,9 @@ export const MethodologyModal = ({ methodology, onClose, isOpen }: { methodology
 
         <button 
           onClick={onClose}
-          className="w-full mt-10 bg-white text-brand font-bold py-4 rounded-xl hover:bg-accent hover:text-brand transition-all"
+          className="w-full mt-10 bg-gradient-to-r from-accent to-accent-deep text-brand font-bold text-xs uppercase tracking-widest py-4 rounded-xl hover:shadow-[0_4px_25px_rgba(197,160,89,0.35)] hover:scale-[1.01] transition-all duration-300"
         >
-          Close Methodology
+          Dismiss Briefing
         </button>
       </motion.div>
     </div>
@@ -89,8 +89,11 @@ export const FeatureCard = ({ icon: Icon, title, description, index, onOpenMetho
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ delay: index * 0.1 }}
     onClick={() => onOpenMethodology(title)}
-    className="group p-8 bg-brand-light/30 border border-white/5 rounded-2xl hover:bg-brand-light/50 hover:border-accent/30 transition-all duration-500 flex flex-col h-full cursor-pointer"
+    className="group p-8 bg-brand-light/30 border border-white/5 rounded-2xl hover:bg-brand-light/50 hover:border-accent/30 hover:shadow-[0_12px_30px_rgba(197,160,89,0.05)] transition-all duration-500 flex flex-col h-full cursor-pointer relative overflow-hidden"
   >
+    {/* Soft ambient corner light on card hover */}
+    <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    
     <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-brand transition-all duration-500">
       <Icon className="w-6 h-6 text-accent group-hover:text-brand" />
     </div>
@@ -99,7 +102,7 @@ export const FeatureCard = ({ icon: Icon, title, description, index, onOpenMetho
     
     <div className="inline-flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-widest group/btn">
       View Methodology
-      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1.5 transition-transform duration-300" />
     </div>
   </motion.div>
 );
