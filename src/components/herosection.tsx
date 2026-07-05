@@ -212,7 +212,7 @@ export function HeroSection({ language }: { language: 'en' | 'es' | 'zh' | 'ar' 
                   </div>
                 </div>
                 
-                <div className="h-[180px] w-full mt-2">
+                <div className="h-[180px] w-full mt-2 relative min-h-[180px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={SECTOR_CHART_DATA[activeSector] || SECTOR_CHART_DATA.Logistics}>
                       <defs>
