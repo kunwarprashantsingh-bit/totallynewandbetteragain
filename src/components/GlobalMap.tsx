@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Globe, Layers, AlertCircle, Loader2 } from 'lucide-react';
+import { MapPin, Globe, Layers, AlertCircle, Loader2, Search, X } from 'lucide-react';
 import { geoEquirectangular, geoPath } from 'd3';
 import { feature } from 'topojson-client';
 
@@ -8,9 +8,10 @@ interface GlobalMapProps {
   nodes?: any[];
   selectedNodeId?: string;
   onNodeClick?: (node: any) => void;
+  hideControls?: boolean;
 }
 
-const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClick }) => {
+const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClick, hideControls = false }) => {
   const [hoveredCity, setHoveredCity] = useState<string | null>(null);
   const [hoveredNode, setHoveredNode] = useState<any | null>(null);
   const [mapMode, setMapMode] = useState<'satellite' | 'night' | 'tactical'>('satellite');
@@ -20,10 +21,16 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
   const [loadError, setLoadError] = useState<string | null>(null);
   const [showGrid, setShowGrid] = useState(true);
   const [showSonar, setShowSonar] = useState(true);
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null);
+
+  const currentSelectedId = selectedNodeId || internalSelectedId;
 
   useEffect(() => {
     let active = true;
-    fetch("https://unpkg.com/world-atlas@2.0.2/countries-110m.json")
+    fetch("/world-110m.json")
       .then(res => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
@@ -53,13 +60,6 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
     const projected = d3Projection([coords[0], coords[1]]);
     return projected || [0, 0];
   };
-
-  const activeNodeProjectedCoords = React.useMemo(() => {
-    if (!selectedNodeId || !nodes) return null;
-    const node = nodes.find(n => n.id === selectedNodeId);
-    if (!node) return null;
-    return projection([node.lng, node.lat]);
-  }, [selectedNodeId, nodes, d3Projection]);
 
   const getLaneStatusStyle = (fromId: string, toId: string) => {
     if (!nodes) return { color: "rgba(255,255,255,0.15)", duration: 5, width: 0.75, glowColor: "rgba(255,255,255,0.3)", dash: "4 10" };
@@ -167,74 +167,181 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
 
   const isUsingProps = nodes && nodes.length > 0;
 
+  const activeNodeProjectedCoords = React.useMemo(() => {
+    if (!currentSelectedId) return null;
+    if (isUsingProps) {
+      const node = nodes?.find(n => n.id === currentSelectedId);
+      if (!node) return null;
+      return projection([node.lng, node.lat]);
+    } else {
+      const city = cities.find(c => c.name === currentSelectedId);
+      if (!city) return null;
+      return projection(city.coords);
+    }
+  }, [currentSelectedId, nodes, cities, d3Projection, isUsingProps]);
+
+  const searchResults = React.useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    if (isUsingProps) {
+      return (nodes || []).filter(n => 
+        n.name.toLowerCase().includes(query) || 
+        (n.description && n.description.toLowerCase().includes(query))
+      );
+    } else {
+      return cities.filter(c => c.name.toLowerCase().includes(query));
+    }
+  }, [searchQuery, nodes, cities, isUsingProps]);
+
+  const handleSearchResultClick = (result: any) => {
+    if (isUsingProps) {
+      setInternalSelectedId(result.id);
+      if (onNodeClick) onNodeClick(result);
+    } else {
+      setInternalSelectedId(result.name);
+    }
+    setSearchQuery("");
+    setIsSearchFocused(false);
+  };
+
   return (
     <div className="relative w-full h-full min-h-[400px] bg-brand-dark/50 rounded-3xl overflow-hidden border border-white/5">
       {/* Real Map Layer Controls */}
-      <div className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-3 bg-brand-dark/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/10 shadow-xl">
-        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent mr-1">
-          <Layers className="w-3.5 h-3.5 text-accent animate-pulse" />
-          <span>Real World Map</span>
-        </div>
-        
-        {/* Toggle Buttons */}
-        <div className="flex items-center gap-1 bg-white/5 p-0.5 rounded-xl border border-white/5">
-          {(['satellite', 'night', 'tactical'] as const).map((mode) => (
+      {!hideControls && (
+        <div className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-3 bg-brand-dark/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/10 shadow-xl">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-accent mr-1">
+            <Layers className="w-3.5 h-3.5 text-accent animate-pulse" />
+            <span>Real World Map</span>
+          </div>
+          
+          {/* Toggle Buttons */}
+          <div className="flex items-center gap-1 bg-white/5 p-0.5 rounded-xl border border-white/5">
+            {(['satellite', 'night', 'tactical'] as const).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => {
+                  setMapMode(mode);
+                  if (mode === 'tactical') setMapOpacity(0.15);
+                  else if (mode === 'satellite') setMapOpacity(0.55);
+                  else setMapOpacity(0.65);
+                }}
+                className={`px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-wider transition-all ${
+                  mapMode === mode 
+                    ? 'bg-accent text-brand shadow-md shadow-accent/10' 
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {mode === 'tactical' ? 'Vector' : mode === 'satellite' ? 'Physical' : 'Night'}
+              </button>
+            ))}
+          </div>
+
+          {/* Opacity slider */}
+          <div className="hidden sm:flex items-center gap-2 border-l border-white/10 pl-3">
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-widest">Dim</span>
+            <input
+              type="range"
+              min="0.05"
+              max="0.95"
+              step="0.05"
+              value={mapOpacity}
+              onChange={(e) => setMapOpacity(parseFloat(e.target.value))}
+              className="w-16 accent-accent bg-white/10 h-1 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-widest">Bright</span>
+          </div>
+
+          {/* Technical Toggles */}
+          <div className="flex items-center gap-1.5 border-l border-white/10 pl-3">
             <button
-              key={mode}
-              onClick={() => {
-                setMapMode(mode);
-                if (mode === 'tactical') setMapOpacity(0.15);
-                else if (mode === 'satellite') setMapOpacity(0.55);
-                else setMapOpacity(0.65);
-              }}
-              className={`px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-wider transition-all ${
-                mapMode === mode 
-                  ? 'bg-accent text-brand shadow-md shadow-accent/10' 
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
+              onClick={() => setShowGrid(!showGrid)}
+              className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest transition-all border ${
+                showGrid 
+                  ? 'bg-accent/15 border-accent/40 text-accent font-black' 
+                  : 'bg-transparent border-white/5 text-white/40 hover:text-white/60 hover:border-white/10'
               }`}
             >
-              {mode === 'tactical' ? 'Vector' : mode === 'satellite' ? 'Physical' : 'Night'}
+              Grid
             </button>
-          ))}
+            <button
+              onClick={() => setShowSonar(!showSonar)}
+              className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest transition-all border ${
+                showSonar 
+                  ? 'bg-accent/15 border-accent/40 text-accent font-black' 
+                  : 'bg-transparent border-white/5 text-white/40 hover:text-white/60 hover:border-white/10'
+              }`}
+            >
+              Sonar
+            </button>
+          </div>
         </div>
+      )}
 
-        {/* Opacity slider */}
-        <div className="hidden sm:flex items-center gap-2 border-l border-white/10 pl-3">
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-widest">Dim</span>
-          <input
-            type="range"
-            min="0.05"
-            max="0.95"
-            step="0.05"
-            value={mapOpacity}
-            onChange={(e) => setMapOpacity(parseFloat(e.target.value))}
-            className="w-16 accent-accent bg-white/10 h-1 rounded-lg appearance-none cursor-pointer"
-          />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-widest">Bright</span>
-        </div>
-
-        {/* Technical Toggles */}
-        <div className="flex items-center gap-1.5 border-l border-white/10 pl-3">
-          <button
-            onClick={() => setShowGrid(!showGrid)}
-            className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest transition-all border ${
-              showGrid 
-                ? 'bg-accent/15 border-accent/40 text-accent font-black' 
-                : 'bg-transparent border-white/5 text-white/40 hover:text-white/60 hover:border-white/10'
-            }`}
-          >
-            Grid
-          </button>
-          <button
-            onClick={() => setShowSonar(!showSonar)}
-            className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-widest transition-all border ${
-              showSonar 
-                ? 'bg-accent/15 border-accent/40 text-accent font-black' 
-                : 'bg-transparent border-white/5 text-white/40 hover:text-white/60 hover:border-white/10'
-            }`}
-          >
-            Sonar
-          </button>
+      {/* Search Bar */}
+      <div className="absolute top-4 right-4 z-30">
+        <div className={`flex flex-col bg-brand-dark/85 backdrop-blur-md rounded-2xl border ${isSearchFocused ? 'border-accent/40 shadow-accent/10' : 'border-white/10'} shadow-xl transition-all duration-300`}>
+          <div className="flex items-center px-3 py-2 w-64">
+            <Search className={`w-4 h-4 mr-2 ${isSearchFocused ? 'text-accent' : 'text-white/40'}`} />
+            <input
+              type="text"
+              placeholder={isUsingProps ? "Search Nodes..." : "Search Cities..."}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+              className="bg-transparent border-none outline-none text-xs text-white placeholder:text-white/40 w-full font-mono"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} className="ml-2 hover:bg-white/10 rounded-full p-0.5">
+                <X className="w-3.5 h-3.5 text-white/60" />
+              </button>
+            )}
+          </div>
+          
+          <AnimatePresence>
+            {isSearchFocused && searchResults.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="max-h-60 overflow-y-auto border-t border-white/5 no-scrollbar"
+              >
+                {searchResults.map((result: any, i) => (
+                  <div
+                    key={result.id || result.name || i}
+                    onClick={() => handleSearchResultClick(result)}
+                    className="px-3 py-2.5 hover:bg-white/5 cursor-pointer flex items-center justify-between border-b border-white/5 last:border-0 group"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold text-white group-hover:text-accent uppercase tracking-wider line-clamp-1">{result.name}</span>
+                      {result.description && (
+                        <span className="text-[8px] text-white/40 line-clamp-1">{result.description}</span>
+                      )}
+                    </div>
+                    {isUsingProps && result.status && (
+                      <span className="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded ml-2" style={{
+                        backgroundColor: `${getStatusColor(result.status)}20`,
+                        color: getStatusColor(result.status)
+                      }}>
+                        {result.status}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </motion.div>
+            )}
+            
+            {isSearchFocused && searchQuery && searchResults.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="px-4 py-3 border-t border-white/5"
+              >
+                <span className="text-[10px] text-white/40">No results found</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -388,7 +495,7 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
               const midY = Math.min(y1, y2) - 30; // gentler arc for trade lanes
 
               // Highlight if selected
-              const isSelectedLane = selectedNodeId && (selectedNodeId === conn.from || selectedNodeId === conn.to);
+              const isSelectedLane = currentSelectedId && (currentSelectedId === conn.from || currentSelectedId === conn.to);
               const laneStyle = getLaneStatusStyle(conn.from, conn.to);
 
               return (
@@ -424,25 +531,26 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
           {!isUsingProps ? (
             cities.map((city, i) => {
               const [x, y] = projection(city.coords) || [0, 0];
+              const isSelected = currentSelectedId === city.name;
               return (
-                <g key={`city-${i}`} onMouseEnter={() => setHoveredCity(city.name)} onMouseLeave={() => setHoveredCity(null)} className="cursor-pointer">
+                <g key={`city-${i}`} onClick={() => handleSearchResultClick(city)} onMouseEnter={() => setHoveredCity(city.name)} onMouseLeave={() => setHoveredCity(null)} className="cursor-pointer group">
                   <motion.circle
                     cx={x}
                     cy={y}
-                    r={6}
+                    r={isSelected ? 10 : 6}
                     fill={city.color}
                     initial={{ scale: 1, opacity: 0.6 }}
-                    animate={{ scale: [1, 2.2, 1], opacity: [0.6, 0.2, 0.6] }}
+                    animate={{ scale: isSelected ? [1, 2.5, 1] : [1, 2.2, 1], opacity: isSelected ? [0.8, 0.1, 0.8] : [0.6, 0.2, 0.6] }}
                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                   />
-                  <circle cx={x} cy={y} r={3} fill={city.color} className="stroke-brand stroke-2" />
+                  <circle cx={x} cy={y} r={isSelected ? 4.5 : 3} fill={city.color} className="stroke-brand stroke-2" />
                 </g>
               );
             })
           ) : (
             nodes.map((node, i) => {
               const [x, y] = projection([node.lng, node.lat]) || [0, 0];
-              const isSelected = selectedNodeId === node.id;
+              const isSelected = currentSelectedId === node.id;
               const color = getStatusColor(node.status);
               
               return (
@@ -495,7 +603,7 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
         {showSonar && activeNodeProjectedCoords && (
           <g className="pointer-events-none">
             {Array.from({ length: 3 }).map((_, idx) => {
-              const node = nodes?.find(n => n.id === selectedNodeId);
+              const node = nodes?.find(n => n.id === currentSelectedId);
               const color = node ? getStatusColor(node.status) : '#c5a059';
               return (
                 <motion.circle
@@ -560,7 +668,7 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute top-4 right-4 px-4 py-2 bg-brand/90 backdrop-blur-md border border-accent/20 rounded-xl shadow-2xl z-10"
+            className="absolute top-16 right-4 px-4 py-2 bg-brand/90 backdrop-blur-md border border-accent/20 rounded-xl shadow-2xl z-10"
           >
             <div className="flex items-center gap-2">
               <MapPin className="w-3 h-3 text-accent" />
@@ -578,7 +686,7 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute top-4 right-4 px-4 py-3 bg-brand/95 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl z-10 w-64 pointer-events-none"
+            className="absolute top-16 right-4 px-4 py-3 bg-brand/95 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl z-10 w-64 pointer-events-none"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-white line-clamp-1">{hoveredNode.name}</span>
@@ -600,20 +708,22 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
         )}
       </AnimatePresence>
 
-      <div className="absolute bottom-4 left-4 flex items-center gap-4 bg-brand/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/5">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-          <span className="text-[9px] font-bold uppercase tracking-widest text-white/60">
-            {isUsingProps ? "Live Logistics Nodes" : "Active Projects"}
-          </span>
+      {!hideControls && (
+        <div className="absolute bottom-4 left-4 flex items-center gap-4 bg-brand/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/5">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+            <span className="text-[9px] font-bold uppercase tracking-widest text-white/60">
+              {isUsingProps ? "Live Logistics Nodes" : "Active Projects"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Globe className="w-3 h-3 text-white/20" />
+            <span className="text-[9px] font-bold uppercase tracking-widest text-white/60">
+              {isUsingProps ? "Global Sea Lanes" : "Global Network"}
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Globe className="w-3 h-3 text-white/20" />
-          <span className="text-[9px] font-bold uppercase tracking-widest text-white/60">
-            {isUsingProps ? "Global Sea Lanes" : "Global Network"}
-          </span>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
