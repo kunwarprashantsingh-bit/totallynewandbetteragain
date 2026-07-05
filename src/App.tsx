@@ -148,7 +148,7 @@ const ClientIntelligenceSuite = React.lazy(() => import('./components/ClientInte
 const ClientPortal = React.lazy(() => import('./components/ClientPortal'));
 const ContactForm = React.lazy(() => import('./components/ContactForm'));
 import { MethodologyModal, FeatureCard } from './components/MethodologyComponents';
-const PrimeAlerts = React.lazy(() => import('./components/PrimeAlerts').then(module => ({ default: module.PrimeAlerts })));
+const InlineChatbot = React.lazy(() => import('./components/InlineChatbot'));
 
 const ToolSkeleton = () => (
   <div className="w-full h-96 bg-brand-light/20 rounded-3xl animate-pulse flex items-center justify-center">
@@ -663,33 +663,46 @@ export default function App() {
   useEffect(() => {
     if (news.length === 0) return;
 
+    // Snappy initial check 1.5 seconds after tab/news loads for an instant, real-time presentation experience
+    const initialCheckTimeout = setTimeout(() => {
+      checkAndTriggerRiskAlert();
+    }, 1500);
+
     const riskScanner = setInterval(() => {
-      const highRiskItems = news.filter(n => n.riskLevel === 'High');
-      if (highRiskItems.length > 0 && !smartAlert) {
-        const item = highRiskItems[Math.floor(Math.random() * highRiskItems.length)];
+      checkAndTriggerRiskAlert();
+    }, 30000); // Scan every 30s
+
+    function checkAndTriggerRiskAlert() {
+      const freshHighRiskItems = news.filter(n => {
+        if (n.riskLevel !== 'High') return false;
+        const pubDateStr = n.publishedAt || n.date;
+        if (!pubDateStr) return false;
+        
+        const publishedTime = new Date(pubDateStr).getTime();
+        const hoursAgo = (Date.now() - publishedTime) / (1000 * 60 * 60);
+        return hoursAgo >= 0 && hoursAgo <= 4;
+      });
+
+      if (freshHighRiskItems.length > 0 && !smartAlert) {
+        const item = freshHighRiskItems[Math.floor(Math.random() * freshHighRiskItems.length)];
+        const pubTime = new Date(item.publishedAt || item.date).getTime();
+        const minsAgo = Math.max(1, Math.floor((Date.now() - pubTime) / (1000 * 60)));
+        const timeAgoStr = minsAgo < 60 ? `${minsAgo}m ago` : `${Math.floor(minsAgo / 60)}h ${minsAgo % 60}m ago`;
+
         setSmartAlert({
           title: "Survvi Autonomous Warning",
-          message: `URGENT: High risk detected in ${item.industry} sector: "${item.title}". Assessing potential ripple effects.`
+          message: `URGENT BREAKING NEWS (${timeAgoStr}): [${item.industry || 'Global'}] "${item.title}". Assessing systemic supply ripple effects.`
         });
-        setTimeout(() => setSmartAlert(null), 10000);
+        setTimeout(() => setSmartAlert(null), 12000);
       }
-    }, 45000); // Scan every 45s
-
-    // Auto Morning Brief
-    if (!hasShownBrief && news.length > 0) {
-      import('./services/api').then(m => {
-        m.getDailySummary(news).then(summary => {
-          setSmartAlert({
-            title: "Morning Strategic Brief",
-            message: summary
-          });
-          setHasShownBrief(true);
-          setTimeout(() => setSmartAlert(null), 12000);
-        });
-      });
     }
 
-    return () => clearInterval(riskScanner);
+    // Auto Morning Brief removed because it displays huge text in a tiny popup.
+
+    return () => {
+      clearTimeout(initialCheckTimeout);
+      clearInterval(riskScanner);
+    };
   }, [news, hasShownBrief, smartAlert]);
   const [researchSourceFilter, setResearchSourceFilter] = useState("");
   const [researchDateFilter, setResearchDateFilter] = useState("");
@@ -773,6 +786,20 @@ export default function App() {
     if (!researchReports[activeResearchTab]) {
       fetchResearch(activeResearchTab);
     }
+    const categoryMap: Record<string, string> = {
+      materials: 'Materials',
+      energy: 'Energy',
+      shipping: 'Shipping',
+      steel: 'Steel',
+      chemicals: 'Chemicals',
+      mining: 'Mining',
+      agribusiness: 'Agribusiness',
+      logistics: 'Logistics',
+      ai: 'Industrial AI',
+      pharma: 'Pharmaceuticals',
+      other: 'Global Industrial'
+    };
+    fetchNews(categoryMap[activeResearchTab]);
   }, [activeResearchTab]);
 
   useEffect(() => {
@@ -861,7 +888,7 @@ Summary: ${art.summary}`
       ).join("\n\n");
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Strategist. 
 Analyze the following hand-selected intelligence bulletins curated by the asset manager:
 
@@ -1101,7 +1128,7 @@ Structure your response using clean, bulleted, professional sections with bold t
     setSelectedResearchInsight("");
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents: `You are a world-class commodity strategist and research director.
 Analyze this research report title: "${report.title}" from source: "${report.source}" (${report.date}).
 
@@ -1136,7 +1163,7 @@ Keep the tone extremely elite, precise, and professional. Do not use generic fil
       const categoryLabel = activeResearchTab.toUpperCase();
       
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Director.
 We have multiple high-impact intelligence reports for the sector: ${categoryLabel}.
 Analyze this collective matrix of publications:
@@ -1181,7 +1208,7 @@ Keep the formatting clean, bulleted, and in a high-caliber professional report s
       }
       
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents: `You are a Senior Sovereign Risk & Commodity Intelligence Stress-Testing Specialist.
 Evaluate the exact macro-economic and industrial impact of this stress scenario: "${stressScenario}" on the sector: "${categoryLabel}".
 
@@ -1243,9 +1270,23 @@ Ensure the output is valid JSON only.`,
     setLoadingResearch(false);
   };
 
-  const fetchNews = async () => {
+  const fetchNews = async (subject?: string) => {
     setLoadingNews(true);
-    const latestNews = await getRealTimeNews();
+    const categoryMap: Record<string, string> = {
+      materials: 'Materials',
+      energy: 'Energy',
+      shipping: 'Shipping',
+      steel: 'Steel',
+      chemicals: 'Chemicals',
+      mining: 'Mining',
+      agribusiness: 'Agribusiness',
+      logistics: 'Logistics',
+      ai: 'Industrial AI',
+      pharma: 'Pharmaceuticals',
+      other: 'Global Industrial'
+    };
+    const currentSubject = subject || categoryMap[activeResearchTab] || 'Global Industrial';
+    const latestNews = await getRealTimeNews(currentSubject);
     setNews(latestNews);
     setLoadingNews(false);
   };
@@ -1399,7 +1440,7 @@ Ensure the output is valid JSON only.`,
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents: `You are the AI assistant inside Survvi Opulence Insights. Users are high-level executives. Answer concisely. User says: ${chatInput}`
       });
       setChatMessages([...newMsgs, { role: 'ai', content: response.text || "I am analyzing this now." }]);
@@ -3322,29 +3363,17 @@ Ensure the output is valid JSON only.`,
         </div>
       </section>
 
-      {/* 12. Feature: Industrial Oracle Subscription */}
+      {/* 12. Feature: Inline Chatbot instead of Oracle Subscription */}
       <section className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
-        <div className="bg-accent text-brand rounded-[40px] p-16 text-center relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)', backgroundSize: '10px 10px' }} />
-          
-          <div className="relative z-10">
-            <h2 className="text-5xl font-bold tracking-tighter mb-6">SUBSCRIBE TO THE ORACLE</h2>
-            <p className="text-xl font-medium max-w-2xl mx-auto mb-10">
-              Get weekly strategic signals, market arbitrage alerts, and industrial foresight delivered to your inbox.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-              <input 
-                type="email" 
-                placeholder="Enter your corporate email" 
-                className="flex-1 bg-brand text-text px-8 py-4 rounded-full focus:outline-none border-2 border-transparent focus:border-text/20"
-              />
-              <button className="bg-brand text-text px-10 py-4 rounded-full font-bold hover:bg-brand/90 transition-all">
-                Join Now
-              </button>
-            </div>
-            <p className="text-[10px] uppercase tracking-widest mt-6 opacity-50 font-bold">Trusted by leaders at ArcelorMittal, Holcim, and Shell.</p>
-          </div>
+        <div className="mb-10 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">ASK SURVVI INSIGHTS</h2>
+          <p className="text-lg text-text/60 max-w-2xl mx-auto">
+            Interact with our AI consultant directly to ask questions regarding industrial foresight, market trends, and risk assessment.
+          </p>
         </div>
+        <React.Suspense fallback={<div className="h-[600px] w-full bg-surface animate-pulse rounded-3xl" />}>
+          <InlineChatbot />
+        </React.Suspense>
       </section>
 
       <ContactForm />
@@ -3424,7 +3453,6 @@ Ensure the output is valid JSON only.`,
 
       {/* 3. Feature: AI Strategic Consultant (Floating Chatbot) */}
       <React.Suspense fallback={null}>
-        <PrimeAlerts />
         <AIConsultant />
       </React.Suspense>
 
