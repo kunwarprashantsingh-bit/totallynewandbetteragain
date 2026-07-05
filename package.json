@@ -7,8 +7,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "tsx server.ts",
-    "build": "tsx zip-project.ts && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && npx -y tsx -e \"require('fs').copyFileSync('public/source.zip', 'dist/source.zip')\"",
+    "dev": "npx tsx server.ts",
+    "build": "npx tsx zip-project.ts && vite build && npx esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && node -e \"const fs=require('fs'); if(fs.existsSync('public/source.zip')) fs.copyFileSync('public/source.zip', 'dist/source.zip')\"",
     "build:prod": "vite build",
     "vercel-build": "vite build",
     "start": "node dist/server.cjs",
