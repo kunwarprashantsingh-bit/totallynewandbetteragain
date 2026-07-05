@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Globe, Layers, AlertCircle, Loader2 } from 'lucide-react';
 import { geoEquirectangular, geoPath } from 'd3';
 import { feature } from 'topojson-client';
-import worldAtlasData from '../../public/world-110m.json';
+// Using root absolute path for public asset "/world-110m.json" in fetch
 
 interface GlobalMapProps {
   nodes?: any[];
@@ -23,15 +23,25 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
   const [showSonar, setShowSonar] = useState(true);
 
   useEffect(() => {
-    try {
-      const countries = feature(worldAtlasData as any, (worldAtlasData as any).objects.countries) as any;
-      setGeoData(countries);
-      setIsLoading(false);
-    } catch (err) {
-      console.error("Error loading local map topojson:", err);
-      setLoadError("Using localized offline fallback projection.");
-      setIsLoading(false);
-    }
+    let active = true;
+    fetch("/world-110m.json")
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (!active) return;
+        const countries = feature(data, data.objects.countries) as any;
+        setGeoData(countries);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Error loading local map topojson:", err);
+        if (!active) return;
+        setLoadError("Using localized offline fallback projection.");
+        setIsLoading(false);
+      });
+      return () => { active = false; };
   }, []);
 
   const d3Projection = geoEquirectangular()

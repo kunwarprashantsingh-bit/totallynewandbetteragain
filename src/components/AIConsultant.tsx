@@ -21,7 +21,7 @@ const AIConsultant = () => {
 
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-3.5-flash",
         contents: userMsg,
         config: {
           systemInstruction: "You are a world-class industrial management consultant and AI strategist at Survvi Opulence Insights. Provide concise, high-level strategic advice on building materials, energy, and global supply chains. Use a professional, authoritative, and forward-thinking tone.",
@@ -51,7 +51,7 @@ const AIConsultant = () => {
                   <Bot className="w-6 h-6 text-brand" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-text">Strategic Oracle</h4>
+                  <h4 className="text-sm font-bold uppercase tracking-widest text-text">AI Consultant</h4>
                   <div className="flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
                     <span className="text-[10px] text-text/40 uppercase font-bold tracking-widest">Active Intelligence</span>
@@ -97,7 +97,7 @@ const AIConsultant = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Ask the Oracle..."
+                  placeholder="Ask a question..."
                   className="w-full bg-brand border border-text/10 rounded-2xl px-4 py-3 text-xs text-text placeholder:text-text/20 focus:outline-none focus:border-accent/50 pr-12"
                 />
                 <button

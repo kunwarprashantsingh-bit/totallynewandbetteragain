@@ -196,7 +196,7 @@ export const SovereignIntelligenceTerminal = ({
           <div className="flex flex-wrap items-center gap-1.5 bg-brand-light/60 p-1 rounded-xl border border-white/5">
             {[
               { id: 'news', label: 'Geopolitical Risk Desk', icon: Newspaper },
-              { id: 'research', label: 'The Industrial Oracle', icon: FileText },
+              { id: 'research', label: 'The Intelligence Hub', icon: FileText },
               { id: 'materials', label: 'Material Innovations', icon: Building2 },
               { id: 'energy', label: 'Energy Transition', icon: Zap }
             ].map(tab => {
@@ -463,7 +463,7 @@ export const SovereignIntelligenceTerminal = ({
                                     try {
                                       const textList = pinnedNews.map(n => `- [${n.source}] ${n.title}: ${n.summary}`).join('\n');
                                       const response = await ai.models.generateContent({
-                                        model: "gemini-2.0-flash",
+                                        model: "gemini-3.5-flash",
                                         contents: `Perform an institutional cross-correlation and geopolitical exposure assessment on the following news dispatches for a sovereign wealth fund. Format with clear display headings. News items:\n${textList}`
                                       });
                                       setBriefcaseAnalysis(response.text || "Briefcase assessment successfully compiled.");
@@ -635,7 +635,7 @@ export const SovereignIntelligenceTerminal = ({
               </motion.div>
             )}
 
-            {/* Tab: The Industrial Oracle */}
+            {/* Tab: The Intelligence Hub */}
             {terminalTab === 'research' && (
               <motion.div
                 key="research"
@@ -651,9 +651,9 @@ export const SovereignIntelligenceTerminal = ({
                       <Search className="w-3 h-3" />
                       Intelligence Story
                     </div>
-                    <h3 className="text-2xl font-bold mb-4">The Industrial Oracle</h3>
+                    <h3 className="text-2xl font-bold mb-4">The Intelligence Hub</h3>
                     <p className="text-white/50 text-sm leading-relaxed">
-                      "Data without context is just noise," Prashant often says. Our Research Hub is the "Industrial Oracle"—a synthesis of human expertise and machine learning that filters the global noise into actionable strategic signals. We don't just report on markets; we interpret their soul.
+                      "Data without context is just noise," Prashant often says. Our Research Hub is a synthesis of human expertise and machine learning that filters the global noise into actionable strategic signals. We don't just report on markets; we interpret their soul.
                     </p>
                   </div>
 
@@ -826,7 +826,7 @@ export const SovereignIntelligenceTerminal = ({
                         setSynthesizingSector(true);
                         try {
                           const response = await ai.models.generateContent({
-                            model: "gemini-2.0-flash",
+                            model: "gemini-3.5-flash",
                             contents: `Analyze macroeconomic exposures, supply elasticity, and price signals for the industrial sector: ${activeResearchTab}. Emphasize geopolitical friction and supply chain bottlenecks. Provide actionable risk mitigation strategies for multi-billion dollar private equity allocations. Audited by Prashant Singh.`
                           });
                           setSectorSynthesis(response.text || "Assessment completed successfully.");
