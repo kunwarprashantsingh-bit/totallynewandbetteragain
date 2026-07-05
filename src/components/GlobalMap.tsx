@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Globe, Layers, AlertCircle, Loader2 } from 'lucide-react';
 import { geoEquirectangular, geoPath } from 'd3';
 import { feature } from 'topojson-client';
-import worldAtlasUrl from '../../public/world-110m.json?url';
 
 interface GlobalMapProps {
   nodes?: any[];
@@ -24,7 +23,7 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
 
   useEffect(() => {
     let active = true;
-    fetch(worldAtlasUrl)
+    fetch("https://unpkg.com/world-atlas@2.0.2/countries-110m.json")
       .then(res => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
