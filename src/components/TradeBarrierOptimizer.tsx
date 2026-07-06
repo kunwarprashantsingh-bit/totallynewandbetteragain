@@ -63,12 +63,13 @@ const TradeBarrierOptimizer: React.FC = () => {
     const totalEmissionsTons = adjustedEmissionsFactor * shippingVolume;
     const baseLiability = totalEmissionsTons * carbonPrice;
     
-    // Regional CBAM adjustments
+    // Top 5 Global Steel Producing countries CBAM exposure and carbon intensity factors
     const regionalLiabilities = [
-      { region: 'European Union (CBAM)', rate: 1.0, liability: baseLiability, compliance: 'Critical watch / High risk' },
-      { region: 'United States (CCA)', rate: 0.72, liability: baseLiability * 0.72, compliance: 'Moderate / Legislation pending' },
-      { region: 'China (ETS Integration)', rate: 0.28, liability: baseLiability * 0.28, compliance: 'Low / Domestic offsets allowed' },
-      { region: 'United Kingdom (UK-CBAM)', rate: 0.95, liability: baseLiability * 0.95, compliance: 'Critical watch' }
+      { region: 'China', rate: 1.20, liability: baseLiability * 1.20, compliance: 'High Risk / Coal-intensive Blast Furnace dominance (Baowu, Ansteel)' },
+      { region: 'India', rate: 1.45, liability: baseLiability * 1.45, compliance: 'Critical Risk / Coal-based DRI production (Tata, JSW)' },
+      { region: 'Japan', rate: 0.95, liability: baseLiability * 0.95, compliance: 'Moderate Risk / High-efficiency integrated mills (Nippon Steel)' },
+      { region: 'United States', rate: 0.55, liability: baseLiability * 0.55, compliance: 'Low Risk / High Electric Arc Furnace (EAF) recycling share (Nucor)' },
+      { region: 'Russia', rate: 1.15, liability: baseLiability * 1.15, compliance: 'High Risk / Standard coal-reliant blast furnace mills (NLMK)' }
     ];
 
     return {
@@ -117,7 +118,7 @@ Archived on ${new Date().toLocaleString()} | Survvi Sovereign Analytics Suite`,
 
   const chartData = useMemo(() => {
     return metrics.regionalLiabilities.map(r => ({
-      region: r.region.split(' ')[0],
+      region: r.region,
       liabilityMillions: parseFloat((r.liability / 1000000).toFixed(2))
     }));
   }, [metrics]);
@@ -270,7 +271,7 @@ Archived on ${new Date().toLocaleString()} | Survvi Sovereign Analytics Suite`,
         {/* Right column: Results & Bar Chart */}
         <div className="lg:col-span-7 flex flex-col gap-6">
           <div className="bg-brand/20 border border-white/5 rounded-3xl p-6">
-            <h4 className="text-xs font-black uppercase tracking-widest text-white/40 mb-4">Regional Tariff Exposure & Compliance Status</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-white/40 mb-4">Producer Country CBAM Exposure & Compliance Status</h4>
             
             <div className="space-y-3.5">
               {metrics.regionalLiabilities.map((reg, idx) => (
@@ -294,7 +295,7 @@ Archived on ${new Date().toLocaleString()} | Survvi Sovereign Analytics Suite`,
 
           {/* Bar Chart comparing regional exposures */}
           <div className="bg-brand/20 border border-white/5 rounded-3xl p-6 flex-1 flex flex-col">
-            <h4 className="text-xs font-black uppercase tracking-widest text-white/40 mb-6">Regional Carbon Tariff Exposure ($ Millions)</h4>
+            <h4 className="text-xs font-black uppercase tracking-widest text-white/40 mb-6">Top 5 Global Steel Producers CBAM Exposure ($ Millions)</h4>
             
             <div className="flex-1 min-h-[220px]">
               <ResponsiveContainer width="100%" height="100%">
