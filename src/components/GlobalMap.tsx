@@ -3,16 +3,17 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Globe, Layers, AlertCircle, Loader2, Search, X } from 'lucide-react';
 import { geoEquirectangular, geoPath } from 'd3';
 import { feature } from 'topojson-client';
-import worldAtlasUrl from '../../public/world-110m.json?url';
+import worldData from '../../public/world-110m.json';
 
 interface GlobalMapProps {
   nodes?: any[];
   selectedNodeId?: string;
   onNodeClick?: (node: any) => void;
   hideControls?: boolean;
+  className?: string;
 }
 
-const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClick, hideControls = false }) => {
+const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClick, hideControls = false, className }) => {
   const [hoveredCity, setHoveredCity] = useState<string | null>(null);
   const [hoveredNode, setHoveredNode] = useState<any | null>(null);
   const [mapMode, setMapMode] = useState<'satellite' | 'night' | 'tactical'>('satellite');
@@ -29,26 +30,16 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
 
   const currentSelectedId = selectedNodeId || internalSelectedId;
 
-  useEffect(() => {
-    let active = true;
-    fetch(worldAtlasUrl)
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        if (!active) return;
-        const countries = feature(data, data.objects.countries) as any;
-        setGeoData(countries);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error("Error loading local map topojson:", err);
-        if (!active) return;
-        setLoadError("Using localized offline fallback projection.");
-        setIsLoading(false);
-      });
-      return () => { active = false; };
+    useEffect(() => {
+    try {
+      const countries = feature(worldData as any, (worldData as any).objects.countries) as any;
+      setGeoData(countries);
+      setIsLoading(false);
+    } catch (err) {
+      console.error("Error loading local map topojson:", err);
+      setLoadError("Using localized offline fallback projection.");
+      setIsLoading(false);
+    }
   }, []);
 
   const d3Projection = geoEquirectangular()
@@ -206,7 +197,7 @@ const GlobalMap: React.FC<GlobalMapProps> = ({ nodes, selectedNodeId, onNodeClic
   };
 
   return (
-    <div className="relative w-full h-full min-h-[400px] bg-brand-dark/50 rounded-3xl overflow-hidden border border-white/5">
+    <div className={className || "relative w-full h-full min-h-[400px] bg-brand-dark/50 rounded-3xl overflow-hidden border border-white/5"}>
       {/* Real Map Layer Controls */}
       {!hideControls && (
         <div className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-3 bg-brand-dark/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/10 shadow-xl">

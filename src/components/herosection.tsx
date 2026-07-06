@@ -177,7 +177,7 @@ export function HeroSection({ language }: { language: 'en' | 'es' | 'zh' | 'ar' 
           className="lg:col-span-6 relative h-full min-h-[500px] flex flex-col items-center justify-center"
         >
           {/* Interactive Sector Selector */}
-          <div className="absolute top-0 right-0 z-20 flex flex-wrap justify-end gap-2 p-4">
+          <div className="w-full flex flex-wrap justify-end gap-2 mb-4">
             {SECTORS.map(sector => (
               <button
                 key={sector}
@@ -198,7 +198,7 @@ export function HeroSection({ language }: { language: 'en' | 'es' | 'zh' | 'ar' 
           </div>
 
           {/* Animated Map Container */}
-          <div className="relative w-full h-[400px] bg-brand-light/20 border border-white/5 rounded-[32px] overflow-hidden shadow-2xl flex items-center justify-center">
+          <div className="relative w-full h-[500px] bg-brand-light/20 border border-white/5 rounded-[32px] overflow-hidden shadow-2xl flex items-center justify-center">
             {viewMode === 'graph' ? (
               <div className="absolute inset-0 p-8 flex flex-col justify-between bg-[#07090e]/95 backdrop-blur-md select-none">
                 <div className="flex items-center justify-between border-b border-white/5 pb-3">
@@ -239,19 +239,19 @@ export function HeroSection({ language }: { language: 'en' | 'es' | 'zh' | 'ar' 
                 </div>
 
                 <div className="text-[8px] text-white/30 flex justify-between font-mono pt-2 border-t border-white/5">
-                  <span>AUDITED BY PRASHANT SINGH</span>
+                  <span>AUDITED BY SURVVI AI</span>
                   <span>MODEL CONFIDENCE: 98.4%</span>
                 </div>
               </div>
             ) : (
-              /* Using the GlobalMap component here scaled down or custom svg */
-              <div className="absolute inset-0 scale-[1.5] origin-center opacity-80 pointer-events-none">
-                 <GlobalMap  />
+              /* Using the GlobalMap component here */
+              <div className="absolute inset-0 origin-center opacity-90">
+                 <GlobalMap />
               </div>
             )}
             
-            <div className="absolute bottom-6 left-6 right-6 z-20">
-              <div className="bg-[#0a0d12]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex items-center justify-between shadow-xl">
+            <div className="absolute bottom-6 left-6 right-6 z-20 pointer-events-none">
+              <div className="bg-[#0a0d12]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex items-center justify-between shadow-xl pointer-events-auto">
                 <div>
                   <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-1">{activeSector} Intelligence</h4>
                   <p className="text-[10px] text-white/40 font-mono">
