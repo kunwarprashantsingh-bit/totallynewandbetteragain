@@ -2846,7 +2846,7 @@ Ensure the output is valid JSON only.`,
         onMacroClick={() => setShowMacro(true)}
         
         activeNewsTopic={activeNewsTopic}
-        setActiveNewsTopic={setActiveNewsTopic}
+        setActiveNewsTopic={(topic) => setActiveNewsTopic(topic as any)}
         
         loadingNewsletter={loadingNewsletter}
         newsletterNews={newsletterNews}
