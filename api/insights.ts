@@ -64,9 +64,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error: any) {
     const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
     if (isRateLimited) {
-      console.warn("Rate limited generating insights. Using fallback.");
+      console.warn("[Notice] Rate limited generating insights. Using fallback.");
+    } else if (error?.message && error.message.includes("leaked")) {
+      console.warn("\n⚠️  [Gemini API Advisory] The configured GEMINI_API_KEY has been reported as leaked by Google and is disabled. Please configure a new Gemini API Key in the AI Studio Settings menu.\n");
     } else {
-      console.error("Error generating insights:", error);
+      console.warn("[Notice] Gemini API insights unavailable. Applying fallback: ", error?.message || error);
     }
     return res.status(isRateLimited ? 429 : 500).json({ error: 'Failed to generate insights', details: error.message });
   }
