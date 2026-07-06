@@ -842,7 +842,7 @@ If you have specific query parameters or risk profiles you would like us to mode
 
       const { GoogleGenAI } = await import('@google/genai');
       const ai = new GoogleGenAI({ 
-        apiKey: process.env.GEMINI_API_KEY || "AI_STUDIO_PLACEHOLDER_KEY",
+        apiKey: process.env.GEMINI_API_KEY ,
         httpOptions: {
           headers: {
             'User-Agent': 'aistudio-build',
@@ -884,7 +884,7 @@ If you have specific query parameters or risk profiles you would like us to mode
 
       const { GoogleGenAI } = await import('@google/genai');
       const ai = new GoogleGenAI({ 
-        apiKey: process.env.GEMINI_API_KEY || "AI_STUDIO_PLACEHOLDER_KEY",
+        apiKey: process.env.GEMINI_API_KEY ,
         httpOptions: {
           headers: {
             'User-Agent': 'aistudio-build',
