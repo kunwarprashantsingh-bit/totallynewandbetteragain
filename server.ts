@@ -865,9 +865,11 @@ If you have specific query parameters or risk profiles you would like us to mode
     } catch (error: any) {
       const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
       if (isRateLimited) {
-        console.warn("Rate limited generating proxy content. Using high-fidelity fallback.");
+        console.warn("[Notice] Rate limited generating proxy content. Using high-fidelity fallback.");
+      } else if (error?.message && error.message.includes("leaked")) {
+        console.warn("\n⚠️  [Gemini API Advisory] The configured GEMINI_API_KEY has been reported as leaked by Google and is disabled. Please configure a new Gemini API Key in the AI Studio Settings menu.\n");
       } else {
-        console.error("Error generating proxy content:", error);
+        console.warn("[Notice] Gemini API unavailable. Applying high-fidelity offline fallback: ", error?.message || error);
       }
       
       const fallbackResult = getProxyGeminiFallback(contents, model, config);
@@ -921,9 +923,11 @@ If you have specific query parameters or risk profiles you would like us to mode
     } catch (error: any) {
       const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
       if (isRateLimited) {
-        console.warn("Rate limited generating insights. Using high-fidelity fallback.");
+        console.warn("[Notice] Rate limited generating insights. Using high-fidelity fallback.");
+      } else if (error?.message && error.message.includes("leaked")) {
+        console.warn("\n⚠️  [Gemini API Advisory] The configured GEMINI_API_KEY has been reported as leaked by Google and is disabled. Please configure a new Gemini API Key in the AI Studio Settings menu.\n");
       } else {
-        console.error("Error generating insights:", error);
+        console.warn("[Notice] Gemini API insights unavailable. Applying high-fidelity offline fallback: ", error?.message || error);
       }
       
       const fallbackText = `Our deep sovereign research and algorithmic intelligence indicate key systemic trends for "${query || 'Global Markets'}". Structural friction across primary logistics corridors is accelerating capital rotations. We advise securing supply line integrity through long-term raw supply agreements and rotating surplus holdings toward highly liquid physical assets.`;
