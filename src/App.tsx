@@ -2845,6 +2845,9 @@ Ensure the output is valid JSON only.`,
         setTerminalTab={setTerminalTab}
         onMacroClick={() => setShowMacro(true)}
         
+        activeNewsTopic={activeNewsTopic}
+        setActiveNewsTopic={setActiveNewsTopic}
+        
         loadingNewsletter={loadingNewsletter}
         newsletterNews={newsletterNews}
         newsletterDate={newsletterDate}
@@ -2881,7 +2884,7 @@ Ensure the output is valid JSON only.`,
 
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-8">
-            <GlobalMap />
+            <GlobalMap className="relative w-full h-[500px] lg:h-[700px] bg-brand-dark/50 rounded-3xl overflow-hidden border border-white/5" />
           </div>
           <div className="lg:col-span-4 space-y-8">
             <div className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:border-accent/30 transition-all group">
