@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 
 // Initialize the SDK server-side. It automatically picks up GEMINI_API_KEY from the environment.
 const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || "AI_STUDIO_PLACEHOLDER_KEY",
+  apiKey: process.env.GEMINI_API_KEY ,
   httpOptions: {
     headers: {
       'User-Agent': 'aistudio-build',

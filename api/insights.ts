@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 
 // Initialize the SDK. It automatically picks up GEMINI_API_KEY from the environment.
 const ai = new GoogleGenAI({ 
-  apiKey: process.env.GEMINI_API_KEY || "AI_STUDIO_PLACEHOLDER_KEY",
+  apiKey: process.env.GEMINI_API_KEY ,
   httpOptions: {
     headers: {
       'User-Agent': 'aistudio-build',
@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `As a senior management consultant at Survvi Opulence Insights, provide a cutting-edge market insight for: ${query}. Focus on global industrial trends. 
       
       CRITICAL REAL-TIME CONTEXT: The current live market data for major indices is: ${marketContext || "Data not provided"}. 
