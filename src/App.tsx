@@ -23,6 +23,7 @@ import {
   Activity,
   Database,
   Target,
+  Terminal,
   ArrowRight,
   Sun,
   Moon,
@@ -47,7 +48,14 @@ import {
   Navigation,
   Sliders,
   Download,
-  Linkedin
+  Linkedin,
+  DollarSign,
+  Leaf,
+  Map as MapIcon,
+  HardHat,
+  LayoutGrid,
+  ListFilter,
+  LineChart as LucideLineChart
 } from 'lucide-react';
 import { ai } from './services/geminiService';
 import { 
@@ -495,6 +503,25 @@ const researchTabQueries: Record<string, string> = {
   other: '"global manufacturing" OR "industrial supply chain" OR "macroeconomic trade"'
 };
 
+export const VIEW_SECTIONS = [
+  { id: 'all', label: 'All Intelligence Systems (Full Blueprint)', category: 'Overview', icon: Compass },
+  { id: 'pulse', label: 'Global Commodity Pulse & Index', category: 'Intelligence', icon: TrendingUp },
+  { id: 'heatmap', label: 'Industry Performance Heatmap', category: 'Intelligence', icon: BarChart3 },
+  { id: 'predictor', label: 'AI-Driven Industrial Predictor', category: 'Intelligence', icon: Cpu },
+  { id: 'terminal', label: 'Sovereign Intelligence Terminal (SIT)', category: 'Intelligence', icon: Terminal },
+  { id: 'news', label: 'Astraeus Real-Time News Feed', category: 'Intelligence', icon: Newspaper },
+  { id: 'story', label: 'Corporate Narrative & Founders', category: 'Company', icon: Users },
+  { id: 'solutions', label: 'Methodology: The Flight Deck', category: 'Company', icon: Layers },
+  { id: 'global-presence', label: 'Global Project Network (Map)', category: 'Global', icon: Globe },
+  { id: 'scenario-modeler', label: 'Scenario Intelligence Modeler', category: 'Simulation', icon: Sliders },
+  { id: 'predictive-analytics', label: 'Predictive Supply Chain Modeler', category: 'Simulation', icon: LucideLineChart },
+  { id: 'mining-iot', label: 'Rare Earth & Subsea Cable Monitor', category: 'Simulation', icon: HardHat },
+  { id: 'market-insights', label: 'Alternative Market Insights', category: 'Intelligence', icon: Sparkles },
+  { id: 'calculator', label: 'Material Carbon Calculator', category: 'Sustainability', icon: Leaf },
+  { id: 'map', label: 'Global Footprint Map', category: 'Global', icon: MapIcon },
+  { id: 'pricing', label: 'Sovereign Plans & Pricing', category: 'Company', icon: DollarSign }
+];
+
 export default function App() {
   const [storedDarkMode, setStoredDarkMode] = useLocalStorage('ai_studio_darkMode', true);
   const darkMode = true;
@@ -588,6 +615,27 @@ export default function App() {
   const [workspace, setWorkspace] = useLocalStorage<any[]>('ai_studio_workspace', []);
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [terminalTab, setTerminalTab] = useLocalStorage<'materials' | 'energy' | 'news' | 'research'>('ai_studio_terminalTab', 'news');
+  const [activeViewSection, setActiveViewSection] = useLocalStorage<string>('ai_studio_activeViewSection', 'all');
+
+  const handlePrevSection = () => {
+    const idx = VIEW_SECTIONS.findIndex(s => s.id === activeViewSection);
+    const prevIdx = idx <= 0 ? VIEW_SECTIONS.length - 1 : idx - 1;
+    setActiveViewSection(VIEW_SECTIONS[prevIdx].id);
+    setTimeout(() => {
+      const el = document.getElementById('cockpit-view-selector');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  const handleNextSection = () => {
+    const idx = VIEW_SECTIONS.findIndex(s => s.id === activeViewSection);
+    const nextIdx = idx === VIEW_SECTIONS.length - 1 ? 0 : idx + 1;
+    setActiveViewSection(VIEW_SECTIONS[nextIdx].id);
+    setTimeout(() => {
+      const el = document.getElementById('cockpit-view-selector');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
 
   useEffect(() => {
     const handleAdd = (e: Event) => {
@@ -2293,125 +2341,228 @@ Ensure the output is valid JSON only.`,
         </button>
       </div>
       
-      {/* 1. Feature: Real-time Global Commodity Pulse */}
-      <div className="pt-44 lg:pt-52">
-        <GlobalTicker data={marketData} onAssetClick={setSelectedMarketAsset} loading={loadingMarket} />
-        <BDIChart data={marketData} loading={loadingMarket} />
-        <OpulenceIndexWidget />
+      {/* Survvi Cockpit Command View Selector */}
+      <div id="cockpit-view-selector" className="sticky top-[68px] sm:top-[74px] z-35 bg-[#07090c]/90 backdrop-blur-xl border-y border-white/5 py-4 px-6 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          
+          {/* Left side: System status & current view title */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+            </div>
+            <div>
+              <span className="text-[8px] font-black text-accent uppercase tracking-[0.25em] block mb-0.5">COCKPIT PERSPECTIVE</span>
+              <h2 className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1.5 font-mono">
+                <span>{VIEW_SECTIONS.find(s => s.id === activeViewSection)?.label || "Survvi Blueprint"}</span>
+              </h2>
+            </div>
+          </div>
+
+          {/* Center: Dropdown Selector & Navigation Cycles */}
+          <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+            {/* Prev Arrow */}
+            <button
+              onClick={handlePrevSection}
+              className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-accent/40 text-white/75 hover:text-accent hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              title="Previous Module"
+            >
+              <ChevronRight className="w-4 h-4 rotate-180" />
+            </button>
+
+            {/* Dropdown Menu */}
+            <div className="relative flex-1 md:w-80 md:flex-initial">
+              <select
+                value={activeViewSection}
+                onChange={(e) => {
+                  setActiveViewSection(e.target.value);
+                  setTimeout(() => {
+                    const el = document.getElementById('cockpit-view-selector');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 100);
+                }}
+                className="w-full bg-[#0a0d12] border border-accent/20 rounded-xl px-4 py-2.5 text-xs text-white font-bold uppercase tracking-widest focus:outline-none focus:border-accent hover:border-accent/40 transition-all cursor-pointer shadow-xl appearance-none pr-10"
+              >
+                <optgroup label="System Overview" className="bg-brand text-accent font-extrabold uppercase tracking-widest text-[9px]">
+                  <option value="all">All Systems Blueprint (Full Scroll)</option>
+                </optgroup>
+                <optgroup label="Real-time Feeds" className="bg-brand text-accent font-extrabold uppercase tracking-widest text-[9px]">
+                  <option value="pulse">Global Commodity Pulse & Index</option>
+                  <option value="heatmap">Industry Performance Heatmap</option>
+                  <option value="news">Astraeus Real-Time News Feed</option>
+                </optgroup>
+                <optgroup label="Decision Systems" className="bg-brand text-accent font-extrabold uppercase tracking-widest text-[9px]">
+                  <option value="predictor">AI-Driven Industrial Predictor</option>
+                  <option value="terminal">Sovereign Intelligence Terminal (SIT)</option>
+                  <option value="market-insights">Alternative Market Insights</option>
+                </optgroup>
+                <optgroup label="Core Strategic Simulators" className="bg-brand text-accent font-extrabold uppercase tracking-widest text-[9px]">
+                  <option value="scenario-modeler">Scenario Intelligence Modeler</option>
+                  <option value="predictive-analytics">Predictive Supply Chain Modeler</option>
+                  <option value="mining-iot">Rare Earth & Subsea Cable Monitor</option>
+                  <option value="calculator">Material Carbon Calculator</option>
+                </optgroup>
+                <optgroup label="Global Projects" className="bg-brand text-accent font-extrabold uppercase tracking-widest text-[9px]">
+                  <option value="global-presence">Global Project Network (Map)</option>
+                  <option value="map">Global Footprint Map</option>
+                </optgroup>
+                <optgroup label="Corporate & Methodology" className="bg-brand text-accent font-extrabold uppercase tracking-widest text-[9px]">
+                  <option value="story">Corporate Narrative & Founders</option>
+                  <option value="solutions">Methodology: The Flight Deck</option>
+                  <option value="pricing">Sovereign Plans & Pricing</option>
+                </optgroup>
+              </select>
+              {/* Custom Dropdown Caret */}
+              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-accent">
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+
+            {/* Next Arrow */}
+            <button
+              onClick={handleNextSection}
+              className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:border-accent/40 text-white/75 hover:text-accent hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+              title="Next Module"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+        </div>
       </div>
 
+      {activeViewSection !== 'all' && <div className="h-44 sm:h-52 bg-brand" />}
+
+      {/* 1. Feature: Real-time Global Commodity Pulse */}
+      {(activeViewSection === 'all' || activeViewSection === 'pulse') && (
+        <div className={activeViewSection === 'pulse' ? "" : "pt-44 lg:pt-52"}>
+          <GlobalTicker data={marketData} onAssetClick={setSelectedMarketAsset} loading={loadingMarket} />
+          <BDIChart data={marketData} loading={loadingMarket} />
+          <OpulenceIndexWidget />
+        </div>
+      )}
+
       {/* 2. Feature: Industry Performance Heatmap */}
-      <IndustryHeatmap data={marketData} loading={loadingMarket} />
+      {(activeViewSection === 'all' || activeViewSection === 'heatmap') && (
+        <IndustryHeatmap data={marketData} loading={loadingMarket} />
+      )}
 
       {/* Hero Section */}
-      <HeroSection language={language} />
+      {activeViewSection === 'all' && (
+        <HeroSection language={language} />
+      )}
 
       {/* 3. Feature: Global Time & IP Localization Hub */}
-      <section className="py-12 bg-brand-light/20 border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-8">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-              <Clock className="w-6 h-6 text-accent" />
+      {activeViewSection === 'all' && (
+        <section className="py-12 bg-brand-light/20 border-y border-white/5">
+          <div className="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                <Clock className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <p className="text-[10px] text-white/40 uppercase tracking-widest">{t.hub.time}</p>
+                <p className="text-2xl font-mono font-bold">{format(time, 'HH:mm:ss')}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-[10px] text-white/40 uppercase tracking-widest">{t.hub.time}</p>
-              <p className="text-2xl font-mono font-bold">{format(time, 'HH:mm:ss')}</p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-              <MapPin className="w-6 h-6 text-accent-deep" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                <MapPin className="w-6 h-6 text-accent-deep" />
+              </div>
+              <div>
+                <p className="text-[10px] text-white/40 uppercase tracking-widest">{t.hub.access}</p>
+                <p className="text-lg font-bold">
+                  {location ? `${location.city}, ${location.country_name}` : t.hub.detecting}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-[10px] text-white/40 uppercase tracking-widest">{t.hub.access}</p>
-              <p className="text-lg font-bold">
-                {location ? `${location.city}, ${location.country_name}` : t.hub.detecting}
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-              <Zap className="w-6 h-6 text-yellow-500" />
-            </div>
-            <div>
-              <p className="text-[10px] text-white/40 uppercase tracking-widest">{t.hub.grid}</p>
-              <p className="text-lg font-bold">{t.hub.optimized} {location?.timezone || 'GMT'}</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                <Zap className="w-6 h-6 text-yellow-500" />
+              </div>
+              <div>
+                <p className="text-[10px] text-white/40 uppercase tracking-widest">{t.hub.grid}</p>
+                <p className="text-lg font-bold">{t.hub.optimized} {location?.timezone || 'GMT'}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 4. Feature: AI-Driven Industrial Predictor */}
-      <section className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
-        <div className="bg-gradient-to-br from-[#0c0f14] via-brand-light to-brand border border-white/5 rounded-[40px] p-12 relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.5)] hover:border-accent/15 transition-all duration-500 group">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-105 transition-all duration-700">
-            <Cpu className="w-64 h-64 text-accent" />
-          </div>
-          
-          <div className="relative z-10 max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-display font-extrabold mb-6 tracking-tight text-white leading-tight">{t.predictor.title}</h2>
-            <p className="text-text/50 font-light mb-8 leading-relaxed text-base md:text-lg">
-              {t.predictor.description}
-            </p>
+      {(activeViewSection === 'all' || activeViewSection === 'predictor') && (
+        <section className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+          <div className="bg-gradient-to-br from-[#0c0f14] via-brand-light to-brand border border-white/5 rounded-[40px] p-12 relative overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.5)] hover:border-accent/15 transition-all duration-500 group">
+            <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-105 transition-all duration-700">
+              <Cpu className="w-64 h-64 text-accent" />
+            </div>
             
-            <div className="flex gap-3 mb-8">
-              <input 
-                type="text" 
-                placeholder={t.predictor.placeholder}
-                className="flex-1 bg-brand/50 border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/10 transition-all placeholder:text-white/30"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') fetchInsight((e.target as HTMLInputElement).value);
-                }}
-              />
-              <button 
-                onClick={() => fetchInsight("Current energy trends")}
-                className="bg-gradient-to-r from-accent to-accent-deep text-brand p-4 rounded-full hover:scale-105 hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 shrink-0 active:scale-95"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="bg-brand/60 backdrop-blur-md border border-white/5 rounded-2xl p-6 min-h-[120px] flex flex-col justify-center">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-accent">{t.predictor.engine}</span>
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="text-3xl md:text-4xl font-display font-extrabold mb-6 tracking-tight text-white leading-tight">{t.predictor.title}</h2>
+              <p className="text-text/50 font-light mb-8 leading-relaxed text-base md:text-lg">
+                {t.predictor.description}
+              </p>
+              
+              <div className="flex gap-3 mb-8">
+                <input 
+                  type="text" 
+                  placeholder={t.predictor.placeholder}
+                  className="flex-1 bg-brand/50 border border-white/10 rounded-full px-6 py-4 text-sm text-white focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/10 transition-all placeholder:text-white/30"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') fetchInsight((e.target as HTMLInputElement).value);
+                  }}
+                />
+                <button 
+                  onClick={() => fetchInsight("Current energy trends")}
+                  className="bg-gradient-to-r from-accent to-accent-deep text-brand p-4 rounded-full hover:scale-105 hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 shrink-0 active:scale-95"
+                >
+                  <Search className="w-5 h-5" />
+                </button>
               </div>
-              {loadingInsight ? (
-                <div className="flex-1 flex items-center justify-center py-4">
-                  <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+
+              <div className="bg-brand/60 backdrop-blur-md border border-white/5 rounded-2xl p-6 min-h-[120px] flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-accent">{t.predictor.engine}</span>
                 </div>
-              ) : (
-                <p className="text-sm md:text-base text-text/80 italic leading-relaxed font-light">
-                  "{aiInsight || t.predictor.default}"
-                </p>
-              )}
-              {insightSources.length > 0 && !loadingInsight && (
-                <div className="mt-4 pt-4 border-t border-white/5">
-                  <p className="text-[10px] font-mono font-bold text-text/40 uppercase tracking-widest mb-2">Sources</p>
-                  <div className="flex flex-wrap gap-2">
-                    {insightSources.map((source, idx) => (
-                      <a 
-                        key={idx} 
-                        href={source.uri} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-[10px] text-accent hover:text-white bg-accent/5 hover:bg-accent/20 px-2.5 py-1 rounded-md border border-accent/10 transition-colors"
-                      >
-                        {source.title || "Source"}
-                      </a>
-                    ))}
+                {loadingInsight ? (
+                  <div className="flex-1 flex items-center justify-center py-4">
+                    <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p className="text-sm md:text-base text-text/80 italic leading-relaxed font-light">
+                    "{aiInsight || t.predictor.default}"
+                  </p>
+                )}
+                {insightSources.length > 0 && !loadingInsight && (
+                  <div className="mt-4 pt-4 border-t border-white/5">
+                    <p className="text-[10px] font-mono font-bold text-text/40 uppercase tracking-widest mb-2">Sources</p>
+                    <div className="flex flex-wrap gap-2">
+                      {insightSources.map((source, idx) => (
+                        <a 
+                          key={idx} 
+                          href={source.uri} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-[10px] text-accent hover:text-white bg-accent/5 hover:bg-accent/20 px-2.5 py-1 rounded-md border border-accent/10 transition-colors"
+                        >
+                          {source.title || "Source"}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CEO's Vision & Our Story */}
-      <section id="story" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
+      {(activeViewSection === 'all' || activeViewSection === 'story') && (
+        <section id="story" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -2598,9 +2749,11 @@ Ensure the output is valid JSON only.`,
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* 5. Feature: Our Methodology */}
-      <section id="solutions" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+      {(activeViewSection === 'all' || activeViewSection === 'solutions') && (
+        <section id="solutions" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
             <Layers className="w-3 h-3" />
@@ -2684,9 +2837,13 @@ Ensure the output is valid JSON only.`,
             onOpenMethodology={openMethodology}
           />
         </div>
+      </section>
+      )}
 
-        {/* Real-time News Feed */}
-        <div className="mt-24">
+      {/* Real-time News Feed */}
+      {(activeViewSection === 'all' || activeViewSection === 'news') && (
+        <section id="news" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
+          <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
             <div>
               <h3 className="text-3xl font-bold tracking-tight">{t.news.title}</h3>
@@ -2878,42 +3035,46 @@ Ensure the output is valid JSON only.`,
           </div>
         </div>
       </section>
+      )}
 
       {/* Sovereign Intelligence Terminal */}
-      <SovereignIntelligenceTerminal 
-        language={language}
-        isPremium={isPremium}
-        time={time}
-        terminalTab={terminalTab}
-        setTerminalTab={setTerminalTab}
-        onMacroClick={() => setShowMacro(true)}
-        
-        activeNewsTopic={activeNewsTopic}
-        setActiveNewsTopic={(topic) => setActiveNewsTopic(topic as any)}
-        
-        loadingNewsletter={loadingNewsletter}
-        newsletterNews={newsletterNews}
-        newsletterDate={newsletterDate}
-        pinnedNews={pinnedNews}
-        setPinnedNews={setPinnedNews}
-        setSelectedResearchItem={handleFetchResearchInsight}
-        workspace={workspace}
-        setWorkspace={setWorkspace}
-        
-        activeResearchTab={activeResearchTab}
-        setActiveResearchTab={setActiveResearchTab}
-        loadingResearch={loadingResearch}
-        researchChartData={researchChartData}
-        researchSourceFilter={researchSourceFilter}
-        setResearchSourceFilter={setResearchSourceFilter}
-        researchSources={researchSources}
-        researchDateFilter={researchDateFilter}
-        setResearchDateFilter={setResearchDateFilter}
-        researchDates={researchDates}
-        filteredResearch={filteredResearchReports}
-      />
+      {(activeViewSection === 'all' || activeViewSection === 'terminal') && (
+        <SovereignIntelligenceTerminal 
+          language={language}
+          isPremium={isPremium}
+          time={time}
+          terminalTab={terminalTab}
+          setTerminalTab={setTerminalTab}
+          onMacroClick={() => setShowMacro(true)}
+          
+          activeNewsTopic={activeNewsTopic}
+          setActiveNewsTopic={(topic) => setActiveNewsTopic(topic as any)}
+          
+          loadingNewsletter={loadingNewsletter}
+          newsletterNews={newsletterNews}
+          newsletterDate={newsletterDate}
+          pinnedNews={pinnedNews}
+          setPinnedNews={setPinnedNews}
+          setSelectedResearchItem={handleFetchResearchInsight}
+          workspace={workspace}
+          setWorkspace={setWorkspace}
+          
+          activeResearchTab={activeResearchTab}
+          setActiveResearchTab={setActiveResearchTab}
+          loadingResearch={loadingResearch}
+          researchChartData={researchChartData}
+          researchSourceFilter={researchSourceFilter}
+          setResearchSourceFilter={setResearchSourceFilter}
+          researchSources={researchSources}
+          researchDateFilter={researchDateFilter}
+          setResearchDateFilter={setResearchDateFilter}
+          researchDates={researchDates}
+          filteredResearch={filteredResearchReports}
+        />
+      )}
       {/* Global Presence Section */}
-      <section id="global-presence" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
+      {(activeViewSection === 'all' || activeViewSection === 'global-presence') && (
+        <section id="global-presence" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="mb-12 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest mb-4">
             <Navigation className="w-3 h-3" />
@@ -2968,139 +3129,152 @@ Ensure the output is valid JSON only.`,
           </div>
         </div>
       </section>
+      )}
 
       {/* Scenario Modeler Section */}
-      <section id="scenario-modeler" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
-        <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
-          <ScenarioModeler language={language} />
-        </div>
-        {!isPremium && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-30 bg-brand/40">
-            <div className="max-w-md w-full bg-[#0a0d12]/95 border border-accent/30 rounded-[32px] p-8 text-center shadow-[0_0_50px_rgba(197,160,89,0.15)] flex flex-col items-center">
-              <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-center text-accent mb-4 shadow-lg shadow-accent/10 animate-pulse">
-                <Sliders className="w-6 h-6" />
-              </div>
-              <span className="text-[10px] font-bold text-accent uppercase tracking-[0.2em] bg-accent/10 px-3 py-1 rounded-full border border-accent/20 mb-3">Sovereign Feature</span>
-              <h3 className="text-xl font-bold text-white mb-2">Scenario Intelligence Modeler</h3>
-              <p className="text-xs text-white/50 leading-relaxed mb-6">
-                Unlock dynamic scenario planning tools. Adjust carbon border adjustments, raw materials index, and logistical friction to simulate global industrial outcomes.
-              </p>
-              <button 
-                onClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
-                className="w-full bg-gradient-to-r from-accent to-amber-500 text-brand py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-103 transition-all shadow-lg shadow-accent/20"
-              >
-                Unlock Sovereign Analytics
-              </button>
-            </div>
+      {(activeViewSection === 'all' || activeViewSection === 'scenario-modeler') && (
+        <section id="scenario-modeler" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
+          <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
+            <ScenarioModeler language={language} />
           </div>
-        )}
-      </section>
+          {!isPremium && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-30 bg-brand/40">
+              <div className="max-w-md w-full bg-[#0a0d12]/95 border border-accent/30 rounded-[32px] p-8 text-center shadow-[0_0_50px_rgba(197,160,89,0.15)] flex flex-col items-center">
+                <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-center text-accent mb-4 shadow-lg shadow-accent/10 animate-pulse">
+                  <Sliders className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold text-accent uppercase tracking-[0.2em] bg-accent/10 px-3 py-1 rounded-full border border-accent/20 mb-3">Sovereign Feature</span>
+                <h3 className="text-xl font-bold text-white mb-2">Scenario Intelligence Modeler</h3>
+                <p className="text-xs text-white/50 leading-relaxed mb-6">
+                  Unlock dynamic scenario planning tools. Adjust carbon border adjustments, raw materials index, and logistical friction to simulate global industrial outcomes.
+                </p>
+                <button 
+                  onClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
+                  className="w-full bg-gradient-to-r from-accent to-amber-500 text-brand py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-103 transition-all shadow-lg shadow-accent/20"
+                >
+                  Unlock Sovereign Analytics
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Predictive Analytics Section */}
-      <section id="predictive-analytics" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
-        <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
-          <PredictiveAnalytics language={language} />
-        </div>
-        {!isPremium && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-30 bg-brand/40">
-            <div className="max-w-md w-full bg-[#0a0d12]/95 border border-accent/30 rounded-[32px] p-8 text-center shadow-[0_0_50px_rgba(197,160,89,0.15)] flex flex-col items-center">
-              <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-center text-accent mb-4 shadow-lg shadow-accent/10 animate-pulse">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <span className="text-[10px] font-bold text-accent uppercase tracking-[0.2em] bg-accent/10 px-3 py-1 rounded-full border border-accent/20 mb-3">Sovereign Feature</span>
-              <h3 className="text-xl font-bold text-white mb-2">12-Month Predictive Forecasting</h3>
-              <p className="text-xs text-white/50 leading-relaxed mb-6">
-                Explore deep learning based multi-variate trend lines, global logistics projections, and raw commodity price forecasts.
-              </p>
-              <button 
-                onClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
-                className="w-full bg-gradient-to-r from-accent to-amber-500 text-brand py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-103 transition-all shadow-lg shadow-accent/20"
-              >
-                Unlock Sovereign Analytics
-              </button>
-            </div>
+      {(activeViewSection === 'all' || activeViewSection === 'predictive-analytics') && (
+        <section id="predictive-analytics" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5 relative overflow-hidden rounded-[32px] my-4">
+          <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
+            <PredictiveAnalytics language={language} />
           </div>
-        )}
-      </section>
+          {!isPremium && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-30 bg-brand/40">
+              <div className="max-w-md w-full bg-[#0a0d12]/95 border border-accent/30 rounded-[32px] p-8 text-center shadow-[0_0_50px_rgba(197,160,89,0.15)] flex flex-col items-center">
+                <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-center text-accent mb-4 shadow-lg shadow-accent/10 animate-pulse">
+                  <TrendingUp className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold text-accent uppercase tracking-[0.2em] bg-accent/10 px-3 py-1 rounded-full border border-accent/20 mb-3">Sovereign Feature</span>
+                <h3 className="text-xl font-bold text-white mb-2">12-Month Predictive Forecasting</h3>
+                <p className="text-xs text-white/50 leading-relaxed mb-6">
+                  Explore deep learning based multi-variate trend lines, global logistics projections, and raw commodity price forecasts.
+                </p>
+                <button 
+                  onClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
+                  className="w-full bg-gradient-to-r from-accent to-amber-500 text-brand py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:scale-103 transition-all shadow-lg shadow-accent/20"
+                >
+                  Unlock Sovereign Analytics
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Mining & IoT Stories */}
-      <section id="mining-iot" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
-        <div className="grid md:grid-cols-2 gap-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="p-10 bg-brand-light/20 rounded-[32px] border border-white/5 hover:border-accent/30 transition-all"
-          >
-            <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-6">
-              <Compass className="w-6 h-6 text-accent" />
-            </div>
-            <h3 className="text-2xl font-bold mb-4">Mining & Metals: <span className="text-accent">Deep Earth Intelligence</span></h3>
-            <p className="text-white/50 leading-relaxed mb-6">
-              "We are moving from extraction to precision," Prashant explains. Our Mining story is about the "Invisible Mine"—using AI and IoT to extract value with minimal footprint. We help firms transition to the "Green Metal" era, where efficiency is the new currency.
-            </p>
-            <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
-              <span>Autonomous Operations</span>
-              <span className="w-1 h-1 bg-white/20 rounded-full" />
-              <span>Zero-Waste Extraction</span>
-            </div>
-          </motion.div>
+      {(activeViewSection === 'all' || activeViewSection === 'mining-iot') && (
+        <section id="mining-iot" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
+          <div className="grid md:grid-cols-2 gap-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="p-10 bg-brand-light/20 rounded-[32px] border border-white/5 hover:border-accent/30 transition-all"
+            >
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-6">
+                <Compass className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Mining & Metals: <span className="text-accent">Deep Earth Intelligence</span></h3>
+              <p className="text-white/50 leading-relaxed mb-6">
+                "We are moving from extraction to precision," Prashant explains. Our Mining story is about the "Invisible Mine"—using AI and IoT to extract value with minimal footprint. We help firms transition to the "Green Metal" era, where efficiency is the new currency.
+              </p>
+              <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
+                <span>Autonomous Operations</span>
+                <span className="w-1 h-1 bg-white/20 rounded-full" />
+                <span>Zero-Waste Extraction</span>
+              </div>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="p-10 bg-brand-light/20 rounded-[32px] border border-white/5 hover:border-accent/30 transition-all"
-          >
-            <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-6">
-              <Cpu className="w-6 h-6 text-accent" />
-            </div>
-            <h3 className="text-2xl font-bold mb-4">Industrial IoT: <span className="text-accent">The Neural Factory</span></h3>
-            <p className="text-white/50 leading-relaxed mb-6">
-              Prashant's vision for IoT isn't just about sensors; it's about "Industrial Consciousness." We build the neural pathways that allow factories to sense, think, and adapt in real-time. It's the transition from static production to living systems.
-            </p>
-            <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
-              <span>Predictive Maintenance</span>
-              <span className="w-1 h-1 bg-white/20 rounded-full" />
-              <span>Neural Optimization</span>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="p-10 bg-brand-light/20 rounded-[32px] border border-white/5 hover:border-accent/30 transition-all"
+            >
+              <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-6">
+                <Cpu className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Industrial IoT: <span className="text-accent">The Neural Factory</span></h3>
+              <p className="text-white/50 leading-relaxed mb-6">
+                Prashant's vision for IoT isn't just about sensors; it's about "Industrial Consciousness." We build the neural pathways that allow factories to sense, think, and adapt in real-time. It's the transition from static production to living systems.
+              </p>
+              <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-accent">
+                <span>Predictive Maintenance</span>
+                <span className="w-1 h-1 bg-white/20 rounded-full" />
+                <span>Neural Optimization</span>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
       {/* Client Intelligence Suite Section */}
-      <section id="market-insights" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
-        <MarketInsightTool />
-      </section>
-      
-      <div className="relative overflow-hidden rounded-[40px] my-4">
-        <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
-          <ClientIntelligenceSuite language={language} />
-        </div>
-        {!isPremium && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-30 bg-brand/40">
-            <div className="max-w-xl w-full bg-[#0a0d12]/95 border border-accent/30 rounded-[40px] p-10 text-center shadow-[0_0_50px_rgba(197,160,89,0.25)] flex flex-col items-center">
-              <div className="w-14 h-14 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-center text-accent mb-6 shadow-lg shadow-accent/10 animate-pulse">
-                <Cpu className="w-7 h-7" />
-              </div>
-              <span className="text-xs font-bold text-accent uppercase tracking-[0.25em] bg-accent/10 px-4 py-1.5 rounded-full border border-accent/20 mb-4">Elite Intelligence Suite</span>
-              <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Client Intelligence Decision Room</h3>
-              <p className="text-sm text-white/50 leading-relaxed mb-8 max-w-md mx-auto">
-                Gain access to 16+ proprietary real-time industrial applications, including Arbitrage Spotters, Decarbonization Paybacks, Volatility Propagation models, and Geopolitical War-gaming panels.
-              </p>
-              <button 
-                onClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
-                className="bg-gradient-to-r from-accent to-amber-500 text-brand px-10 py-4.5 rounded-full font-bold text-sm uppercase tracking-[0.15em] hover:scale-105 transition-all shadow-xl shadow-accent/25 animate-pulse"
-              >
-                Unlock Elite Decision Suite
-              </button>
+      {(activeViewSection === 'all' || activeViewSection === 'market-insights') && (
+        <>
+          <section id="market-insights" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+            <MarketInsightTool />
+          </section>
+          
+          <div className="relative overflow-hidden rounded-[40px] my-4">
+            <div className={cn("transition-all duration-700", !isPremium && "blur-md pointer-events-none opacity-20 select-none")}>
+              <ClientIntelligenceSuite language={language} />
             </div>
+            {!isPremium && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-30 bg-brand/40">
+                <div className="max-w-xl w-full bg-[#0a0d12]/95 border border-accent/30 rounded-[40px] p-10 text-center shadow-[0_0_50px_rgba(197,160,89,0.25)] flex flex-col items-center">
+                  <div className="w-14 h-14 bg-accent/10 border border-accent/20 rounded-2xl flex items-center justify-center text-accent mb-6 shadow-lg shadow-accent/10 animate-pulse">
+                    <Cpu className="w-7 h-7" />
+                  </div>
+                  <span className="text-xs font-bold text-accent uppercase tracking-[0.25em] bg-accent/10 px-4 py-1.5 rounded-full border border-accent/20 mb-4">Elite Intelligence Suite</span>
+                  <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Client Intelligence Decision Room</h3>
+                  <p className="text-sm text-white/50 leading-relaxed mb-8 max-w-md mx-auto">
+                    Gain access to 16+ proprietary real-time industrial applications, including Arbitrage Spotters, Decarbonization Paybacks, Volatility Propagation models, and Geopolitical War-gaming panels.
+                  </p>
+                  <button 
+                    onClick={() => { setUpgradePlan('sovereign'); setUpgradeStep(0); setShowSubscriptionModal(true); }}
+                    className="bg-gradient-to-r from-accent to-amber-500 text-brand px-10 py-4.5 rounded-full font-bold text-sm uppercase tracking-[0.15em] hover:scale-105 transition-all shadow-xl shadow-accent/25 animate-pulse"
+                  >
+                    Unlock Elite Decision Suite
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
-      <section id="pricing" className="py-14 md:py-16 bg-[#07090c] text-white border-y border-white/5 relative overflow-hidden">
+      {/* Sovereign Plans & Pricing */}
+      {(activeViewSection === 'all' || activeViewSection === 'pricing') && (
+        <section id="pricing" className="py-14 md:py-16 bg-[#07090c] text-white border-y border-white/5 relative overflow-hidden">
         {/* Glow Effects */}
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -3225,9 +3399,11 @@ Ensure the output is valid JSON only.`,
           </div>
         </div>
       </section>
+      )}
 
       {/* 9. Feature: Sustainability Impact Calculator */}
-      <section id="calculator" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
+      {(activeViewSection === 'all' || activeViewSection === 'calculator') && (
+        <section id="calculator" className="py-14 md:py-16 px-6 max-w-7xl mx-auto border-t border-white/5">
         <div className="bg-accent-deep/20 border border-accent/20 rounded-[40px] p-12 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-12 opacity-5">
             <Activity className="w-64 h-64 text-accent" />
@@ -3293,9 +3469,11 @@ Ensure the output is valid JSON only.`,
           </div>
         </div>
       </section>
+      )}
 
       {/* 10. Feature: Global Project Map */}
-      <section id="map" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
+      {(activeViewSection === 'all' || activeViewSection === 'map') && (
+        <section id="map" className="py-14 md:py-16 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold tracking-tight mb-4">Global Footprint</h2>
           <p className="text-white/40 max-w-2xl mx-auto">500+ projects across 6 continents. Our intelligence knows no borders.</p>
@@ -3336,6 +3514,7 @@ Ensure the output is valid JSON only.`,
           </div>
         </div>
       </section>
+      )}
 
       {/* 11. Feature: Expert Network Carousel */}
       <section className="py-14 md:py-16 bg-brand-light/10">
