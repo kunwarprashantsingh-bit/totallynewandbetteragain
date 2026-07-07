@@ -15,6 +15,7 @@ import {
   ShieldCheck, 
   ArrowUpRight, 
   ArrowDownRight,
+  ExternalLink,
   Clock, 
   MapPin,
   Search,
@@ -466,6 +467,34 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val
   return [storedValue, setValue];
 }
 
+const researchTabNames: Record<string, string> = {
+  materials: 'Materials',
+  energy: 'Energy',
+  shipping: 'Shipping',
+  steel: 'Steel',
+  chemicals: 'Chemicals',
+  mining: 'Mining',
+  agribusiness: 'Agribusiness',
+  logistics: 'Logistics',
+  ai: 'Industrial AI',
+  pharma: 'Pharmaceuticals',
+  other: 'Global Industrial'
+};
+
+const researchTabQueries: Record<string, string> = {
+  materials: '"cement construction" OR "concrete production" OR "lumber supply" OR "raw materials"',
+  energy: '"crude oil" OR "natural gas" OR "LNG transport" OR "power grid"',
+  shipping: '"ocean carrier shipping" OR "dry bulk shipping" OR "Capesize" OR "Baltic Dry Index"',
+  steel: '"steel production" OR "electric arc furnace" OR "scrap steel" OR "metallurgical coal"',
+  chemicals: '"petrochemicals" OR "industrial chemicals" OR "polymers supply" OR "ethylene pipeline"',
+  mining: '"lithium mining" OR "copper mining" OR "cobalt extraction" OR "rare earth refinery"',
+  agribusiness: '"fertilizer supply" OR "grain logistics" OR "agriculture trade" OR "wheat soy corn"',
+  logistics: '"freight rates" OR "rail freight" OR "trucking logistics" OR "multimodal transport"',
+  ai: '"industrial AI" OR "factory automation" OR "robotics manufacturing" OR "SCADA security"',
+  pharma: '"pharmaceutical supply chain" OR "active pharmaceutical ingredients" OR "drug shortage"',
+  other: '"global manufacturing" OR "industrial supply chain" OR "macroeconomic trade"'
+};
+
 export default function App() {
   const [storedDarkMode, setStoredDarkMode] = useLocalStorage('ai_studio_darkMode', true);
   const darkMode = true;
@@ -554,7 +583,7 @@ export default function App() {
   // Feature 5: Smart Notifications
   const [smartAlert, setSmartAlert] = useState<{title: string, message: string} | null>(null);
   const [usageStats, setUsageStats] = useLocalStorage<Record<string, number>>('ai_studio_usage_stats', {});
-  const [hasShownBrief, setHasShownBrief] = useState(false);
+  const [hasShownSmartAlert, setHasShownSmartAlert] = useLocalStorage<boolean>('ai_studio_has_shown_warning', false);
   // Feature: Strategic Workspaces
   const [workspace, setWorkspace] = useLocalStorage<any[]>('ai_studio_workspace', []);
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
@@ -661,7 +690,7 @@ export default function App() {
 
   // Autonomous Intelligence: Background Risk Monitor
   useEffect(() => {
-    if (news.length === 0) return;
+    if (news.length === 0 || hasShownSmartAlert) return;
 
     // Snappy initial check 1.5 seconds after tab/news loads for an instant, real-time presentation experience
     const initialCheckTimeout = setTimeout(() => {
@@ -673,6 +702,8 @@ export default function App() {
     }, 30000); // Scan every 30s
 
     function checkAndTriggerRiskAlert() {
+      if (hasShownSmartAlert) return;
+
       const freshHighRiskItems = news.filter(n => {
         if (n.riskLevel !== 'High') return false;
         const pubDateStr = n.publishedAt || n.date;
@@ -693,6 +724,7 @@ export default function App() {
           title: "Survvi Autonomous Warning",
           message: `URGENT BREAKING NEWS (${timeAgoStr}): [${item.industry || 'Global'}] "${item.title}". Assessing systemic supply ripple effects.`
         });
+        setHasShownSmartAlert(true);
         setTimeout(() => setSmartAlert(null), 12000);
       }
     }
@@ -703,7 +735,7 @@ export default function App() {
       clearTimeout(initialCheckTimeout);
       clearInterval(riskScanner);
     };
-  }, [news, hasShownBrief, smartAlert]);
+  }, [news, hasShownSmartAlert, smartAlert]);
   const [researchSourceFilter, setResearchSourceFilter] = useState("");
   const [researchDateFilter, setResearchDateFilter] = useState("");
   const [loadingResearch, setLoadingResearch] = useState(false);
@@ -2770,6 +2802,17 @@ Ensure the output is valid JSON only.`,
                 <Activity className={cn("w-4 h-4", loadingNews && "animate-spin")} />
                 Refresh Feed
               </button>
+
+              <a
+                href={`https://news.google.com/search?q=${encodeURIComponent(researchTabQueries[activeResearchTab] || researchTabQueries.other)}&hl=en-US&gl=US&ceid=US:en`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 hover:text-red-300 rounded-lg text-xs font-bold transition-all ml-2"
+                title={`Open live '${researchTabNames[activeResearchTab]}' news on Google News`}
+              >
+                <Newspaper className="w-3.5 h-3.5" />
+                Live on Google News ↗
+              </a>
             </div>
           </div>
 
