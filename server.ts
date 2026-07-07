@@ -22,10 +22,38 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
+  // Helper to find source.zip in any possible location (dev, prod, relative, absolute)
+  const findZipPath = (): string | null => {
+    const possiblePaths = [
+      path.join(process.cwd(), "dist", "source.zip"),
+      path.join(process.cwd(), "public", "source.zip"),
+      path.join(process.cwd(), "source.zip"),
+    ];
+
+    // Safe dynamic check for __dirname
+    try {
+      if (typeof __dirname !== "undefined") {
+        possiblePaths.push(
+          path.join(__dirname, "source.zip"),
+          path.join(__dirname, "..", "source.zip"),
+          path.join(__dirname, "public", "source.zip"),
+          path.join(__dirname, "..", "public", "source.zip")
+        );
+      }
+    } catch (e) {}
+
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) {
+        return p;
+      }
+    }
+    return null;
+  };
+
   // API Routes
   app.get("/source.zip", (req, res) => {
-    const zipPath = path.join(process.cwd(), "public", "source.zip");
-    if (fs.existsSync(zipPath)) {
+    const zipPath = findZipPath();
+    if (zipPath) {
       res.setHeader("Content-Type", "application/zip");
       res.setHeader("Content-Disposition", "attachment; filename=source.zip");
       return res.sendFile(zipPath);
@@ -34,8 +62,8 @@ async function startServer() {
   });
 
   app.get("/api/source", (req, res) => {
-    const zipPath = path.join(process.cwd(), "public", "source.zip");
-    if (fs.existsSync(zipPath)) {
+    const zipPath = findZipPath();
+    if (zipPath) {
       res.setHeader("Content-Type", "application/zip");
       res.setHeader("Content-Disposition", "attachment; filename=source.zip");
       return res.sendFile(zipPath);
