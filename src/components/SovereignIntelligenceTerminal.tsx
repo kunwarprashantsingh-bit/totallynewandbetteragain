@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Newspaper, FileText, Building2, Zap, Search, Bookmark, 
   Compass, FolderHeart, ChevronUp, ChevronDown, X, Sparkles, 
-  Download, Play, ChevronRight, Clock, Bot, DownloadCloud
+  Download, Play, ChevronRight, Clock, Bot,
+  ExternalLink
 } from 'lucide-react';
 import { 
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, 
@@ -110,6 +111,19 @@ const ToolSkeleton = () => (
     </div>
   </div>
 );
+
+const GOOGLE_NEWS_QUERIES: Record<string, string> = {
+  "Cement": '"cement clinker" OR "concrete production" OR "cement manufacturing" OR "limestone quarries"',
+  "Bulk Shipping": '"dry bulk shipping" OR "Panamax" OR "Capesize" OR "Baltic Dry Index"',
+  "Paper Industry": '"paper industry" OR "pulp mill" OR "containerboard packaging" OR "forestry lumber"',
+  "Energy": '"crude oil" OR "natural gas" OR "LNG transport" OR "power grid infrastructure"',
+  "Steel": '"steel production" OR "electric arc furnace" OR "scrap steel" OR "metallurgical coal"',
+  "Chemicals": '"petrochemicals" OR "industrial chemicals" OR "polymers supply" OR "ethylene pipeline"',
+  "Mining": '"lithium mining" OR "copper mining" OR "cobalt extraction" OR "rare earth refinery"',
+  "Defense & Aerospace": '"defense aerospace" OR "military titanium" OR "national security logistics" OR "aircraft manufacturing"',
+  "Logistics": '"freight rates" OR "rail freight" OR "trucking logistics" OR "multimodal transport"',
+  "Pharmaceuticals": '"pharmaceutical supply chain" OR "active pharmaceutical ingredients" OR "drug shortage"'
+};
 
 export const SovereignIntelligenceTerminal = ({
   language,
@@ -255,21 +269,36 @@ export const SovereignIntelligenceTerminal = ({
                   </div>
 
                   {/* Topic Select List */}
-                  <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto">
-                    {NEWS_TOPICS.map((topic) => (
-                      <button
-                        key={topic}
-                        onClick={() => setActiveNewsTopic(topic)}
-                        className={cn(
-                          "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer",
-                          activeNewsTopic === topic
-                            ? "bg-accent text-brand shadow-lg font-black"
-                            : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-                        )}
+                  <div className="flex flex-col gap-3 max-w-4xl mx-auto w-full">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      {NEWS_TOPICS.map((topic) => (
+                        <button
+                          key={topic}
+                          onClick={() => setActiveNewsTopic(topic)}
+                          className={cn(
+                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer",
+                            activeNewsTopic === topic
+                              ? "bg-accent text-brand shadow-lg font-black"
+                              : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+                          )}
+                        >
+                          {topic}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Direct Google News Search Link */}
+                    <div className="flex justify-center mt-3 transition-all">
+                      <a
+                        href={`https://news.google.com/search?q=${encodeURIComponent(GOOGLE_NEWS_QUERIES[activeNewsTopic] || activeNewsTopic)}&hl=en-US&gl=US&ceid=US:en`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg hover:shadow-red-600/30 border border-red-500/30 transform hover:-translate-y-0.5"
                       >
-                        {topic}
-                      </button>
-                    ))}
+                        <Newspaper className="w-4 h-4 animate-pulse" />
+                        Direct Access: Open "{activeNewsTopic}" Live on Google News ↗
+                      </a>
+                    </div>
                   </div>
                 </div>
 
@@ -558,6 +587,18 @@ export const SovereignIntelligenceTerminal = ({
                         <h3 className="text-xl lg:text-2xl font-bold max-w-2xl leading-tight group-hover:text-accent transition-colors">
                           {filteredNewsletterNews[0].title}
                         </h3>
+                        {filteredNewsletterNews[0].url && (
+                          <a
+                            href={filteredNewsletterNews[0].url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-accent/20 hover:bg-accent/45 border border-accent/30 text-accent hover:text-white rounded-lg text-xs font-bold transition-all"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            Direct Source Feed ↗
+                          </a>
+                        )}
                       </div>
                     </motion.div>
                   ) : null}
@@ -596,24 +637,38 @@ export const SovereignIntelligenceTerminal = ({
                               </span>
                             </div>
 
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setPinnedNews(
-                                  pinnedNews.some(item => item.title === article.title)
-                                    ? pinnedNews.filter(item => item.title !== article.title)
-                                    : [...pinnedNews, article]
-                                );
-                              }}
-                              className={cn(
-                                "p-2 rounded-lg border transition-all cursor-pointer",
-                                pinnedNews.some(item => item.title === article.title)
-                                  ? "bg-accent/10 border-accent/35 text-accent"
-                                  : "bg-white/5 border-white/5 text-white/30 hover:text-white hover:border-white/20"
+                            <div className="flex items-center gap-1.5">
+                              {article.url && (
+                                <a
+                                  href={article.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="p-2 rounded-lg border border-white/5 bg-white/5 text-white/30 hover:text-white hover:border-white/20 hover:bg-white/10 transition-all cursor-pointer"
+                                  title="Open live news reference"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
                               )}
-                            >
-                              <Bookmark className={cn("w-3.5 h-3.5", pinnedNews.some(item => item.title === article.title) && "fill-accent text-accent")} />
-                            </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPinnedNews(
+                                    pinnedNews.some(item => item.title === article.title)
+                                      ? pinnedNews.filter(item => item.title !== article.title)
+                                      : [...pinnedNews, article]
+                                  );
+                                }}
+                                className={cn(
+                                  "p-2 rounded-lg border transition-all cursor-pointer",
+                                  pinnedNews.some(item => item.title === article.title)
+                                    ? "bg-accent/10 border-accent/35 text-accent"
+                                    : "bg-white/5 border-white/5 text-white/30 hover:text-white hover:border-white/20"
+                                )}
+                              >
+                                <Bookmark className={cn("w-3.5 h-3.5", pinnedNews.some(item => item.title === article.title) && "fill-accent text-accent")} />
+                              </button>
+                            </div>
                           </div>
 
                           <h4 className="text-lg font-bold text-white mb-2 group-hover:text-accent transition-colors line-clamp-2">
@@ -622,6 +677,19 @@ export const SovereignIntelligenceTerminal = ({
                           <p className="text-white/40 text-sm line-clamp-2 leading-relaxed">
                             {article.summary}
                           </p>
+                          {article.url && (
+                            <div className="mt-4 flex justify-between items-center text-[10px] font-bold uppercase tracking-wider pt-3 border-t border-white/5">
+                              <a
+                                href={article.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-accent hover:text-white flex items-center gap-1 transition-colors"
+                              >
+                                View Direct Feed Source <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
+                          )}
                         </motion.div>
                       ))
                     ) : (
