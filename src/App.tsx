@@ -2341,8 +2341,11 @@ Ensure the output is valid JSON only.`,
         </button>
       </div>
       
+      {/* Spacer to prevent cockpit-view-selector from being covered by the fixed Navbar */}
+      <div className="h-[140px] sm:h-[148px] w-full shrink-0" />
+      
       {/* Survvi Cockpit Command View Selector */}
-      <div id="cockpit-view-selector" className="sticky top-[68px] sm:top-[74px] z-35 bg-[#07090c]/90 backdrop-blur-xl border-y border-white/5 py-4 px-6 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300">
+      <div id="cockpit-view-selector" className="sticky top-[64px] sm:top-[65px] z-35 bg-[#07090c]/90 backdrop-blur-xl border-y border-white/5 py-4 px-6 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           
           {/* Left side: System status & current view title */}
