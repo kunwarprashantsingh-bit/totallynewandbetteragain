@@ -35,6 +35,10 @@ export const CementShortageChart = () => {
         </div>
       </div>
       
+      <div className="absolute top-6 right-6 lg:right-auto lg:top-auto lg:bottom-6 lg:left-6 z-10 pointer-events-none opacity-50 text-[9px] uppercase tracking-widest font-mono text-white/70">
+        SOURCE: SOI Predictive Analytics Core
+      </div>
+
       <div className="flex-1 min-h-0 w-full relative">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={forecastData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -121,6 +125,10 @@ export const FleetTrackingMap = () => {
       <div className="absolute top-6 left-6 z-10">
         <h3 className="text-sm font-semibold text-white/90">Global Logistics Topology</h3>
         <p className="text-xs text-white/50 mt-1">Real-time throughput and vulnerability mapping</p>
+      </div>
+
+      <div className="absolute bottom-6 left-6 z-10 pointer-events-none opacity-50 text-[9px] uppercase tracking-widest font-mono text-white/70">
+        SOURCE: SOI Maritime Logistics Node
       </div>
 
       <div className="absolute top-6 right-6 z-10 flex gap-4 text-[10px] uppercase tracking-wider">
@@ -227,6 +235,10 @@ export const SingaporeBottleneckMap = () => {
         </div>
       </div>
       
+      <div className="absolute bottom-6 right-6 z-10 pointer-events-none opacity-50 text-[9px] uppercase tracking-widest font-mono text-white/70">
+        SOURCE: Global Port Authority Data & SOI Analytics
+      </div>
+
       <div className="flex-1 w-full min-h-0">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={portData} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
@@ -286,9 +298,14 @@ export const WarehouseGrid = () => {
           <h3 className="text-sm font-semibold text-white/90">Strategic Reserve Allocation Matrix</h3>
           <p className="text-xs text-white/50 mt-1">Utilization relative to required baseline buffer capacities</p>
         </div>
-        <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2 py-1.5 rounded-md">
-          <Filter className="w-3.5 h-3.5 text-white/40" />
-          <span className="text-[9px] text-white/60 uppercase tracking-wider font-semibold">Tier 1 Assets</span>
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2 py-1.5 rounded-md">
+            <Filter className="w-3.5 h-3.5 text-white/40" />
+            <span className="text-[9px] text-white/60 uppercase tracking-wider font-semibold">Tier 1 Assets</span>
+          </div>
+          <div className="pointer-events-none opacity-50 text-[9px] uppercase tracking-widest font-mono text-white/70">
+            SOURCE: SOI Asset Tracking Node
+          </div>
         </div>
       </div>
 
