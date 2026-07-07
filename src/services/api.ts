@@ -1,4 +1,13 @@
-import { Type } from "@google/genai";
+export enum Type {
+  TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED",
+  STRING = "STRING",
+  NUMBER = "NUMBER",
+  INTEGER = "INTEGER",
+  BOOLEAN = "BOOLEAN",
+  ARRAY = "ARRAY",
+  OBJECT = "OBJECT",
+  NULL = "NULL",
+}
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db, handleFirestoreError, OperationType } from "../firebase";
 import type { MarketData, UserLocation, ResearchReport } from "../types";
@@ -245,7 +254,7 @@ export async function getUserLocation(): Promise<UserLocation | null> {
 export async function getDailySummary(news: any[]) {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `You are a high-level industrial analyst. Given these top news items: ${JSON.stringify(news.slice(0, 5))}, provide a 2-sentence "Executive Morning Brief" highlight. Focus only on the most critical strategic shift.`
     });
     return response.text || "Market volatility remains within expected parameters. Supply chain nodes show moderate resilience.";
@@ -255,13 +264,16 @@ export async function getDailySummary(news: any[]) {
   }
 }
 
-export async function getRealTimeNews() {
-  const cacheKey = 'real_time_news';
+export async function getRealTimeNews(topic?: string) {
+  const cacheKey = topic ? `real_time_news_${topic}` : 'real_time_news_global';
   if (cache[cacheKey] && Date.now() - cache[cacheKey].timestamp < CACHE_TTL) {
     return cache[cacheKey].data;
   }
   try {
-    const response = await fetch('/api/news?q=global+industrial+supply+chain', {
+    const url = topic 
+      ? `/api/news?topic=${encodeURIComponent(topic)}` 
+      : '/api/news?q=global+industrial+supply+chain';
+    const response = await fetch(url, {
       headers: {
         'Accept': 'application/json'
       }
@@ -291,46 +303,21 @@ export async function getNewsletterNews(topic: string, date: string) {
     return cache[cacheKey].data;
   }
   try {
-    const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: `Generate 5 detailed news articles for the topic: ${topic} for the date: ${date}. 
-      The articles should be re-written from global sources (any language) into professional English. 
-      Include the 'title', 'summary' (insightful and catchy), 'source' (original publication), 'url' (placeholder), 'date', 'topic', 'sentiment' (Must be one of: Bullish, Bearish, Neutral), and 'impact' (Must be one of: High, Medium, Low). 
-      Ensure no duplicates and high-quality industrial foresight.`,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              title: { type: Type.STRING },
-              summary: { type: Type.STRING },
-              source: { type: Type.STRING },
-              url: { type: Type.STRING },
-              date: { type: Type.STRING },
-              topic: { type: Type.STRING },
-              sentiment: { type: Type.STRING, description: "Bullish, Bearish, or Neutral" },
-              impact: { type: Type.STRING, description: "High, Medium, or Low" },
-            },
-            required: ["title", "summary", "source", "url", "date", "topic", "sentiment", "impact"],
-          },
-        },
-      },
-    }));
+    const response = await fetch(`/api/news?topic=${encodeURIComponent(topic)}&date=${encodeURIComponent(date)}`, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error('Failed to fetch newsletter news');
+    const result = await response.json();
     
-    if (response.text) {
-      const result = JSON.parse(response.text);
+    if (result && result.length > 0) {
       cache[cacheKey] = { data: result, timestamp: Date.now() };
       return result;
     }
     return [];
   } catch (error: any) {
-    if (error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || error?.message?.includes("429") || error?.message?.includes("RESOURCE_EXHAUSTED")) {
-      console.warn("Newsletter news API quota exceeded. Using fallback data.");
-    } else {
-      console.error("Error fetching newsletter news:", error);
-    }
+    console.error("Error fetching newsletter news from server, returning fallback:", error);
     return [];
   }
 }
@@ -342,7 +329,7 @@ export async function getResearchReports(category: string) {
   }
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `List the top 10 current global research reports or major market analyses for the ${category} industry in 2026. For each report, provide the 'title', 'type' (e.g., Report, Analysis, Whitepaper), 'source' (e.g., IEA, Bloomberg, Deloitte), 'date' (e.g., Mar 2026), 'url', 'summary' (a brief 1-sentence description), and 'impact' (choose exactly one of: 'High', 'Medium', 'Low').`,
       config: {
         responseMimeType: "application/json",
@@ -481,7 +468,7 @@ export async function getRegionalMacroNews(region: string) {
   }
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `As a senior geopolitical and macroeconomic analyst for Survvi Opulence Insights, provide 5 major news items and strategic updates for the region: ${region} as of March 2026. 
       Provide a diverse mixture of:
       - 2 Economic updates (monetary policies, trade deals, inflation markers)
@@ -526,10 +513,60 @@ export async function getRegionalMacroNews(region: string) {
   }
 }
 
+function getMockIncidentFallback(region: string, incident: string) {
+  const incidentLower = incident.toLowerCase();
+  
+  let eventSummary = "";
+  let economicImpact = "";
+  let politicalImpact = "";
+  let defenseSecurityBriefing = "";
+  let recommendedPositioning = "";
+  let threatLevel = "High";
+
+  if (incidentLower.includes("red sea") || incidentLower.includes("bottleneck") || incidentLower.includes("maritime") || incidentLower.includes("rerout")) {
+    eventSummary = `High-level interdiction event involving maritime trade corridors in the vicinity of critical chokepoints affecting the ${region} logistics network. Armed boarding attempts and drone surveillance are forcing major dry bulk carriers and container fleets to select longer circumnavigation loops.`;
+    economicImpact = `Container spot rates for ${region} shipments surge by 35% to 60% within 72 hours. BDI (Baltic Dry Index) undergoes high-volatility adjustments. Extended transit cycles are increasing working capital requirements and putting upwards pressure on intermediate material costs in the EU and North American hubs.`;
+    politicalImpact = `Diplomatic efforts to secure coalition escort patrols are accelerating. Alliances are strained over transit security responsibilities and cargo prioritization, driving regional powers to reassess their dependency on open-ocean maritime routes.`;
+    defenseSecurityBriefing = `Naval escort readiness raised to maximum. Cyber-telemetry teams observe increased probe activity against regional port traffic control systems and logistics hubs. Enhanced satellite reconnaissance deployed over coastal shipping channels.`;
+    recommendedPositioning = `SECURE ROLLING SPOT FREIGHT SPACE immediately through Q3. Hedge dry cargo exposures with high-liquidity freight derivatives. Divert highly critical micro-assemblies to multimodal air-rail transport vectors through secondary Eurasian corridors.`;
+    threatLevel = "High";
+  } else if (incidentLower.includes("steel") || incidentLower.includes("tariff") || incidentLower.includes("carbon") || incidentLower.includes("tax")) {
+    eventSummary = `Regulatory tariff escalation within the ${region} industrial zone. The abrupt activation of high-intensity carbon border adjustment mechanisms (such as CBAM) has created structural friction for raw material imports, specifically steel and aluminum.`;
+    economicImpact = `Imported blast-furnace steel costs rise by 18% in the regional market, driving margin compression for structural engineering projects. Local electric arc furnace (EAF) operators experience a dramatic surge in domestic demand, elevating scrap metal inputs to historic highs.`;
+    politicalImpact = `Intense trade lobbying from bilateral partners. Developing nations are challenging the carbon tax compliance structure in international tribunals, leading to retaliatory import duty proposals on agricultural and consumer products.`;
+    defenseSecurityBriefing = `Supply chain intelligence units report a surge in transshipment attempts via secondary unaligned nations to mask the country-of-origin of non-compliant metals. Regulatory compliance monitoring systems are placed on high alert.`;
+    recommendedPositioning = `REALLOCATE CAPITAL to regional low-carbon scrap processors. Establish long-term forward purchasing agreements for green-certified domestic steel. Hedge carbon credit futures (EUA) to neutralize the direct impact of regulatory price escalation.`;
+    threatLevel = "Medium";
+  } else if (incidentLower.includes("cyber") || incidentLower.includes("power") || incidentLower.includes("disrupt") || incidentLower.includes("pipeline") || incidentLower.includes("electric")) {
+    eventSummary = `A high-sophistication cyber-telemetry breach targeting the energy distribution network of the ${region} industrial ecosystem. Critical transmission infrastructure has experienced partial automation lockouts, causing localized grid instabilities.`;
+    economicImpact = `Spot electricity prices for regional heavy industrial smelting and processing facilities spike by up to 120%. Manufacturing run-rates are curtailed to conserve power, driving down industrial productivity index metrics across secondary manufacturing sectors.`;
+    politicalImpact = `National emergency declarations. Regional cabinet officials and security agencies are meeting to coordinate counter-measures, while trading blame with state-sponsored advanced persistent threat (APT) groups.`;
+    defenseSecurityBriefing = `Industrial Control Systems (ICS) and SCADA networks placed on DEFCON-equivalent alert. Military cyber-defense commands are deployed to isolate infected network nodes, while backup satellite telemetry systems are activated for basic routing.`;
+    recommendedPositioning = `TRIGGER OFF-GRID GENERATION PROTOCOLS immediately for all high-value continuous-process operations. Secure auxiliary fuel stockpiles (diesel/LNG) for up to 30 days of offline runtime. Relocate digital data operations to backup secure nodes.`;
+    threatLevel = "Critical";
+  } else {
+    eventSummary = `Geopolitical security incident: "${incident}" affecting the regional infrastructure of ${region}. Evaluated as a potential systemic risk to local supply chains.`;
+    economicImpact = `Increased volatility in regional commodity futures and spot transport rates. Extended delivery times are predicted, resulting in a 5% to 12% rise in localized material buffer costs.`;
+    politicalImpact = `Heightened administrative scrutiny of cross-border trade documentation. Regional policy boards are drafting protective guidelines to insulate critical domestic industries from external friction.`;
+    defenseSecurityBriefing = `Local defense assets are maintaining standard alert postures. Supply chain security agencies recommend auditing tier-1 and tier-2 vendor networks to identify vulnerabilities.`;
+    recommendedPositioning = `INCREASE INVENTORY SAFETY BUFFERS to 20-30% above run-rate. Establish secondary supplier relationships outside the immediate impact zone of the current incident.`;
+    threatLevel = "Medium";
+  }
+
+  return {
+    eventSummary,
+    economicImpact,
+    politicalImpact,
+    defenseSecurityBriefing,
+    recommendedPositioning,
+    threatLevel
+  };
+}
+
 export async function analyzeMacroIncident(region: string, incident: string) {
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `You are the lead geopolitical strategist and defense security advisor for Survvi Opulence Insights. 
       Analyze the hypothetical or real-time event/incident: "${incident}" and its strategic impact on the region: "${region}".
       Focus on economic, political, and defense & security consequences (e.g. maritime shipping routes, resource stockpiles, infrastructure protection, cyber-threat postures, regional sovereignty and alliances).
@@ -561,7 +598,7 @@ export async function analyzeMacroIncident(region: string, incident: string) {
     if (response.text) {
       return JSON.parse(response.text);
     }
-    return null;
+    return getMockIncidentFallback(region, incident);
   } catch (error) {
     const isRateLimited = error?.status === "RESOURCE_EXHAUSTED" || error?.code === 429 || (error?.message && (error.message.includes("429") || error.message.includes("RESOURCE_EXHAUSTED") || error.message.toLowerCase().includes("quota")));
     if (isRateLimited) {
@@ -569,7 +606,7 @@ export async function analyzeMacroIncident(region: string, incident: string) {
     } else {
       console.error("Error analyzing incident impact:", error);
     }
-    return null;
+    return getMockIncidentFallback(region, incident);
   }
 }
 
@@ -595,7 +632,7 @@ export async function getPredictiveAnalytics(sector: string) {
   }
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `As an AI market analyst for Survvi Opulence Insights, provide a 12-month predictive forecast for the ${sector} sector as of March 2026. 
       Include:
       1. A set of 12 data points for a price index forecast (starting from 100).
@@ -672,7 +709,7 @@ export async function getPredictiveModel(variables: Record<string, number>) {
   }
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `As an industrial market analyst for Survvi Opulence Insights, calculate the predictive impact of these variables: ${JSON.stringify(variables)}. 
       Focus on how they affect industrial costs (${SECTORS.slice(0, 4).join(', ')}). 
       Provide a list of impacts with 'variable', 'impact' (percentage), and 'description'.`,
@@ -717,7 +754,7 @@ export async function getSupplyChainNodes() {
   }
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: "Identify 11 major global supply chain nodes (ports, industrial hubs, pharmaceutical distribution centers) for industrial sectors as of March 2026. Make sure to include Mumbai (Port of Mumbai / JNPT) as one of the prominent strategic hubs in South Asia. Include 'id', 'name', 'status' (optimal, congested, critical), 'lat', 'lng', and 'description' (current bottleneck details).",
       config: {
         responseMimeType: "application/json",
@@ -844,7 +881,7 @@ export async function getSupplyChainNodes() {
 export async function getComplianceRegulations(region: string) {
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `List 5 major ESG and industrial regulations for the region: ${region} in 2026. Include 'id', 'region', 'title', 'status' (active, upcoming, proposed), 'impactScore' (1-100), and 'description'.`,
       config: {
         responseMimeType: "application/json",
@@ -879,7 +916,7 @@ export async function getComplianceRegulations(region: string) {
 export async function getSentimentAnalysis(commodities: string[] = [...COMMODITIES.slice(0, 5)], dateRange: string = '7d') {
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `Provide daily sentiment analysis for the following commodities: ${commodities.join(', ')} for the last ${dateRange} as of March 2026. For each day and commodity, include 'commodity', 'sentiment' (-1 to 1), 'trend' (up, down, neutral), 'topKeywords' (array of strings), and 'date' (ISO string).`,
       config: {
         responseMimeType: "application/json",
@@ -913,7 +950,7 @@ export async function getSentimentAnalysis(commodities: string[] = [...COMMODITI
 export async function analyzeDocument(text: string) {
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `As a senior consultant at Survvi Opulence Insights, analyze this industrial project document and identify key risks and opportunities based on current 2026 market intelligence: ${text}`,
     }));
     return response.text || "Analysis failed. Please try again.";
@@ -953,7 +990,7 @@ export async function getLiveMarketData(): Promise<MarketData[]> {
     }
     return MOCK_MARKET_DATA;
   } catch (error) {
-    console.error("Error fetching live market data:", error);
+    console.warn("Error fetching live market data, using mock fallback:", error);
     return MOCK_MARKET_DATA;
   }
 }
@@ -979,7 +1016,7 @@ export const MOCK_MARKET_DATA: MarketData[] = [
 export async function generateResearchPDFContent(topic: string) {
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `Generate a detailed professional research briefing for today on the topic: ${topic}. 
       Include a title, an executive summary, 3 key trends, and a future outlook. Format it logically as it will be shown in a PDF.`,
       config: {
@@ -1019,7 +1056,7 @@ export async function generateResearchPDFContent(topic: string) {
 export async function getAssetBriefing(name: string, symbol: string): Promise<{ text: string, sources?: { uri: string, title: string }[] }> {
   try {
     const response: any = await withRetry(() => ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: `You are an elite global commodities and macro logistics analyst at Survvi Opulence Insights.
       Provide a highly precise, data-driven intelligence briefing for the asset/index: "${name}" (${symbol}).
       
