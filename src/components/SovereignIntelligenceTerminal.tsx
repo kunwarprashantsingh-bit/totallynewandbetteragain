@@ -969,10 +969,10 @@ export const SovereignIntelligenceTerminal = ({
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {[
-                        { title: "Managing Director Prashant Singh outlines SOI's Molecular Material Philosophy", source: "Prashant Singh MD", seed: "md_building_materials", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-                        { title: "AI Predictor reveals structural global cement shortages for 2026", source: "Astraeus Predictive AI", seed: "cement_ai_forecast", url: "https://www.w3schools.com/html/movie.mp4" },
-                        { title: "Sovereign Supply Chain models expose Singapore transshipment bottleneck", source: "Sovereign Supply Network", seed: "shipping_route_bottleneck", url: "https://www.w3schools.com/html/mov_bbb.mp4" },
-                        { title: "IFC Senior Advisors unpack Middle East pipeline steel constraints", source: "Development Bank Advisor Panel", seed: "pipeline_steel_advisor", url: "https://www.w3schools.com/html/movie.mp4" },
+                        { title: "Managing Director Prashant Singh outlines SOI's Fleet & Logistics Tracking Platform", source: "Prashant Singh MD", seed: "fleet_management_operator", url: "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/driver-gaze-detection.mp4" },
+                        { title: "AI Predictor reveals structural global cement shortages for 2026", source: "Astraeus Predictive AI", seed: "cement_ai_forecast", url: "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/bottle-detection.mp4" },
+                        { title: "Sovereign Supply Chain models expose Singapore transshipment bottleneck", source: "Sovereign Supply Network", seed: "shipping_route_bottleneck", url: "https://assets.mixkit.co/videos/preview/mixkit-cargo-ship-sailing-in-the-sea-43093-large.mp4" },
+                        { title: "Warehouse Intelligence System details raw material shelving and storage statuses", source: "Storage Intelligence Node", seed: "pipeline_steel_advisor", url: "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/store-on-shelf-status.mp4" },
                       ].map((video, idx) => (
                         <div
                           key={idx}
