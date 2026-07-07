@@ -22,21 +22,29 @@ export const CementShortageChart = () => {
           <h3 className="text-sm font-semibold text-white/90">Global Cement Supply vs Demand Forecast</h3>
           <p className="text-xs text-white/50 mt-1">Projecting structural deficits based on macro-economic shifts (M Tons)</p>
         </div>
-        <div className="flex bg-white/5 p-1 rounded-lg border border-white/10">
-          {(['base', 'severe', 'optimized'] as const).map(s => (
-            <button
-              key={s}
-              onClick={() => setScenario(s)}
-              className={`px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider rounded-md transition-colors ${scenario === s ? 'bg-white/20 text-white' : 'text-white/40 hover:text-white/80'}`}
-            >
-              {s}
-            </button>
-          ))}
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex bg-white/5 p-1 rounded-lg border border-white/10">
+            {(['base', 'severe', 'optimized'] as const).map(s => (
+              <button
+                key={s}
+                onClick={() => setScenario(s)}
+                className={`px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider rounded-md transition-colors ${scenario === s ? 'bg-white/20 text-white' : 'text-white/40 hover:text-white/80'}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          <div className="text-[9px] uppercase tracking-widest font-mono text-white/40 text-right max-w-[200px] leading-tight">
+            SOURCE: USGS Mineral Commodity Summaries (2024), IEA Net Zero, Global Cement Report
+          </div>
         </div>
       </div>
       
-      <div className="absolute top-6 right-6 lg:right-auto lg:top-auto lg:bottom-6 lg:left-6 z-10 pointer-events-none opacity-50 text-[9px] uppercase tracking-widest font-mono text-white/70">
-        SOURCE: SOI Predictive Analytics Core
+      <div className="absolute top-24 left-6 z-10 max-w-[200px] bg-black/40 border border-white/10 p-3 rounded-lg backdrop-blur-sm">
+        <h4 className="text-[10px] font-bold text-white/80 uppercase tracking-wider mb-1">Methodology</h4>
+        <p className="text-[9px] text-white/50 leading-relaxed">
+          Baseline calibrated to 4.1B Tonnes (USGS). Severe scenario models 15% clinker production cap due to accelerated decarbonization mandates (IEA). Optimized assumes high SCM (Supplementary Cementitious Materials) substitution.
+        </p>
       </div>
 
       <div className="flex-1 min-h-0 w-full relative">
