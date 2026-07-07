@@ -77,6 +77,8 @@ interface SovereignIntelligenceTerminalProps {
   onMacroClick: () => void;
   
   // News hub props
+  activeNewsTopic: string;
+  setActiveNewsTopic: (topic: string) => void;
   loadingNewsletter: boolean;
   newsletterNews: NewsArticle[];
   newsletterDate: string;
@@ -116,6 +118,8 @@ export const SovereignIntelligenceTerminal = ({
   terminalTab,
   setTerminalTab,
   onMacroClick,
+  activeNewsTopic,
+  setActiveNewsTopic,
   loadingNewsletter,
   newsletterNews,
   newsletterDate,
@@ -143,7 +147,6 @@ export const SovereignIntelligenceTerminal = ({
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   // News desk state variables
-  const [activeNewsTopic, setActiveNewsTopic] = useLocalStorage<typeof NEWS_TOPICS[number]>('ai_studio_newsTopic', NEWS_TOPICS[0]);
   const [activeBulletinIdx, setActiveBulletinIdx] = useState(0);
   const [discloseBulletin, setDiscloseBulletin] = useState(false);
   const [newsSearchQuery, setNewsSearchQuery] = useState("");
