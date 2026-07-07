@@ -4,7 +4,7 @@ import {
   Newspaper, FileText, Building2, Zap, Search, Bookmark, 
   Compass, FolderHeart, ChevronUp, ChevronDown, X, Sparkles, 
   Download, Play, ChevronRight, Clock, Bot,
-  ExternalLink
+  ExternalLink, Eye, EyeOff, Terminal, Sliders, ShieldAlert
 } from 'lucide-react';
 import { 
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, 
@@ -969,10 +969,26 @@ export const SovereignIntelligenceTerminal = ({
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {[
-                        { title: "Managing Director Prashant Singh outlines SOI's Fleet & Logistics Tracking Platform", source: "Prashant Singh MD", seed: "fleet_management_operator", url: "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/driver-gaze-detection.mp4" },
-                        { title: "AI Predictor reveals structural global cement shortages for 2026", source: "Astraeus Predictive AI", seed: "cement_ai_forecast", url: "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/bottle-detection.mp4" },
-                        { title: "Sovereign Supply Chain models expose Singapore transshipment bottleneck", source: "Sovereign Supply Network", seed: "shipping_route_bottleneck", url: "https://assets.mixkit.co/videos/preview/mixkit-cargo-ship-sailing-in-the-sea-43093-large.mp4" },
-                        { title: "Warehouse Intelligence System details raw material shelving and storage statuses", source: "Storage Intelligence Node", seed: "pipeline_steel_advisor", url: "https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/store-on-shelf-status.mp4" },
+                        { 
+                          title: "Managing Director Prashant Singh outlines SOI's Fleet & Logistics Tracking Platform", 
+                          source: "Prashant Singh MD", 
+                          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
+                        },
+                        { 
+                          title: "AI Predictor reveals structural global cement shortages for 2026", 
+                          source: "Astraeus Predictive AI", 
+                          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                        },
+                        { 
+                          title: "Sovereign Supply Chain models expose Singapore transshipment bottleneck", 
+                          source: "Sovereign Supply Network", 
+                          url: "https://assets.mixkit.co/videos/preview/mixkit-cargo-ship-sailing-in-the-sea-43093-large.mp4"
+                        },
+                        { 
+                          title: "Warehouse Intelligence System details raw material shelving and storage statuses", 
+                          source: "Storage Intelligence Node", 
+                          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+                        }
                       ].map((video, idx) => (
                         <div
                           key={idx}
@@ -1183,29 +1199,47 @@ export const SovereignIntelligenceTerminal = ({
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-brand/95 backdrop-blur-xl p-4"
           >
-            <div className="bg-[#0b1322] border border-accent/20 rounded-3xl overflow-hidden w-full max-w-4xl shadow-2xl relative">
-              <div className="flex items-center justify-between border-b border-white/5 p-5">
+            <div className="bg-[#040811] border border-accent/20 rounded-3xl overflow-hidden w-full max-w-4xl shadow-2xl relative flex flex-col">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 p-5 gap-4 bg-[#080d1a]">
                 <div className="text-left">
-                  <span className="text-[10px] text-accent font-bold uppercase tracking-widest font-mono">{selectedVideo.source}</span>
-                  <h3 className="text-sm font-bold text-white line-clamp-1">{selectedVideo.title}</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-accent font-black uppercase tracking-widest font-mono bg-accent/10 px-2 py-0.5 rounded border border-accent/20">
+                      {selectedVideo.source}
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                    <span className="text-[9px] text-red-400 font-bold uppercase tracking-wider font-mono">
+                      LIVE TACTICAL DISPATCH FEED
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-bold text-white mt-1 line-clamp-1 font-display tracking-tight">{selectedVideo.title}</h3>
                 </div>
-                <button 
-                  onClick={() => {
-                    setIsVideoModalOpen(false);
-                    setSelectedVideo(null);
-                  }}
-                  className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-white/50 hover:text-white transition-all cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                
+                {/* Control Toggles */}
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                  <button 
+                    onClick={() => {
+                      setIsVideoModalOpen(false);
+                      setSelectedVideo(null);
+                    }}
+                    className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-white/50 hover:text-white transition-all cursor-pointer border border-white/5 ml-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-              <div className="aspect-video bg-black flex items-center justify-center relative font-mono text-xs">
-                <video 
-                  src={selectedVideo.url} 
-                  controls 
-                  autoPlay 
-                  className="w-full h-full object-contain"
-                />
+
+              {/* Viewport container */}
+              <div className="aspect-video bg-[#02050b] flex items-center justify-center relative overflow-hidden group select-none">
+                  {/* Standard HTML5 Video Player */}
+                  <video 
+                    src={selectedVideo.url} 
+                    controls 
+                    autoPlay 
+                    loop
+                    playsInline
+                    className="w-full h-full object-contain"
+                  />
               </div>
             </div>
           </motion.div>
