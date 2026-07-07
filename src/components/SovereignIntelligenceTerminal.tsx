@@ -17,6 +17,12 @@ import { Language, NewsArticle, ResearchReport, MarketData } from '../types';
 import { ai } from '../services/geminiService';
 import AIDispatchCompiler from './AIDispatchCompiler';
 import NewsletterSubscription from './NewsletterSubscription';
+import { 
+  FleetTrackingMap, 
+  CementShortageChart, 
+  SingaporeBottleneckMap, 
+  WarehouseGrid 
+} from './SovereignVisualizers';
 
 const GEOPOLITICAL_BULLETINS = [
   {
@@ -155,10 +161,6 @@ export const SovereignIntelligenceTerminal = ({
   filteredResearch
 }: SovereignIntelligenceTerminalProps) => {
   const t = translations[language];
-
-  // Video modal internal states
-  const [selectedVideo, setSelectedVideo] = useState<{title: string, source: string, url: string} | null>(null);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   // News desk state variables
   const [activeBulletinIdx, setActiveBulletinIdx] = useState(0);
@@ -961,60 +963,77 @@ export const SovereignIntelligenceTerminal = ({
                     )}
                   </div>
 
-                  {/* Video dispatches */}
+                  {/* Actionable Live Visualizations */}
                   <div className="mt-12 pt-12 border-t border-white/5">
                     <div className="flex items-center gap-2 mb-6">
                       <Sparkles className="w-4 h-4 text-accent" />
-                      <h4 className="text-xs font-extrabold uppercase tracking-widest text-white/60">Sovereign Video Dispatch Stream</h4>
+                      <h4 className="text-xs font-extrabold uppercase tracking-widest text-white/60">Live Intelligence & Network Visualizers</h4>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      {[
-                        { 
-                          title: "Managing Director Prashant Singh outlines SOI's Fleet & Logistics Tracking Platform", 
-                          source: "Prashant Singh MD", 
-                          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
-                        },
-                        { 
-                          title: "AI Predictor reveals structural global cement shortages for 2026", 
-                          source: "Astraeus Predictive AI", 
-                          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-                        },
-                        { 
-                          title: "Sovereign Supply Chain models expose Singapore transshipment bottleneck", 
-                          source: "Sovereign Supply Network", 
-                          url: "https://assets.mixkit.co/videos/preview/mixkit-cargo-ship-sailing-in-the-sea-43093-large.mp4"
-                        },
-                        { 
-                          title: "Warehouse Intelligence System details raw material shelving and storage statuses", 
-                          source: "Storage Intelligence Node", 
-                          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
-                        }
-                      ].map((video, idx) => (
-                        <div
-                          key={idx}
-                          className="relative aspect-video rounded-xl overflow-hidden border border-white/5 bg-brand cursor-pointer group shadow-md"
-                          onClick={() => {
-                            setSelectedVideo(video);
-                            setIsVideoModalOpen(true);
-                          }}
-                        >
-                          <img 
-                            src={`https://picsum.photos/seed/${video.seed}/320/180`} 
-                            alt={video.title} 
-                            className="absolute inset-0 w-full h-full object-cover grayscale opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-500"
-                            referrerPolicy="no-referrer"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-brand/90 to-transparent flex items-center justify-center">
-                            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                              <Play className="w-4 h-4 text-white fill-white" />
-                            </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="flex flex-col border border-white/5 bg-brand rounded-2xl overflow-hidden shadow-lg h-[400px]">
+                        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-black/40">
+                          <div>
+                            <span className="text-[9px] text-accent font-black uppercase tracking-widest font-mono">Prashant Singh MD</span>
+                            <h3 className="text-xs font-bold text-white mt-1">Fleet & Logistics Tracking Platform</h3>
                           </div>
-                          <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-brand to-transparent text-left">
-                            <p className="text-[10px] text-accent font-bold uppercase tracking-widest mb-1">{video.source}</p>
-                            <p className="text-xs font-bold leading-tight line-clamp-1">{video.title}</p>
+                          <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                            <span className="text-[8px] text-emerald-400 font-mono uppercase">Live</span>
                           </div>
                         </div>
-                      ))}
+                        <div className="flex-1 relative">
+                          <FleetTrackingMap />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col border border-white/5 bg-brand rounded-2xl overflow-hidden shadow-lg h-[400px]">
+                        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-black/40">
+                          <div>
+                            <span className="text-[9px] text-accent font-black uppercase tracking-widest font-mono">Astraeus Predictive AI</span>
+                            <h3 className="text-xs font-bold text-white mt-1">Structural Global Cement Shortages 2026</h3>
+                          </div>
+                          <div className="flex items-center gap-1.5 px-2 py-1 bg-red-500/10 border border-red-500/20 rounded">
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+                            <span className="text-[8px] text-red-400 font-mono uppercase">Alert</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 relative">
+                          <CementShortageChart />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col border border-white/5 bg-brand rounded-2xl overflow-hidden shadow-lg h-[400px]">
+                        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-black/40">
+                          <div>
+                            <span className="text-[9px] text-accent font-black uppercase tracking-widest font-mono">Sovereign Supply Network</span>
+                            <h3 className="text-xs font-bold text-white mt-1">Singapore Transshipment Bottleneck</h3>
+                          </div>
+                          <div className="flex items-center gap-1.5 px-2 py-1 bg-yellow-500/10 border border-yellow-500/20 rounded">
+                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
+                            <span className="text-[8px] text-yellow-400 font-mono uppercase">Warning</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 relative">
+                          <SingaporeBottleneckMap />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col border border-white/5 bg-brand rounded-2xl overflow-hidden shadow-lg h-[400px]">
+                        <div className="p-4 border-b border-white/5 flex justify-between items-center bg-black/40">
+                          <div>
+                            <span className="text-[9px] text-accent font-black uppercase tracking-widest font-mono">Storage Intelligence Node</span>
+                            <h3 className="text-xs font-bold text-white mt-1">Warehouse Raw Material Status</h3>
+                          </div>
+                          <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                            <span className="text-[8px] text-emerald-400 font-mono uppercase">Live</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 relative">
+                          <WarehouseGrid />
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -1191,60 +1210,6 @@ export const SovereignIntelligenceTerminal = ({
 
       </div>
 
-      <AnimatePresence>
-        {isVideoModalOpen && selectedVideo && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-brand/95 backdrop-blur-xl p-4"
-          >
-            <div className="bg-[#040811] border border-accent/20 rounded-3xl overflow-hidden w-full max-w-4xl shadow-2xl relative flex flex-col">
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 p-5 gap-4 bg-[#080d1a]">
-                <div className="text-left">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-accent font-black uppercase tracking-widest font-mono bg-accent/10 px-2 py-0.5 rounded border border-accent/20">
-                      {selectedVideo.source}
-                    </span>
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                    <span className="text-[9px] text-red-400 font-bold uppercase tracking-wider font-mono">
-                      LIVE TACTICAL DISPATCH FEED
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-bold text-white mt-1 line-clamp-1 font-display tracking-tight">{selectedVideo.title}</h3>
-                </div>
-                
-                {/* Control Toggles */}
-                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                  <button 
-                    onClick={() => {
-                      setIsVideoModalOpen(false);
-                      setSelectedVideo(null);
-                    }}
-                    className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-white/50 hover:text-white transition-all cursor-pointer border border-white/5 ml-1"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Viewport container */}
-              <div className="aspect-video bg-[#02050b] flex items-center justify-center relative overflow-hidden group select-none">
-                  {/* Standard HTML5 Video Player */}
-                  <video 
-                    src={selectedVideo.url} 
-                    controls 
-                    autoPlay 
-                    loop
-                    playsInline
-                    className="w-full h-full object-contain"
-                  />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 };
